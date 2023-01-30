@@ -2,7 +2,7 @@
 <resources>
 
     <style name="main_button_text">
-        <item name="android:textSize">@dimen/main_text_size</item>
+        <item name="android:textSize">@dimen/header_text_size</item>
         <item name="android:textColor">@color/main_button_text_color</item>
     </style>
     <style name="settings_button_text">

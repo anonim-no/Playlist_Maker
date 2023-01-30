@@ -12,7 +12,8 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-
+        // открываем главное активити по нажатию на стрелку назад
+        // правильно делать назад мы еще не умеем
         findViewById<ImageView>(R.id.back_to_main_activity).setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
         }
