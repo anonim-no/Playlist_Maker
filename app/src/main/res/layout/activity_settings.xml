@@ -18,10 +18,10 @@
             android:id="@+id/back_to_main_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_from_start"
+            android:layout_marginStart="@dimen/padding_horizontal"
             android:contentDescription="@string/back"
             android:foreground="?attr/selectableItemBackground"
-            android:padding="7dp"
+            android:padding="8dp"
             android:src="@drawable/icon_back" />
 
         <TextView
@@ -38,10 +38,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_from_header"
-        android:paddingStart="@dimen/margin_from_start"
+        android:paddingStart="@dimen/padding_horizontal"
         android:paddingTop="@dimen/settings_button_padding_top"
         android:paddingBottom="@dimen/settings_button_padding_bottom"
-        android:paddingEnd="7dp"
+        android:paddingEnd="8dp"
 
         android:text="@string/dark_theme"
         android:textColor="@color/settings_text_color"
@@ -58,8 +58,8 @@
         android:gravity="start"
         android:paddingTop="@dimen/settings_button_padding_top"
         android:paddingBottom="@dimen/settings_button_padding_bottom"
-        android:paddingStart="@dimen/settings_button_padding_start"
-        android:paddingEnd="@dimen/settings_button_padding_end"
+        android:paddingHorizontal="@dimen/settings_button_padding_horizontal"
+
 
         android:text="@string/share"
         android:textColor="@color/settings_text_color"
@@ -80,8 +80,7 @@
         android:gravity="start"
         android:paddingTop="@dimen/settings_button_padding_top"
         android:paddingBottom="@dimen/settings_button_padding_bottom"
-        android:paddingStart="@dimen/settings_button_padding_start"
-        android:paddingEnd="@dimen/settings_button_padding_end"
+        android:paddingHorizontal="@dimen/settings_button_padding_horizontal"
 
         android:text="@string/support"
         android:textColor="@color/settings_text_color"
@@ -102,8 +101,7 @@
         android:gravity="start"
         android:paddingTop="@dimen/settings_button_padding_top"
         android:paddingBottom="@dimen/settings_button_padding_bottom"
-        android:paddingStart="@dimen/settings_button_padding_start"
-        android:paddingEnd="22dp"
+        android:paddingHorizontal="@dimen/settings_button_padding_horizontal"
 
         android:text="@string/terms"
         android:textColor="@color/settings_text_color"
