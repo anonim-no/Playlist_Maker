@@ -40,6 +40,8 @@
         android:text="@string/dark_theme"
         tools:ignore="UseSwitchCompatOrMaterialXml"
         android:paddingEnd="8dp"
+        android:thumbTint="@color/settings_switch"
+        android:trackTint="@color/settings_switch"
     />
 
     <Button style="@style/SettingsButtonText"
