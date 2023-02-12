@@ -22,6 +22,7 @@ class SettingsActivity : AppCompatActivity() {
         // Поделиться - текст-ссылка
         findViewById<Button>(R.id.button_sharing).setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
+
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.support_share_link))
             intent.type = "text/plain"
             startActivity(intent)
