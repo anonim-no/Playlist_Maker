@@ -12,4 +12,5 @@
     <color name="main_button_text_color">#1A1B22</color>
     <color name="main_button_icon_color">#1A1B22</color>
     <color name="main_button_background_color">#FFFFFFFF</color>
+    <color name="settings_button_background_color">#FFFFFFFF</color>
 </resources>

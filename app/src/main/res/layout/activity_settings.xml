@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_from_top"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/margin_from_header">
 
         <ImageView
             android:id="@+id/back_to_main_activity"
@@ -33,84 +34,28 @@
             android:textSize="@dimen/header_text_size" />
     </LinearLayout>
 
-    <Switch
+    <Switch style="@style/SettingsButtonText"
         android:id="@+id/switch_dark_theme"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_from_header"
-        android:paddingStart="@dimen/padding_horizontal"
-        android:paddingTop="@dimen/settings_button_padding_top"
-        android:paddingBottom="@dimen/settings_button_padding_bottom"
-        android:paddingEnd="8dp"
-
         android:text="@string/dark_theme"
-        android:textColor="@color/settings_text_color"
-        android:textAppearance="@style/settings_button_text"
+        tools:ignore="UseSwitchCompatOrMaterialXml"
+        android:paddingEnd="8dp"
+    />
 
-        android:foreground="?attr/selectableItemBackground"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-    <Button
+    <Button style="@style/SettingsButtonText"
         android:id="@+id/button_sharing"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:gravity="start"
-        android:paddingTop="@dimen/settings_button_padding_top"
-        android:paddingBottom="@dimen/settings_button_padding_bottom"
-        android:paddingHorizontal="@dimen/settings_button_padding_horizontal"
-
-
         android:text="@string/share"
-        android:textColor="@color/settings_text_color"
-        android:textAppearance="@style/settings_button_text"
-
         app:icon="@drawable/icon_share"
-        app:iconGravity="end"
-        app:iconTint="@color/settings_text_color"
+     />
 
-        style="?android:attr/borderlessButtonStyle"
-        android:foreground="?attr/selectableItemBackground" />
-
-    <Button
+    <Button style="@style/SettingsButtonText"
         android:id="@+id/button_support"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:gravity="start"
-        android:paddingTop="@dimen/settings_button_padding_top"
-        android:paddingBottom="@dimen/settings_button_padding_bottom"
-        android:paddingHorizontal="@dimen/settings_button_padding_horizontal"
-
         android:text="@string/support"
-        android:textColor="@color/settings_text_color"
-        android:textAppearance="@style/settings_button_text"
-
         app:icon="@drawable/icon_support"
-        app:iconGravity="end"
-        app:iconTint="@color/settings_text_color"
+     />
 
-        style="?android:attr/borderlessButtonStyle"
-        android:foreground="?attr/selectableItemBackground" />
-
-    <Button
+    <Button style="@style/SettingsButtonText"
         android:id="@+id/button_terms"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:gravity="start"
-        android:paddingTop="@dimen/settings_button_padding_top"
-        android:paddingBottom="@dimen/settings_button_padding_bottom"
-        android:paddingHorizontal="@dimen/settings_button_padding_horizontal"
-
         android:text="@string/terms"
-        android:textColor="@color/settings_text_color"
-        android:textAppearance="@style/settings_button_text"
-
         app:icon="@drawable/icon_terms"
-        app:iconGravity="end"
-        app:iconTint="@color/settings_text_color"
-
-        style="?android:attr/borderlessButtonStyle"
-        android:foreground="?attr/selectableItemBackground" />
+     />
 </LinearLayout>
