@@ -22,10 +22,9 @@ class SettingsActivity : AppCompatActivity() {
         // Поделиться - текст-ссылка
         findViewById<Button>(R.id.button_sharing).setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
-
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.support_share_link))
             intent.type = "text/plain"
-            startActivity(intent)
+            startActivity(Intent.createChooser(intent, null))
         }
 
         // Обратиться в техподдержку - отправляем в почту
@@ -35,14 +34,14 @@ class SettingsActivity : AppCompatActivity() {
             intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_email)))
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.support_email_text))
             intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_email_subject))
-            startActivity(intent)
+            startActivity(Intent.createChooser(intent, null))
         }
 
         // Пользовательское соглашение - отправляем в браузер
         findViewById<Button>(R.id.button_terms).setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(getString(R.string.support_terms_link))
-            startActivity(intent)
+            startActivity(Intent.createChooser(intent, null))
         }
 
 
