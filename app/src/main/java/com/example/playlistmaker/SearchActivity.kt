@@ -15,6 +15,8 @@ class SearchActivity : AppCompatActivity() {
         const val SEARCH_QUERY = "SEARCH_QUERY"
     }
 
+    // в переменную сохраняется текст из поисковой строки при изменении
+    // можно обойтись и без этой переменной, но в ТЗ она требуется
     private var searchQwery = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,8 +43,6 @@ class SearchActivity : AppCompatActivity() {
                 imm.hideSoftInputFromWindow(view.windowToken, 0)
             }
         }
-
-
 
         // при запуске скрываем или показываем кнопку очистки формы и устанавливаем фокус в поле поиска
         clearButton.visibility = clearButtonVisibility(editText.text)
