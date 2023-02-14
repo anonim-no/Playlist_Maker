@@ -26,13 +26,11 @@
             android:src="@drawable/icon_back"
             app:tint="@color/settings_text_color" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <TextView style="@style/Header"
             android:layout_marginStart="28dp"
             android:text="@string/search"
             android:textColor="@color/settings_text_color"
-            android:textSize="@dimen/header_text_size" />
+            />
     </LinearLayout>
 
     <FrameLayout

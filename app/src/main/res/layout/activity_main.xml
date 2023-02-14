@@ -9,12 +9,9 @@
     android:paddingBottom="28dp"
     android:paddingTop="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <TextView style="@style/Header"
         android:text="@string/title"
         android:textColor="@color/white"
-        android:textSize="@dimen/header_text_size"
         android:layout_marginBottom="@dimen/margin_from_header"
         />
 
@@ -24,6 +21,7 @@
         android:layout_marginTop="@dimen/main_button_margin_from_button"
         android:text="@string/search"
         app:icon="@drawable/icon_search"
+        android:letterSpacing="0"
         />
 
     <Button style="@style/MainButtonStyle"
