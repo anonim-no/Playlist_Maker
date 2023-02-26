@@ -57,6 +57,6 @@
     <Button style="@style/SettingsButtonText"
         android:id="@+id/button_terms"
         android:text="@string/terms"
-        app:icon="@drawable/icon_terms"
+        app:icon="@drawable/icon_chevron_right"
      />
 </LinearLayout>
