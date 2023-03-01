@@ -12,12 +12,14 @@ import com.example.playlistmaker.models.Track
 class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val trackName: TextView = itemView.findViewById(R.id.tvTrackName)
-    private val artistName: TextView = itemView.findViewById(R.id.tvArtistNameTrackTime)
+    private val artistName: TextView = itemView.findViewById(R.id.tvArtistName)
+    private val trackTime: TextView = itemView.findViewById(R.id.tvTrackTime)
     private val artworkUrl100: ImageView = itemView.findViewById(R.id.ivTrackArt)
 
     fun bind(track: Track) {
         trackName.text = track.trackName
-        artistName.text = "${track.artistName}  •  ${track.trackTime}"
+        artistName.text = track.artistName
+        trackTime.text = track.trackTime
         Glide
             .with(itemView)
             .load(track.artworkUrl100)
