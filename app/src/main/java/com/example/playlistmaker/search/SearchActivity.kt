@@ -23,6 +23,7 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var searchInput: EditText
     private lateinit var searchInputClearButton: ImageView
+    private lateinit var rvSearch: RecyclerView
 
     private val searchInputTextWatcher = object : TextWatcher {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -45,8 +46,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search() {
-        val rvSearch = findViewById<RecyclerView>(R.id.rvSearchResults)
-        rvSearch.adapter = SearchAdapter(mockTracks, this)
+        rvSearch = findViewById(R.id.rvSearchResults)
+        rvSearch.adapter = SearchAdapter(mockTracks)
     }
 
     private fun init() {
