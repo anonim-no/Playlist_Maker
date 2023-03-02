@@ -21,6 +21,7 @@ class SearchActivity : AppCompatActivity() {
     // в переменную сохраняется текст из поисковой строки при изменении
     private var searchInputQwery = ""
 
+    private lateinit var backButton: ImageView
     private lateinit var searchInput: EditText
     private lateinit var searchInputClearButton: ImageView
     private lateinit var rvSearch: RecyclerView
@@ -40,38 +41,33 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        init()
-
-        search()
-    }
-
-    private fun search() {
+        backButton = findViewById(R.id.back_to_main_activity)
+        searchInput = findViewById(R.id.input_search_form)
+        searchInputClearButton = findViewById(R.id.clear_search_form)
         rvSearch = findViewById(R.id.rvSearchResults)
-        rvSearch.adapter = SearchAdapter(mockTracks)
-    }
 
-    private fun init() {
-
-        // закрываем SearchActivity и возвращаемся на предыдущее
-        findViewById<ImageView>(R.id.back_to_main_activity).setOnClickListener {
+        // по клику назад закрываем SearchActivity и возвращаемся на предыдущее
+        backButton.setOnClickListener {
             finish()
         }
 
-        searchInput = findViewById(R.id.input_search_form)
-        // ставим фокус на форму поиска
-        // уберем пока фокус чтобы вывести моковые результаты поиска
-        //searchInput.requestFocus()
+        //  по клику на корестике очищаем форму поиска
+        searchInputClearButton.setOnClickListener {
+            clearSearchForm()
+        }
 
         // к форме поиска добавляем обработчик ввода текста
         searchInput.addTextChangedListener(searchInputTextWatcher)
 
-        searchInputClearButton = findViewById(R.id.clear_search_form)
         // при запуске скрываем или показываем кнопку очистки формы
         searchInputClearButton.visibility = clearButtonVisibility(searchInput.text)
-        // очищаем форму поиска
-        searchInputClearButton.setOnClickListener {
-            clearSearchForm()
-        }
+
+        // ставим фокус на форму поиска
+        // уберем пока фокус чтобы вывести моковые результаты поиска
+        //searchInput.requestFocus()
+
+        // настраиваем адаптер для поиска и имитируем поиск
+        rvSearch.adapter = SearchAdapter(mockTracks)
     }
 
     private fun clearSearchForm() {
