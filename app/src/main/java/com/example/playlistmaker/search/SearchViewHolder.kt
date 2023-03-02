@@ -25,6 +25,7 @@ class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .load(track.artworkUrl100)
             .placeholder(R.drawable.icon_image)
             .transform(RoundedCorners(2))
+            .centerCrop()
             .into(artworkUrl100)
     }
 }

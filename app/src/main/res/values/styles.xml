@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Header">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/header_text_size</item>
         <item name="android:letterSpacing">0</item>
     </style>
+
     <style name="MainButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/main_button_height</item>
@@ -14,7 +16,7 @@
 
         <item name="android:textSize">@dimen/header_text_size</item>
         <item name="android:textFontWeight">500</item>
-        <item name="android:textColor">@color/main_button_text_color</item>
+        <item name="android:textColor">@color/text_color_primary_variant</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:letterSpacing">0</item>
@@ -24,17 +26,18 @@
         <item name="cornerRadius">@dimen/main_button_corner_radius</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">@dimen/main_button_icon_padding</item>
-        <item name="iconTint">@color/main_button_icon_color</item>
+        <item name="iconTint">@color/text_color_primary_variant</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
 
     </style>
+
     <style name="SettingsButtonText" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
 
-        <item name="android:textSize">@dimen/settings_text_size</item>
+        <item name="android:textSize">@dimen/text_size</item>
         <item name="android:textFontWeight">400</item>
-        <item name="android:textColor">@color/settings_text_color</item>
+        <item name="android:textColor">@color/text_color_primary</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:letterSpacing">0</item>
@@ -45,18 +48,26 @@
         <item name="android:paddingHorizontal">@dimen/settings_button_padding_horizontal</item>
 
         <item name="iconGravity">end</item>
-        <item name="iconTint">@color/settings_text_color</item>
+        <item name="iconTint">@color/text_color_secondary</item>
 
         <item name="android:backgroundTint">@color/settings_button_background_color</item>
 
         <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
-    <style name="SearchResult">
-        <item name="iconTint">@color/settings_text_color</item>
 
+    <style name="SearchResultItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="iconTint">@color/text_color_primary</item>
         <item name="android:backgroundTint">@color/settings_button_background_color</item>
-
         <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="fontWeight">400</item>
+        <item name="android:textSize">@dimen/text_size_variant</item>
+        <item name="android:textColor">@color/text_color_secondary</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_weight">0</item>
     </style>
 
 </resources>
