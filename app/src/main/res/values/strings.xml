@@ -22,4 +22,8 @@
     <string name="middleDot">Разделитель</string>
     <string name="more">Больше</string>
     <string name="clear_search_form">Очистить строку поиска</string>
+    <string name="nothing_was_found">Ничего не нашлось</string>
+    <string name="refresh">Обновить</string>
+    <string name="connection_problem">Проблемы со связью</string>
+    <string name="check_internet_connection">Загрузка не удалась. Проверьте подключение к интернету</string>
 </resources>

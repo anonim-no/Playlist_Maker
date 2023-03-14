@@ -15,7 +15,7 @@
         android:layout_height="@dimen/track_art_size"
         android:layout_weight="0"
         android:contentDescription="@string/trackArt"
-        tools:src="@drawable/icon_image" />
+        tools:src="@drawable/ic_image" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,17 +41,12 @@
                 android:layout_weight="1"
                 tools:text="The Beatles The Beatles The Beatles The Beatles The Beatles The Beatles The Beatles The Beatles " />
 
-            <!--
-            Сначала сделал TextView с символьной точкой, но обнаружил,
-            что она отображается не на всех телефонах.
-            Переделал на ImageView, так надежней, везде будет работать
-            -->
             <ImageView
                 style="@style/SearchResultItem"
                 android:contentDescription="@string/middleDot"
                 android:paddingHorizontal="4dp"
                 android:paddingVertical="6dp"
-                android:src="@drawable/icon_dot" />
+                android:src="@drawable/ic_dot" />
 
             <TextView
                 android:id="@+id/tvTrackTime"
@@ -69,7 +64,7 @@
         android:layout_marginStart="8dp"
         android:layout_weight="0"
         android:contentDescription="@string/more"
-        android:src="@drawable/icon_chevron_right"
+        android:src="@drawable/ic_chevron_right"
         app:tint="@color/text_color_secondary" />
 
 </LinearLayout>

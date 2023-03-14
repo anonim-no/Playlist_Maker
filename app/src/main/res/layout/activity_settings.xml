@@ -22,7 +22,7 @@
             android:contentDescription="@string/back"
             android:foreground="?attr/selectableItemBackground"
             android:padding="8dp"
-            android:src="@drawable/icon_back"
+            android:src="@drawable/ic_back"
             app:tint="@color/text_color_primary" />
 
         <TextView
@@ -45,17 +45,17 @@
         android:id="@+id/button_sharing"
         style="@style/SettingsButtonText"
         android:text="@string/share"
-        app:icon="@drawable/icon_share" />
+        app:icon="@drawable/ic_share" />
 
     <Button
         android:id="@+id/button_support"
         style="@style/SettingsButtonText"
         android:text="@string/support"
-        app:icon="@drawable/icon_support" />
+        app:icon="@drawable/ic_support" />
 
     <Button
         android:id="@+id/button_terms"
         style="@style/SettingsButtonText"
         android:text="@string/terms"
-        app:icon="@drawable/icon_chevron_right" />
+        app:icon="@drawable/ic_chevron_right" />
 </LinearLayout>
