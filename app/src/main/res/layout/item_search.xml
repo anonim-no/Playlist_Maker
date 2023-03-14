@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="@dimen/padding_horizontal"
+    android:paddingVertical="@dimen/padding_vertical">
+
+    <ImageView
+        android:id="@+id/ivTrackArt"
+        android:layout_width="@dimen/track_art_size"
+        android:layout_height="@dimen/track_art_size"
+        android:layout_weight="0"
+        android:contentDescription="@string/trackArt"
+        tools:src="@drawable/icon_image" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTrackName"
+            style="@style/SearchResultItem"
+            android:textColor="@color/text_color_primary"
+            android:textSize="@dimen/text_size"
+            tools:text="Here Comes The Sun (Remastered)" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvArtistName"
+                style="@style/SearchResultItem"
+                android:layout_weight="1"
+                tools:text="The Beatles The Beatles The Beatles The Beatles The Beatles The Beatles The Beatles The Beatles " />
+
+            <!--
+            Сначала сделал TextView с символьной точкой, но обнаружил,
+            что она отображается не на всех телефонах.
+            Переделал на ImageView, так надежней, везде будет работать
+            -->
+            <ImageView
+                style="@style/SearchResultItem"
+                android:contentDescription="@string/middleDot"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="6dp"
+                android:src="@drawable/icon_dot" />
+
+            <TextView
+                android:id="@+id/tvTrackTime"
+                style="@style/SearchResultItem"
+                tools:text="05:05" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/moreImageViewButton"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginStart="8dp"
+        android:layout_weight="0"
+        android:contentDescription="@string/more"
+        android:src="@drawable/icon_chevron_right"
+        app:tint="@color/text_color_secondary" />
+
+</LinearLayout>
