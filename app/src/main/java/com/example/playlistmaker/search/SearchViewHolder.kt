@@ -25,7 +25,7 @@ class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         Glide
             .with(itemView)
             .load(track.artworkUrl100)
-            .placeholder(R.drawable.ic_image)
+            .placeholder(R.drawable.ic_placeholder)
             .transform(RoundedCorners(2))
             .centerCrop()
             .into(artworkUrl100)
