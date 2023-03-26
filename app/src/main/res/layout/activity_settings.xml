@@ -32,8 +32,8 @@
             android:textColor="@color/text_color_primary" />
     </LinearLayout>
 
-    <Switch
-        android:id="@+id/switch_dark_theme"
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/themeSwitcher"
         style="@style/SettingsButtonText"
         android:paddingEnd="8dp"
         android:text="@string/dark_theme"
