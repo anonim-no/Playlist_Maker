@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.models.Track
 
-class SearchAdapter(private val clickListener: TrackClickListener) : RecyclerView.Adapter<SearchViewHolder>() {
+class TracksAdapter(private val clickListener: TrackClickListener) : RecyclerView.Adapter<TracksViewHolder>() {
 
     var tracks = ArrayList<Track>()
         set(newTrackList) {
@@ -18,18 +18,14 @@ class SearchAdapter(private val clickListener: TrackClickListener) : RecyclerVie
             diffResult.dispatchUpdatesTo(this)
         }
 
-    fun clearTracks() {
-        tracks = ArrayList()
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_search, parent, false)
-        return SearchViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TracksViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
+        return TracksViewHolder(view)
     }
 
     override fun getItemCount(): Int = tracks.size
 
-    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TracksViewHolder, position: Int) {
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener { clickListener.onTrackClick(tracks.get(position)) }
     }

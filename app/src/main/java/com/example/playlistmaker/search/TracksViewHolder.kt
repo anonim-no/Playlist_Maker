@@ -11,7 +11,7 @@ import com.example.playlistmaker.models.Track
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val trackName: TextView = itemView.findViewById(R.id.tvTrackName)
     private val artistName: TextView = itemView.findViewById(R.id.tvArtistName)
