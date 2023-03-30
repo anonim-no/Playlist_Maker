@@ -1,6 +1,7 @@
 package com.example.playlistmaker.search
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.example.playlistmaker.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -25,14 +26,11 @@ class TracksHistory(private val sharedPreferences: SharedPreferences) {
     }
 
     fun clear() {
-        val tracksHistory = ArrayList<Track>()
-        save(tracksHistory)
+        sharedPreferences.edit { remove(TRACKS_HISTORY) }
     }
 
     private fun save(tracksHistory: MutableList<Track>) {
         val json = Gson().toJson(tracksHistory)
-        sharedPreferences.edit()
-            .putString(TRACKS_HISTORY, json)
-            .apply()
+        sharedPreferences.edit { putString(TRACKS_HISTORY, json) }
     }
 }
