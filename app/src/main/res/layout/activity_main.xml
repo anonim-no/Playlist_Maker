@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/main_screen_background"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/padding_horizontal"
-    android:paddingBottom="28dp"
-    android:paddingTop="16dp">
+    android:paddingTop="16dp"
+    android:paddingBottom="28dp">
 
-    <TextView style="@style/Header"
-        android:text="@string/title"
-        android:textColor="@color/white"
+    <TextView
+        style="@style/Header"
         android:layout_marginBottom="@dimen/margin_from_header"
-        />
+        android:text="@string/title"
+        android:textColor="@color/white" />
 
 
-    <Button style="@style/MainButtonStyle"
+    <Button
         android:id="@+id/button_search"
+        style="@style/MainButtonStyle"
         android:layout_marginTop="@dimen/main_button_margin_from_button"
-        android:text="@string/search"
-        app:icon="@drawable/ic_search"
         android:letterSpacing="0"
-        />
+        android:text="@string/search"
+        app:icon="@drawable/ic_search" />
 
-    <Button style="@style/MainButtonStyle"
+    <Button
         android:id="@+id/button_media_library"
+        style="@style/MainButtonStyle"
         android:text="@string/media_library"
-        app:icon="@drawable/ic_media_library"
-        />
+        app:icon="@drawable/ic_media_library" />
 
-    <Button style="@style/MainButtonStyle"
+    <Button
         android:id="@+id/button_settings"
+        style="@style/MainButtonStyle"
         android:text="@string/settings"
-        app:icon="@drawable/ic_settings"
-        />
+        app:icon="@drawable/ic_settings" />
 </LinearLayout>

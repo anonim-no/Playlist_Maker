@@ -28,6 +28,7 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         const val SEARCH_QUERY = "SEARCH_QUERY"
     }
+
     private var searchInputQuery = ""
 
     enum class Content {
@@ -42,12 +43,12 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val api = retrofit.create(API::class.java)
 
-    private val searchAdapter = TracksAdapter{
+    private val searchAdapter = TracksAdapter {
         tracksHistory.add(it)
         showInfo(it)
     }
 
-    private val historyAdapter = TracksAdapter{
+    private val historyAdapter = TracksAdapter {
         tracksHistory.add(it)
         showInfo(it)
     }
@@ -178,6 +179,7 @@ class SearchActivity : AppCompatActivity() {
                         }
                     }
                 }
+
                 // ошибка сети, показываем соответствующий плейсхолдер
                 override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
                     showContent(Content.ERROR)
