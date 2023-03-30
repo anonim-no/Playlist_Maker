@@ -10,12 +10,22 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        // свитч смены темы
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        // отмечаем свитч включеным, если тема темная
+        if ((applicationContext as App).darkTheme) themeSwitcher.isChecked = true
+        // слушатель смены темы
+        themeSwitcher.setOnCheckedChangeListener { _, checked ->
+            (applicationContext as App).switchTheme(checked)
+        }
 
         // закрываем SettingsActivity и возвращаемся на предыдущее
         findViewById<ImageView>(R.id.back_to_main_activity).setOnClickListener {

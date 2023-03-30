@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.PLAYLIST_MAKER_PREFERENCE
 import com.example.playlistmaker.R
 import com.example.playlistmaker.models.Track
 import retrofit2.Call
@@ -27,10 +28,11 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         const val SEARCH_QUERY = "SEARCH_QUERY"
     }
+
     private var searchInputQuery = ""
 
-    enum class PlaceHolder {
-        SEARCH_RESULT, NOT_FOUND, ERROR
+    enum class Content {
+        SEARCH_RESULT, NOT_FOUND, ERROR, TRACKS_HISTORY
     }
 
     private val baseUrl = "https://itunes.apple.com"
@@ -41,17 +43,28 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val api = retrofit.create(API::class.java)
 
-    private val adapter = SearchAdapter{
+    private val searchAdapter = TracksAdapter {
+        tracksHistory.add(it)
+        showInfo(it)
+    }
+
+    private val historyAdapter = TracksAdapter {
+        tracksHistory.add(it)
         showInfo(it)
     }
 
     private lateinit var backButton: ImageView
     private lateinit var searchInput: EditText
     private lateinit var searchClearInputButton: ImageView
-    private lateinit var rvSearch: RecyclerView
+    private lateinit var rvSearchResults: RecyclerView
+    private lateinit var rvTracksHistory: RecyclerView
     private lateinit var placeholderNotFound: TextView
     private lateinit var placeholderError: LinearLayout
     private lateinit var errorButton: Button
+    private lateinit var youSearched: LinearLayout
+    private lateinit var clearHistoryButton: Button
+
+    private lateinit var tracksHistory: TracksHistory
 
     private val searchInputTextWatcher = object : TextWatcher {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -59,6 +72,10 @@ class SearchActivity : AppCompatActivity() {
             searchClearInputButton.visibility = clearButtonVisibility(s)
             // сохраняем тест в переменную
             searchInputQuery = s.toString()
+            // если начали заполнять поле ввода - скрываем историю треков
+            if (searchInput.hasFocus() && searchInputQuery.isNotEmpty()) {
+                showContent(Content.SEARCH_RESULT)
+            }
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -72,10 +89,13 @@ class SearchActivity : AppCompatActivity() {
         backButton = findViewById(R.id.back_to_main_activity)
         searchInput = findViewById(R.id.input_search_form)
         searchClearInputButton = findViewById(R.id.clear_search_form)
-        rvSearch = findViewById(R.id.rvSearchResults)
+        rvSearchResults = findViewById(R.id.rvSearchResults)
+        rvTracksHistory = findViewById(R.id.rvTracksHistory)
         placeholderNotFound = findViewById(R.id.placeholderNotFound)
         placeholderError = findViewById(R.id.placeholderError)
         errorButton = findViewById(R.id.errorButton)
+        youSearched = findViewById(R.id.youSearched)
+        clearHistoryButton = findViewById(R.id.clearHistoryButton)
 
         // по клику назад закрываем SearchActivity и возвращаемся на предыдущее
         backButton.setOnClickListener {
@@ -87,8 +107,19 @@ class SearchActivity : AppCompatActivity() {
             clearSearch()
         }
 
+        // по клику на кнопке очистки истории поиска - очищаем историю поиска
+        clearHistoryButton.setOnClickListener {
+            clearTracksHistory()
+        }
+
         // к форме поиска добавляем обработчик ввода текста
         searchInput.addTextChangedListener(searchInputTextWatcher)
+
+        searchInput.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && searchInput.text.isEmpty()) {
+                showContent(Content.SEARCH_RESULT)
+            }
+        }
 
         // при запуске скрываем или показываем кнопку очистки формы
         searchClearInputButton.visibility = clearButtonVisibility(searchInputQuery)
@@ -97,7 +128,7 @@ class SearchActivity : AppCompatActivity() {
         searchInput.requestFocus()
 
         // настраиваем адаптер для поиска
-        rvSearch.adapter = adapter
+        rvSearchResults.adapter = searchAdapter
         // если нажата кнопка done на клавиатуре - ищем
         searchInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -110,6 +141,16 @@ class SearchActivity : AppCompatActivity() {
             search()
         }
 
+        // настраиваем адаптер для истории треков
+        rvTracksHistory.adapter = historyAdapter
+        tracksHistory = TracksHistory(getSharedPreferences(PLAYLIST_MAKER_PREFERENCE, MODE_PRIVATE))
+        // если поле поиска пустое - показываем историю треков
+        if (searchInput.text.isEmpty()) {
+            historyAdapter.tracks = tracksHistory.get()
+            if (historyAdapter.tracks.isNotEmpty()) {
+                showContent(Content.TRACKS_HISTORY)
+            }
+        }
     }
 
     // функция берет строку поиска, делает запрос в апи и показывает результат
@@ -125,43 +166,54 @@ class SearchActivity : AppCompatActivity() {
                         200 -> {
                             // результаты поиска не пустые
                             if (response.body()?.results?.isNotEmpty() == true) {
-                                adapter.tracks = response.body()?.results!!
-                                showPlaceholder(PlaceHolder.SEARCH_RESULT)
+                                searchAdapter.tracks = response.body()?.results!!
+                                showContent(Content.SEARCH_RESULT)
                             } else {
                                 // ничего не найдено, показываем соответствующий плейсхолдер
-                                showPlaceholder(PlaceHolder.NOT_FOUND)
+                                showContent(Content.NOT_FOUND)
                             }
                         }
                         // сервер вернул ошибку - показываем соответствующий плейсхолдер
                         else -> {
-                            showPlaceholder(PlaceHolder.ERROR)
+                            showContent(Content.ERROR)
                         }
                     }
                 }
+
                 // ошибка сети, показываем соответствующий плейсхолдер
                 override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                    showPlaceholder(PlaceHolder.ERROR)
+                    showContent(Content.ERROR)
                 }
             })
         }
     }
 
-    // управляем плейсхолдерами
-    private fun showPlaceholder(placeholder: PlaceHolder) {
-        when (placeholder) {
-            PlaceHolder.NOT_FOUND -> {
-                adapter.clearTracks()
+    // показывает нужный контент
+    private fun showContent(content: Content) {
+        when (content) {
+            Content.NOT_FOUND -> {
+                rvSearchResults.visibility = View.GONE
                 placeholderError.visibility = View.GONE
+                youSearched.visibility = View.GONE
                 placeholderNotFound.visibility = View.VISIBLE
             }
-            PlaceHolder.ERROR -> {
-                adapter.clearTracks()
+            Content.ERROR -> {
+                rvSearchResults.visibility = View.GONE
                 placeholderNotFound.visibility = View.GONE
+                youSearched.visibility = View.GONE
                 placeholderError.visibility = View.VISIBLE
             }
-            else -> {
+            Content.TRACKS_HISTORY -> {
+                rvSearchResults.visibility = View.GONE
                 placeholderNotFound.visibility = View.GONE
                 placeholderError.visibility = View.GONE
+                youSearched.visibility = View.VISIBLE
+            }
+            Content.SEARCH_RESULT -> {
+                youSearched.visibility = View.GONE
+                placeholderNotFound.visibility = View.GONE
+                placeholderError.visibility = View.GONE
+                rvSearchResults.visibility = View.VISIBLE
             }
         }
     }
@@ -172,13 +224,23 @@ class SearchActivity : AppCompatActivity() {
         Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
+    // очищаем историю
+    private fun clearTracksHistory() {
+        tracksHistory.clear()
+        showContent(Content.SEARCH_RESULT)
+        Toast.makeText(applicationContext, "История очищена", Toast.LENGTH_SHORT).show()
+    }
+
     private fun clearSearch() {
         // обнуляем поле ввода
         searchInput.setText("")
-        // обнуляем список результатов
-        adapter.clearTracks()
-        // убираем плейсхолдеры, если были
-        showPlaceholder(PlaceHolder.SEARCH_RESULT)
+        // показываем контент
+        historyAdapter.tracks = tracksHistory.get()
+        if (historyAdapter.tracks.isNotEmpty()) {
+            showContent(Content.TRACKS_HISTORY)
+        } else {
+            showContent(Content.SEARCH_RESULT)
+        }
         // Прячем клавиатуру
         val view = this.currentFocus
         if (view != null) {

@@ -11,7 +11,7 @@ import com.example.playlistmaker.models.Track
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val trackName: TextView = itemView.findViewById(R.id.tvTrackName)
     private val artistName: TextView = itemView.findViewById(R.id.tvArtistName)
@@ -21,11 +21,12 @@ class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(track: Track) {
         trackName.text = track.trackName
         artistName.text = track.artistName
-        trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+        trackTime.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
         Glide
             .with(itemView)
             .load(track.artworkUrl100)
-            .placeholder(R.drawable.ic_image)
+            .placeholder(R.drawable.ic_placeholder)
             .transform(RoundedCorners(2))
             .centerCrop()
             .into(artworkUrl100)
