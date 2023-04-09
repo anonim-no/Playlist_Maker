@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,9 +15,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.PLAYLIST_MAKER_PREFERENCE
-import com.example.playlistmaker.R
+import com.example.playlistmaker.*
 import com.example.playlistmaker.models.Track
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,13 +45,11 @@ class SearchActivity : AppCompatActivity() {
     private val api = retrofit.create(API::class.java)
 
     private val searchAdapter = TracksAdapter {
-        tracksHistory.add(it)
-        showInfo(it)
+        clickOnTrack(it)
     }
 
     private val historyAdapter = TracksAdapter {
-        tracksHistory.add(it)
-        showInfo(it)
+        clickOnTrack(it)
     }
 
     private lateinit var backButton: ImageView
@@ -153,6 +152,14 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun clickOnTrack(track: Track) {
+        tracksHistory.add(track)
+        val intent = Intent(this, PlayerActivity::class.java).apply {
+            putExtra(TRACK, Gson().toJson(track))
+        }
+        startActivity(intent)
+    }
+
     // функция берет строку поиска, делает запрос в апи и показывает результат
     private fun search() {
         if (searchInputQuery.isNotEmpty()) {
@@ -216,12 +223,6 @@ class SearchActivity : AppCompatActivity() {
                 rvSearchResults.visibility = View.VISIBLE
             }
         }
-    }
-
-    //  показываем информацию по клику на трек в результатах поиска
-    private fun showInfo(track: Track) {
-        val message = "${track.trackName}\nСтоимость: ${track.trackPrice}$"
-        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
     // очищаем историю

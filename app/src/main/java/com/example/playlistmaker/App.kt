@@ -7,6 +7,7 @@ import androidx.core.content.edit
 
 const val PLAYLIST_MAKER_PREFERENCE = "playlist_maker_preference"
 const val DARK_THEME_PREFERENCE = "dark_theme_preference"
+const val TRACK = "track"
 
 class App : Application() {
 
