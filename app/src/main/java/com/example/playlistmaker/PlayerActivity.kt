@@ -50,8 +50,14 @@ class PlayerActivity : AppCompatActivity() {
             .with(albumArt)
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.ic_placeholder)
-            .transform(RoundedCorners(2))
             .centerCrop()
+            .transform(
+                RoundedCorners(
+                    resources.getDimensionPixelSize(
+                        R.dimen.track_album_corner_radius
+                    )
+                )
+            )
             .into(albumArt)
 
         trackName.text = track.trackName

@@ -27,8 +27,14 @@ class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .with(itemView)
             .load(track.artworkUrl100)
             .placeholder(R.drawable.ic_placeholder)
-            .transform(RoundedCorners(2))
             .centerCrop()
+            .transform(
+                RoundedCorners(
+                    itemView.resources.getDimensionPixelSize(
+                        R.dimen.track_list_album_corner_radius
+                    )
+                )
+            )
             .into(artworkUrl100)
     }
 }
