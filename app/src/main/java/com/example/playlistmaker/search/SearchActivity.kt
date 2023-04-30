@@ -33,7 +33,10 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         const val SEARCH_QUERY = "SEARCH_QUERY"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
+
+    private val searchRunnable = Runnable { search() }
 
     private var searchInputQuery = ""
 
@@ -85,6 +88,8 @@ class SearchActivity : AppCompatActivity() {
             if (searchInput.hasFocus() && searchInputQuery.isNotEmpty()) {
                 showContent(Content.SEARCH_RESULT)
             }
+            // выполняем поиск автоматически через две секунды, после последних изменений
+            searchDebounce()
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -176,6 +181,10 @@ class SearchActivity : AppCompatActivity() {
     // функция берет строку поиска, делает запрос в апи и показывает результат
     private fun search() {
         if (searchInputQuery.isNotEmpty()) {
+
+            // если пользователь нажал на кнопку done на клавиатуре до того как отработал автоматический поиск - отменяем его
+            handler.removeCallbacks(searchRunnable)
+
             showContent(Content.PROGRESS_BAR)
             api.search(searchInputQuery).enqueue(object : Callback<SearchResponse> {
                 override fun onResponse(
@@ -219,6 +228,7 @@ class SearchActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
                 placeholderNotFound.visibility = View.VISIBLE
             }
+
             Content.ERROR -> {
                 rvSearchResults.visibility = View.GONE
                 placeholderNotFound.visibility = View.GONE
@@ -226,6 +236,7 @@ class SearchActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
                 placeholderError.visibility = View.VISIBLE
             }
+
             Content.TRACKS_HISTORY -> {
                 rvSearchResults.visibility = View.GONE
                 placeholderNotFound.visibility = View.GONE
@@ -233,6 +244,7 @@ class SearchActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
                 youSearched.visibility = View.VISIBLE
             }
+
             Content.SEARCH_RESULT -> {
                 youSearched.visibility = View.GONE
                 placeholderNotFound.visibility = View.GONE
@@ -240,6 +252,7 @@ class SearchActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
                 rvSearchResults.visibility = View.VISIBLE
             }
+
             Content.PROGRESS_BAR -> {
                 youSearched.visibility = View.GONE
                 placeholderNotFound.visibility = View.GONE
@@ -283,13 +296,18 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun clickDebounce() : Boolean {
+    private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
             handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
         return current
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
     // перед уничтожением активити сохраняем всё что введено в поле поискового запроса
