@@ -10,14 +10,14 @@
     android:paddingBottom="28dp">
 
     <TextView
-        style="@style/Header"
+        style="@style/header"
         android:layout_marginBottom="@dimen/margin_from_header"
         android:text="@string/title"
         android:textColor="@color/white" />
 
 
     <Button
-        android:id="@+id/button_search"
+        android:id="@+id/buttonSearch"
         style="@style/MainButtonStyle"
         android:layout_marginTop="@dimen/main_button_margin_from_button"
         android:letterSpacing="0"
@@ -25,13 +25,13 @@
         app:icon="@drawable/ic_search" />
 
     <Button
-        android:id="@+id/button_media_library"
+        android:id="@+id/buttonMediaLibrary"
         style="@style/MainButtonStyle"
         android:text="@string/media_library"
         app:icon="@drawable/ic_media_library" />
 
     <Button
-        android:id="@+id/button_settings"
+        android:id="@+id/buttonSettings"
         style="@style/MainButtonStyle"
         android:text="@string/settings"
         app:icon="@drawable/ic_settings" />

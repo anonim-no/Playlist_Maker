@@ -87,8 +87,8 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
 
         toolbar = findViewById(R.id.toolbar)
-        searchInput = findViewById(R.id.input_search_form)
-        searchClearInputButton = findViewById(R.id.clear_search_form)
+        searchInput = findViewById(R.id.inputSearchForm)
+        searchClearInputButton = findViewById(R.id.clearSearchForm)
         rvSearchResults = findViewById(R.id.rvSearchResults)
         rvTracksHistory = findViewById(R.id.rvTracksHistory)
         placeholderNotFound = findViewById(R.id.placeholderNotFound)

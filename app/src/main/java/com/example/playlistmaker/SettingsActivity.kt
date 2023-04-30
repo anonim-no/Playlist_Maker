@@ -30,7 +30,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Поделиться - текст-ссылка
-        findViewById<Button>(R.id.button_sharing).setOnClickListener {
+        findViewById<Button>(R.id.buttonSharing).setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.support_share_link))
             intent.type = "text/plain"
@@ -46,7 +46,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Обратиться в техподдержку - отправляем в почту
-        findViewById<Button>(R.id.button_support).setOnClickListener {
+        findViewById<Button>(R.id.buttonSupport).setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO)
             intent.data = Uri.parse("mailto:")
             intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_email)))
@@ -64,7 +64,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Пользовательское соглашение - отправляем в браузер
-        findViewById<Button>(R.id.button_terms).setOnClickListener {
+        findViewById<Button>(R.id.buttonTerms).setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(getString(R.string.support_terms_link))
             try {
