@@ -2,6 +2,8 @@ package com.example.playlistmaker.search
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -30,9 +32,14 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val SEARCH_QUERY = "SEARCH_QUERY"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
     private var searchInputQuery = ""
+
+    private var isClickAllowed = true
+
+    private val handler = Handler(Looper.getMainLooper())
 
     enum class Content {
         SEARCH_RESULT, NOT_FOUND, ERROR, TRACKS_HISTORY, PROGRESS_BAR
@@ -157,11 +164,13 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clickOnTrack(track: Track) {
-        tracksHistory.add(track)
-        val intent = Intent(this, PlayerActivity::class.java).apply {
-            putExtra(TRACK, Gson().toJson(track))
+        if (clickDebounce()) {
+            tracksHistory.add(track)
+            val intent = Intent(this, PlayerActivity::class.java).apply {
+                putExtra(TRACK, Gson().toJson(track))
+            }
+            startActivity(intent)
         }
-        startActivity(intent)
     }
 
     // функция берет строку поиска, делает запрос в апи и показывает результат
@@ -272,6 +281,15 @@ class SearchActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
     }
 
     // перед уничтожением активити сохраняем всё что введено в поле поискового запроса
