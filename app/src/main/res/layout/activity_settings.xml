@@ -17,7 +17,7 @@
         app:navigationIconTint="@color/text_color_primary">
 
         <TextView
-            style="@style/Header"
+            style="@style/header"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -35,19 +35,19 @@
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <Button
-        android:id="@+id/button_sharing"
+        android:id="@+id/buttonSharing"
         style="@style/SettingsButtonText"
         android:text="@string/share"
         app:icon="@drawable/ic_share" />
 
     <Button
-        android:id="@+id/button_support"
+        android:id="@+id/buttonSupport"
         style="@style/SettingsButtonText"
         android:text="@string/support"
         app:icon="@drawable/ic_support" />
 
     <Button
-        android:id="@+id/button_terms"
+        android:id="@+id/buttonTerms"
         style="@style/SettingsButtonText"
         android:text="@string/terms"
         app:icon="@drawable/ic_chevron_right" />

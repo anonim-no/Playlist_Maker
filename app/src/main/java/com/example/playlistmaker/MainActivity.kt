@@ -11,15 +11,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        findViewById<Button>(R.id.button_search).setOnClickListener {
+        findViewById<Button>(R.id.buttonSearch).setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
         }
 
-        findViewById<Button>(R.id.button_media_library).setOnClickListener {
+        findViewById<Button>(R.id.buttonMediaLibrary).setOnClickListener {
             startActivity(Intent(this, MediaLibraryActivity::class.java))
         }
 
-        findViewById<Button>(R.id.button_settings).setOnClickListener {
+        findViewById<Button>(R.id.buttonSettings).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 

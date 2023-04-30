@@ -18,7 +18,7 @@
         app:navigationIconTint="@color/text_color_primary">
 
         <TextView
-            style="@style/Header"
+            style="@style/header"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -34,7 +34,7 @@
         android:paddingHorizontal="@dimen/padding_horizontal">
 
         <EditText
-            android:id="@+id/input_search_form"
+            android:id="@+id/inputSearchForm"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_gravity="center"
@@ -56,7 +56,7 @@
             android:textColorHint="@color/search_form_text_hint_color" />
 
         <ImageView
-            android:id="@+id/clear_search_form"
+            android:id="@+id/clearSearchForm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
