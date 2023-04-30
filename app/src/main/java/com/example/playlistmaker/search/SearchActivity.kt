@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -34,7 +35,7 @@ class SearchActivity : AppCompatActivity() {
     private var searchInputQuery = ""
 
     enum class Content {
-        SEARCH_RESULT, NOT_FOUND, ERROR, TRACKS_HISTORY
+        SEARCH_RESULT, NOT_FOUND, ERROR, TRACKS_HISTORY, PROGRESS_BAR
     }
 
     private val baseUrl = "https://itunes.apple.com"
@@ -63,6 +64,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var errorButton: Button
     private lateinit var youSearched: LinearLayout
     private lateinit var clearHistoryButton: Button
+    private lateinit var progressBar: ProgressBar
 
     private lateinit var tracksHistory: TracksHistory
 
@@ -96,6 +98,7 @@ class SearchActivity : AppCompatActivity() {
         errorButton = findViewById(R.id.errorButton)
         youSearched = findViewById(R.id.youSearched)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
+        progressBar = findViewById(R.id.progressBar)
 
         // по клику назад закрываем SearchActivity и возвращаемся на предыдущее
         toolbar.setNavigationOnClickListener {
@@ -164,6 +167,7 @@ class SearchActivity : AppCompatActivity() {
     // функция берет строку поиска, делает запрос в апи и показывает результат
     private fun search() {
         if (searchInputQuery.isNotEmpty()) {
+            showContent(Content.PROGRESS_BAR)
             api.search(searchInputQuery).enqueue(object : Callback<SearchResponse> {
                 override fun onResponse(
                     call: Call<SearchResponse>,
@@ -203,25 +207,36 @@ class SearchActivity : AppCompatActivity() {
                 rvSearchResults.visibility = View.GONE
                 placeholderError.visibility = View.GONE
                 youSearched.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 placeholderNotFound.visibility = View.VISIBLE
             }
             Content.ERROR -> {
                 rvSearchResults.visibility = View.GONE
                 placeholderNotFound.visibility = View.GONE
                 youSearched.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 placeholderError.visibility = View.VISIBLE
             }
             Content.TRACKS_HISTORY -> {
                 rvSearchResults.visibility = View.GONE
                 placeholderNotFound.visibility = View.GONE
                 placeholderError.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 youSearched.visibility = View.VISIBLE
             }
             Content.SEARCH_RESULT -> {
                 youSearched.visibility = View.GONE
                 placeholderNotFound.visibility = View.GONE
                 placeholderError.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 rvSearchResults.visibility = View.VISIBLE
+            }
+            Content.PROGRESS_BAR -> {
+                youSearched.visibility = View.GONE
+                placeholderNotFound.visibility = View.GONE
+                placeholderError.visibility = View.GONE
+                rvSearchResults.visibility = View.GONE
+                progressBar.visibility = View.VISIBLE
             }
         }
     }
