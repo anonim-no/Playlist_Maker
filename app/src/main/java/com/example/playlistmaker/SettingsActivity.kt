@@ -5,8 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.switchmaterial.SwitchMaterial
 
@@ -25,7 +25,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // закрываем SettingsActivity и возвращаемся на предыдущее
-        findViewById<ImageView>(R.id.back_to_main_activity).setOnClickListener {
+        findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
             finish()
         }
 
