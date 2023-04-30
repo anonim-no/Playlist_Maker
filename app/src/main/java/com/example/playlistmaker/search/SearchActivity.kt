@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.*
 import com.example.playlistmaker.models.Track
@@ -52,7 +53,7 @@ class SearchActivity : AppCompatActivity() {
         clickOnTrack(it)
     }
 
-    private lateinit var backButton: ImageView
+    private lateinit var toolbar: Toolbar
     private lateinit var searchInput: EditText
     private lateinit var searchClearInputButton: ImageView
     private lateinit var rvSearchResults: RecyclerView
@@ -85,7 +86,7 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        backButton = findViewById(R.id.back_to_main_activity)
+        toolbar = findViewById(R.id.toolbar)
         searchInput = findViewById(R.id.input_search_form)
         searchClearInputButton = findViewById(R.id.clear_search_form)
         rvSearchResults = findViewById(R.id.rvSearchResults)
@@ -97,7 +98,7 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
 
         // по клику назад закрываем SearchActivity и возвращаемся на предыдущее
-        backButton.setOnClickListener {
+        toolbar.setNavigationOnClickListener {
             finish()
         }
 
