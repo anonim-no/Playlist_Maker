@@ -48,7 +48,7 @@ class SearchActivity : AppCompatActivity() {
         SEARCH_RESULT, NOT_FOUND, ERROR, TRACKS_HISTORY, PROGRESS_BAR
     }
 
-    private val baseUrl = "https://itunes.apple.com"
+    private val baseUrl = "http://itunes.apple.com"
     private val retrofit = Retrofit
         .Builder()
         .baseUrl(baseUrl)
