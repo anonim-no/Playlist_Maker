@@ -31,7 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SearchActivity : AppCompatActivity() {
 
     companion object {
-        const val SEARCH_QUERY = "SEARCH_QUERY"
+        private const val SEARCH_QUERY = "SEARCH_QUERY"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
