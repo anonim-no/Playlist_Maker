@@ -30,12 +30,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
-    companion object {
-        private const val SEARCH_QUERY = "SEARCH_QUERY"
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
-
     private val searchRunnable = Runnable { search() }
 
     private var searchInputQuery = ""
@@ -325,6 +319,12 @@ class SearchActivity : AppCompatActivity() {
             searchInput.setText(searchInputQuery)
             search()
         }
+    }
+
+    companion object {
+        private const val SEARCH_QUERY = "SEARCH_QUERY"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
 }

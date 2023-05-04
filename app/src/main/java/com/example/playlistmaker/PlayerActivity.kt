@@ -19,16 +19,11 @@ import java.util.*
 
 class PlayerActivity : AppCompatActivity() {
 
-    companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-
-        private const val UPDATE_PLAYING_TIME_DELAY = 500L
+    enum class PlayerState {
+        STATE_DEFAULT, STATE_PREPARED, STATE_PLAYING, STATE_PAUSED
     }
 
-    private var playerState = STATE_DEFAULT
+    private var playerState = PlayerState.STATE_DEFAULT
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -125,11 +120,11 @@ class PlayerActivity : AppCompatActivity() {
             playButton.isEnabled = true
             playButton.setImageResource(R.drawable.ic_play)
             progressBar.visibility = View.GONE
-            playerState = STATE_PREPARED
+            playerState = PlayerState.STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
             playButton.setImageResource(R.drawable.ic_play)
-            playerState = STATE_PREPARED
+            playerState = PlayerState.STATE_PREPARED
             playingTime.setText(R.string._00_00)
             handler.removeCallbacks(updatePlayingTimeRunnable)
         }
@@ -138,26 +133,28 @@ class PlayerActivity : AppCompatActivity() {
     private fun startPlayer() {
         mediaPlayer.start()
         playButton.setImageResource(R.drawable.ic_pause)
-        playerState = STATE_PLAYING
+        playerState = PlayerState.STATE_PLAYING
         updatePlayingTime()
     }
 
     private fun pausePlayer() {
         mediaPlayer.pause()
         playButton.setImageResource(R.drawable.ic_play)
-        playerState = STATE_PAUSED
+        playerState = PlayerState.STATE_PAUSED
         handler.removeCallbacks(updatePlayingTimeRunnable)
     }
 
     private fun playbackControl() {
         when (playerState) {
-            STATE_PLAYING -> {
+            PlayerState.STATE_PLAYING -> {
                 pausePlayer()
             }
 
-            STATE_PREPARED, STATE_PAUSED -> {
+            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> {
                 startPlayer()
             }
+
+            PlayerState.STATE_DEFAULT -> {}
         }
     }
 
@@ -175,6 +172,10 @@ class PlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
+    }
+
+    companion object {
+        private const val UPDATE_PLAYING_TIME_DELAY = 500L
     }
 
 }
