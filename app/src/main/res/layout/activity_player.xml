@@ -72,14 +72,24 @@
 
     <ImageView
         android:id="@+id/playButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="84dp"
+        android:layout_height="84dp"
         android:contentDescription="@string/play"
         android:layout_marginBottom="12dp"
         app:layout_constraintEnd_toStartOf="@+id/rightBorder"
         app:layout_constraintStart_toStartOf="@+id/leftBorder"
         app:layout_constraintBottom_toTopOf="@id/playingTime"
-        app:srcCompat="@drawable/ic_play" />
+        android:src="@drawable/ic_blank_button"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:indeterminateTint="@color/progress_bar"
+        app:layout_constraintBottom_toBottomOf="@+id/playButton"
+        app:layout_constraintEnd_toEndOf="@+id/playButton"
+        app:layout_constraintStart_toStartOf="@+id/playButton"
+        app:layout_constraintTop_toTopOf="@+id/playButton" />
 
             <ImageView
                 android:id="@+id/playlistButton"
@@ -107,7 +117,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:maxLines="1"
-        android:text="00:00"
+        android:text="@string/_00_00"
         android:textColor="@android:color/darker_gray"
         android:textSize="14sp"
         android:layout_marginBottom="24dp"

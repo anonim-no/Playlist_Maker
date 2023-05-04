@@ -2,6 +2,8 @@ package com.example.playlistmaker.search
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -11,6 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -27,17 +30,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
-    companion object {
-        const val SEARCH_QUERY = "SEARCH_QUERY"
-    }
+    private val searchRunnable = Runnable { search() }
 
     private var searchInputQuery = ""
 
+    private var isClickAllowed = true
+
+    private val handler = Handler(Looper.getMainLooper())
+
     enum class Content {
-        SEARCH_RESULT, NOT_FOUND, ERROR, TRACKS_HISTORY
+        SEARCH_RESULT, NOT_FOUND, ERROR, TRACKS_HISTORY, PROGRESS_BAR
     }
 
-    private val baseUrl = "https://itunes.apple.com"
+    private val baseUrl = "http://itunes.apple.com"
     private val retrofit = Retrofit
         .Builder()
         .baseUrl(baseUrl)
@@ -63,6 +68,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var errorButton: Button
     private lateinit var youSearched: LinearLayout
     private lateinit var clearHistoryButton: Button
+    private lateinit var progressBar: ProgressBar
 
     private lateinit var tracksHistory: TracksHistory
 
@@ -76,6 +82,8 @@ class SearchActivity : AppCompatActivity() {
             if (searchInput.hasFocus() && searchInputQuery.isNotEmpty()) {
                 showContent(Content.SEARCH_RESULT)
             }
+            // выполняем поиск автоматически через две секунды, после последних изменений
+            searchDebounce()
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -96,6 +104,7 @@ class SearchActivity : AppCompatActivity() {
         errorButton = findViewById(R.id.errorButton)
         youSearched = findViewById(R.id.youSearched)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
+        progressBar = findViewById(R.id.progressBar)
 
         // по клику назад закрываем SearchActivity и возвращаемся на предыдущее
         toolbar.setNavigationOnClickListener {
@@ -154,16 +163,23 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clickOnTrack(track: Track) {
-        tracksHistory.add(track)
-        val intent = Intent(this, PlayerActivity::class.java).apply {
-            putExtra(TRACK, Gson().toJson(track))
+        if (clickDebounce()) {
+            tracksHistory.add(track)
+            val intent = Intent(this, PlayerActivity::class.java).apply {
+                putExtra(TRACK, Gson().toJson(track))
+            }
+            startActivity(intent)
         }
-        startActivity(intent)
     }
 
     // функция берет строку поиска, делает запрос в апи и показывает результат
     private fun search() {
         if (searchInputQuery.isNotEmpty()) {
+
+            // если пользователь нажал на кнопку done на клавиатуре до того как отработал автоматический поиск - отменяем его
+            handler.removeCallbacks(searchRunnable)
+
+            showContent(Content.PROGRESS_BAR)
             api.search(searchInputQuery).enqueue(object : Callback<SearchResponse> {
                 override fun onResponse(
                     call: Call<SearchResponse>,
@@ -203,25 +219,40 @@ class SearchActivity : AppCompatActivity() {
                 rvSearchResults.visibility = View.GONE
                 placeholderError.visibility = View.GONE
                 youSearched.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 placeholderNotFound.visibility = View.VISIBLE
             }
+
             Content.ERROR -> {
                 rvSearchResults.visibility = View.GONE
                 placeholderNotFound.visibility = View.GONE
                 youSearched.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 placeholderError.visibility = View.VISIBLE
             }
+
             Content.TRACKS_HISTORY -> {
                 rvSearchResults.visibility = View.GONE
                 placeholderNotFound.visibility = View.GONE
                 placeholderError.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 youSearched.visibility = View.VISIBLE
             }
+
             Content.SEARCH_RESULT -> {
                 youSearched.visibility = View.GONE
                 placeholderNotFound.visibility = View.GONE
                 placeholderError.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 rvSearchResults.visibility = View.VISIBLE
+            }
+
+            Content.PROGRESS_BAR -> {
+                youSearched.visibility = View.GONE
+                placeholderNotFound.visibility = View.GONE
+                placeholderError.visibility = View.GONE
+                rvSearchResults.visibility = View.GONE
+                progressBar.visibility = View.VISIBLE
             }
         }
     }
@@ -259,6 +290,20 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
     // перед уничтожением активити сохраняем всё что введено в поле поискового запроса
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -274,6 +319,12 @@ class SearchActivity : AppCompatActivity() {
             searchInput.setText(searchInputQuery)
             search()
         }
+    }
+
+    companion object {
+        private const val SEARCH_QUERY = "SEARCH_QUERY"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
 }

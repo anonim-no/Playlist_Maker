@@ -1,8 +1,12 @@
 package com.example.playlistmaker
 
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -15,6 +19,16 @@ import java.util.*
 
 class PlayerActivity : AppCompatActivity() {
 
+    enum class PlayerState {
+        STATE_DEFAULT, STATE_PREPARED, STATE_PLAYING, STATE_PAUSED
+    }
+
+    private var playerState = PlayerState.STATE_DEFAULT
+
+    private val handler = Handler(Looper.getMainLooper())
+
+    private val updatePlayingTimeRunnable = Runnable { updatePlayingTime() }
+
     private lateinit var toolbar: Toolbar
     private lateinit var trackName: TextView
     private lateinit var trackTime: TextView
@@ -25,12 +39,15 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var releaseDate: TextView
     private lateinit var primaryGenreName: TextView
     private lateinit var country: TextView
+    private lateinit var playButton: ImageView
+    private lateinit var playingTime: TextView
+    private lateinit var progressBar: ProgressBar
+
+    private var mediaPlayer = MediaPlayer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
-
-        val track = Gson().fromJson(intent.getStringExtra(TRACK), Track::class.java)
 
         toolbar = findViewById(R.id.toolbar)
         trackName = findViewById(R.id.trackName)
@@ -42,9 +59,22 @@ class PlayerActivity : AppCompatActivity() {
         releaseDate = findViewById(R.id.releaseDate)
         primaryGenreName = findViewById(R.id.primaryGenreName)
         country = findViewById(R.id.country)
+        playButton = findViewById(R.id.playButton)
+        playingTime = findViewById(R.id.playingTime)
+        progressBar = findViewById(R.id.progressBar)
 
         toolbar.setNavigationOnClickListener {
             finish()
+        }
+
+        playButton.isEnabled = false
+
+        val track = Gson().fromJson(intent.getStringExtra(TRACK), Track::class.java)
+
+        preparePlayer(track.previewUrl)
+
+        playButton.setOnClickListener {
+            playbackControl()
         }
 
         Glide
@@ -82,4 +112,70 @@ class PlayerActivity : AppCompatActivity() {
             collectionNameTitle.visibility = View.GONE
         }
     }
+
+    private fun preparePlayer(url: String) {
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            playButton.isEnabled = true
+            playButton.setImageResource(R.drawable.ic_play)
+            progressBar.visibility = View.GONE
+            playerState = PlayerState.STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            playButton.setImageResource(R.drawable.ic_play)
+            playerState = PlayerState.STATE_PREPARED
+            playingTime.setText(R.string._00_00)
+            handler.removeCallbacks(updatePlayingTimeRunnable)
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        playButton.setImageResource(R.drawable.ic_pause)
+        playerState = PlayerState.STATE_PLAYING
+        updatePlayingTime()
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        playButton.setImageResource(R.drawable.ic_play)
+        playerState = PlayerState.STATE_PAUSED
+        handler.removeCallbacks(updatePlayingTimeRunnable)
+    }
+
+    private fun playbackControl() {
+        when (playerState) {
+            PlayerState.STATE_PLAYING -> {
+                pausePlayer()
+            }
+
+            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> {
+                startPlayer()
+            }
+
+            PlayerState.STATE_DEFAULT -> {}
+        }
+    }
+
+    private fun updatePlayingTime() {
+        playingTime.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+        handler.postDelayed(updatePlayingTimeRunnable, UPDATE_PLAYING_TIME_DELAY)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+    }
+
+    companion object {
+        private const val UPDATE_PLAYING_TIME_DELAY = 500L
+    }
+
 }

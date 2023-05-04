@@ -8,10 +8,6 @@ import com.google.gson.reflect.TypeToken
 
 class TracksHistory(private val sharedPreferences: SharedPreferences) {
 
-    companion object {
-        const val TRACKS_HISTORY = "tracks_history"
-    }
-
     fun add(track: Track) {
         val tracksHistory = get()
         tracksHistory.remove(track)
@@ -33,4 +29,9 @@ class TracksHistory(private val sharedPreferences: SharedPreferences) {
         val json = Gson().toJson(tracksHistory)
         sharedPreferences.edit { putString(TRACKS_HISTORY, json) }
     }
+
+    companion object {
+        const val TRACKS_HISTORY = "tracks_history"
+    }
+
 }
