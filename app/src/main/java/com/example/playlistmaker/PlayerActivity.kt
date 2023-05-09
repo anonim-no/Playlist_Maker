@@ -92,7 +92,9 @@ class PlayerActivity : AppCompatActivity() {
             .into(albumArt)
 
         trackName.text = track.trackName
+        trackName.isSelected = true
         artistName.text = track.artistName
+        trackName.isSelected = true
         primaryGenreName.text = track.primaryGenreName
         country.text = track.country
 
