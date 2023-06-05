@@ -1,6 +1,7 @@
 package com.example.playlistmaker.creator
 
 import android.content.Context
+import com.example.playlistmaker.THEME_PREFERENCES
 import com.example.playlistmaker.search.data.TracksRepositoryImpl
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.search.domain.api.TracksInteractor
@@ -13,9 +14,6 @@ import com.example.playlistmaker.settings.domain.api.ThemeSwitchRepository
 import com.example.playlistmaker.settings.domain.impl.ThemeSwitchInteractorImpl
 
 object Creator {
-
-    private const val LOCAL_STORAGE = "local_storage"
-    private const val THEME_PREFERENCES = "current_theme"
 
     private fun getTracksRepository(context: Context): TracksRepository {
         return TracksRepositoryImpl(RetrofitNetworkClient(context))
