@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.settings
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -8,6 +8,8 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import com.example.playlistmaker.App
+import com.example.playlistmaker.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {

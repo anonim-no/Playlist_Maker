@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search
+package com.example.playlistmaker.search.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -19,16 +19,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.*
-import com.example.playlistmaker.models.Track
+import com.example.playlistmaker.PLAYLIST_MAKER_PREFERENCE
+import com.example.playlistmaker.R
+import com.example.playlistmaker.TRACK
+import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.player.PlayerActivity
+import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
+
+    private val tracksInteractor = Creator.provideTracksInteractor(this)
 
     private val searchRunnable = Runnable { search() }
 
@@ -41,14 +43,6 @@ class SearchActivity : AppCompatActivity() {
     enum class Content {
         SEARCH_RESULT, NOT_FOUND, ERROR, TRACKS_HISTORY, PROGRESS_BAR
     }
-
-    private val baseUrl = "http://itunes.apple.com"
-    private val retrofit = Retrofit
-        .Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val api = retrofit.create(API::class.java)
 
     private val searchAdapter = TracksAdapter {
         clickOnTrack(it)
@@ -65,10 +59,12 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var rvTracksHistory: RecyclerView
     private lateinit var placeholderNotFound: TextView
     private lateinit var placeholderError: LinearLayout
+    private lateinit var errorText: TextView
     private lateinit var errorButton: Button
     private lateinit var youSearched: LinearLayout
     private lateinit var clearHistoryButton: Button
     private lateinit var progressBar: ProgressBar
+
 
     private lateinit var tracksHistory: TracksHistory
 
@@ -101,6 +97,7 @@ class SearchActivity : AppCompatActivity() {
         rvTracksHistory = findViewById(R.id.rvTracksHistory)
         placeholderNotFound = findViewById(R.id.placeholderNotFound)
         placeholderError = findViewById(R.id.placeholderError)
+        errorText = findViewById(R.id.errorText)
         errorButton = findViewById(R.id.errorButton)
         youSearched = findViewById(R.id.youSearched)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
@@ -178,37 +175,58 @@ class SearchActivity : AppCompatActivity() {
 
             // если пользователь нажал на кнопку done на клавиатуре до того как отработал автоматический поиск - отменяем его
             handler.removeCallbacks(searchRunnable)
-
             showContent(Content.PROGRESS_BAR)
-            api.search(searchInputQuery).enqueue(object : Callback<SearchResponse> {
-                override fun onResponse(
-                    call: Call<SearchResponse>,
-                    response: Response<SearchResponse>
-                ) {
-                    when (response.code()) {
-                        // сервер ответил успехом
-                        200 -> {
-                            // результаты поиска не пустые
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                searchAdapter.tracks = response.body()?.results!!
-                                showContent(Content.SEARCH_RESULT)
-                            } else {
+
+            tracksInteractor.searchTracks(searchInputQuery, object : TracksInteractor.TracksConsumer {
+                override fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?) {
+                    handler.post {
+                        if (foundTracks!=null) {
+                            if (foundTracks.isEmpty()) {
                                 // ничего не найдено, показываем соответствующий плейсхолдер
                                 showContent(Content.NOT_FOUND)
+                            } else {
+                                // показываем результаты поиска
+                                searchAdapter.tracks = foundTracks
+                                showContent(Content.SEARCH_RESULT)
                             }
-                        }
-                        // сервер вернул ошибку - показываем соответствующий плейсхолдер
-                        else -> {
+                        } else if (errorMessage != null) {
+                            errorText.text = errorMessage
                             showContent(Content.ERROR)
                         }
                     }
                 }
 
-                // ошибка сети, показываем соответствующий плейсхолдер
-                override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                    showContent(Content.ERROR)
-                }
             })
+
+//            ITunesApiService.search(searchInputQuery).enqueue(object : Callback<TracksSearchResponse> {
+//                override fun onResponse(
+//                    call: Call<TracksSearchResponse>,
+//                    response: Response<TracksSearchResponse>
+//                ) {
+//                    when (response.code()) {
+//                        // сервер ответил успехом
+//                        200 -> {
+//                            // результаты поиска не пустые
+//                            if (response.body()?.results?.isNotEmpty() == true) {
+//                                searchAdapter.tracks = response.body()?.results!!
+//                                showContent(Content.SEARCH_RESULT)
+//                            } else {
+//                                // ничего не найдено, показываем соответствующий плейсхолдер
+//                                showContent(Content.NOT_FOUND)
+//                            }
+//                        }
+//                        // сервер вернул ошибку - показываем соответствующий плейсхолдер
+//                        else -> {
+//                            showContent(Content.ERROR)
+//                        }
+//                    }
+//                }
+//
+//                // ошибка сети, показываем соответствующий плейсхолдер
+//                override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
+//                    showContent(Content.ERROR)
+//                }
+//            })
         }
     }
 
