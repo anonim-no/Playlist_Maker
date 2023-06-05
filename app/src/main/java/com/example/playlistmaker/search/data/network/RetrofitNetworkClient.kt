@@ -9,6 +9,7 @@ import com.example.playlistmaker.search.data.dto.TracksSearchRequest
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+// Retrofit - реализация интерфейса NetworkClient
 class RetrofitNetworkClient(private val context: Context) : NetworkClient {
 
     private val BaseUrl = "http://itunes.apple.com"
@@ -22,7 +23,7 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
 
     override fun doRequest(dto: Any): Response {
 
-        if (isConnected() == false) {
+        if (!isConnected()) {
             return Response().apply { resultCode = -1 }
         }
         if (dto !is TracksSearchRequest) {

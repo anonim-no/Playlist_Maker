@@ -6,6 +6,8 @@ import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.util.Resource
 
+// Класс TracksRepositoryImpl - реализация интерфейса TracksRepository
+// Задача этой реализации — сделать запрос и получить ответ от сервера, используя сетевой клиент
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
 
     override fun searchTracks(expression: String): Resource<ArrayList<Track>> {
