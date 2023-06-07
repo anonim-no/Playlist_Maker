@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.domain.impl
 
+import android.util.Log
 import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.SearchRepository
 import com.example.playlistmaker.util.Resource
@@ -13,8 +14,12 @@ class SearchInteractorImpl(private val repository: SearchRepository) : SearchInt
     override fun searchTracks(expression: String, consumer: SearchInteractor.SearchConsumer) {
         executor.execute {
             //consumer.consume(repository.searchTracks(expression))
+
             when(val resource = repository.searchTracks(expression)) {
-                is Resource.Success -> { consumer.consume(resource.data, null) }
+                is Resource.Success -> {
+                    //Log.i("SEARCH", resource.data.toString())
+                    consumer.consume(resource.data, null)
+                }
                 is Resource.Error -> { consumer.consume(null, resource.message) }
             }
         }

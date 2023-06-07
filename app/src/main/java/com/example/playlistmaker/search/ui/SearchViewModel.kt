@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -36,13 +37,13 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     private val stateLiveData = MutableLiveData<SearchState>()
 
     private val mediatorStateLiveData = MediatorLiveData<SearchState>().also { liveData ->
-        liveData.addSource(stateLiveData) { movieState ->
-            liveData.value = when (movieState) {
-                is SearchState.SearchResult -> movieState
-                is SearchState.NotFound -> movieState
-                is SearchState.History -> movieState
-                is SearchState.Error -> movieState
-                is SearchState.Loading -> movieState
+        liveData.addSource(stateLiveData) { searchState ->
+            liveData.value = when (searchState) {
+                is SearchState.SearchResult -> SearchState.SearchResult(searchState.tracks)
+                is SearchState.NotFound -> searchState
+                is SearchState.History -> searchState
+                is SearchState.Error -> searchState
+                is SearchState.Loading -> searchState
             }
         }
     }
@@ -83,6 +84,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
             moviesInteractor.searchTracks(newSearchText, object : SearchInteractor.SearchConsumer {
                 override fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?) {
+                    Log.i("SEARCH", foundTracks.toString())
                     val tracks = arrayListOf<Track>()
                     if (foundTracks != null) {
                         tracks.addAll(foundTracks)
