@@ -13,7 +13,8 @@ class TracksHistory(private val sharedPreferences: SharedPreferences) {
         tracksHistory.remove(track)
         tracksHistory.add(0,track)
         if (tracksHistory.size>10) tracksHistory.removeLast()
-        save(tracksHistory)
+        val json = Gson().toJson(tracksHistory)
+        sharedPreferences.edit { putString(TRACKS_HISTORY, json) }
     }
 
     fun get(): ArrayList<Track> {
@@ -23,11 +24,6 @@ class TracksHistory(private val sharedPreferences: SharedPreferences) {
 
     fun clear() {
         sharedPreferences.edit { remove(TRACKS_HISTORY) }
-    }
-
-    private fun save(tracksHistory: MutableList<Track>) {
-        val json = Gson().toJson(tracksHistory)
-        sharedPreferences.edit { putString(TRACKS_HISTORY, json) }
     }
 
     companion object {
