@@ -17,14 +17,14 @@ import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.PlayerActivity
-import com.example.playlistmaker.search.domain.api.TracksInteractor
+import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
 
-    private val tracksInteractor = Creator.provideTracksInteractor(this)
+    private val tracksInteractor = Creator.provideSearchInteractor(this)
 
     private val searchRunnable = Runnable { search() }
 
@@ -45,20 +45,6 @@ class SearchActivity : AppCompatActivity() {
     private val historyAdapter = TracksAdapter {
         clickOnTrack(it)
     }
-
-//    private lateinit var toolbar: Toolbar
-//    private lateinit var searchInput: EditText
-//    private lateinit var searchClearInputButton: ImageView
-//    private lateinit var rvSearchResults: RecyclerView
-//    private lateinit var rvTracksHistory: RecyclerView
-//    private lateinit var placeholderNotFound: TextView
-//    private lateinit var placeholderError: LinearLayout
-//    private lateinit var errorText: TextView
-//    private lateinit var errorButton: Button
-//    private lateinit var youSearched: LinearLayout
-//    private lateinit var clearHistoryButton: Button
-//    private lateinit var progressBar: ProgressBar
-
 
     private lateinit var tracksHistory: TracksHistory
 
@@ -159,7 +145,7 @@ class SearchActivity : AppCompatActivity() {
             handler.removeCallbacks(searchRunnable)
             showContent(Content.PROGRESS_BAR)
 
-            tracksInteractor.searchTracks(searchInputQuery, object : TracksInteractor.TracksConsumer {
+            tracksInteractor.searchTracks(searchInputQuery, object : SearchInteractor.SearchConsumer {
                 override fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?) {
                     handler.post {
                         if (foundTracks!=null) {

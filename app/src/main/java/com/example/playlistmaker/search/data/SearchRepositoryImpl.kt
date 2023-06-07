@@ -2,13 +2,13 @@ package com.example.playlistmaker.search.data
 
 import com.example.playlistmaker.search.data.dto.TracksSearchRequest
 import com.example.playlistmaker.search.data.dto.TracksSearchResponse
-import com.example.playlistmaker.search.domain.api.TracksRepository
+import com.example.playlistmaker.search.domain.api.SearchRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.util.Resource
 
 // Класс TracksRepositoryImpl - реализация интерфейса TracksRepository
 // Задача этой реализации — сделать запрос и получить ответ от сервера, используя сетевой клиент
-class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
+class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRepository {
 
     override fun searchTracks(expression: String): Resource<ArrayList<Track>> {
         val response = networkClient.doRequest(TracksSearchRequest(expression))

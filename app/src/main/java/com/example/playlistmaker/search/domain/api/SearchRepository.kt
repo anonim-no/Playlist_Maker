@@ -5,6 +5,6 @@ import com.example.playlistmaker.util.Resource
 
 // интерфейс для связи слоя Domain со слоем Data
 // интерфейс TracksRepository реализует TracksRepositoryImpl в data
-interface TracksRepository {
+interface SearchRepository {
     fun searchTracks(expression: String): Resource<ArrayList<Track>>
 }
