@@ -5,7 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.dto.Response
-import com.example.playlistmaker.search.data.dto.TracksSearchRequest
+import com.example.playlistmaker.search.data.dto.SearchRequest
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -26,7 +26,7 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
         if (!isConnected()) {
             return Response().apply { resultCode = -1 }
         }
-        if (dto !is TracksSearchRequest) {
+        if (dto !is SearchRequest) {
             return Response().apply { resultCode = 400 }
         }
 

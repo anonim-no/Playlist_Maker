@@ -14,11 +14,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.PLAYLIST_MAKER_PREFERENCE
 import com.example.playlistmaker.TRACK
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.PlayerActivity
-import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.ui.models.SearchState
 import com.google.gson.Gson
 
@@ -60,7 +58,7 @@ class SearchActivity : AppCompatActivity() {
             //searchInputQuery = s.toString()
             // если начали заполнять поле ввода - скрываем историю треков
             if (binding.inputSearchForm.hasFocus() && s.toString().isNotEmpty()) {
-                showContent(Content.SEARCH_RESULT)
+                showState(Content.SEARCH_RESULT)
             }
             // выполняем поиск автоматически через две секунды, после последних изменений
             searchDebounce()
@@ -99,8 +97,6 @@ class SearchActivity : AppCompatActivity() {
         // к форме поиска добавляем обработчик ввода текста
         binding.inputSearchForm.addTextChangedListener(searchInputTextWatcher)
 
-
-
         viewModel.observeState().observe(this) {
             render(it)
         }
@@ -117,27 +113,20 @@ class SearchActivity : AppCompatActivity() {
         if (binding.inputSearchForm.text.isEmpty()) {
             historyAdapter.tracks = tracksHistory.get()
             if (historyAdapter.tracks.isNotEmpty()) {
-                showContent(Content.TRACKS_HISTORY)
+                showState(Content.TRACKS_HISTORY)
             }
         }
-
-
-
 
         // по клику на кнопке очистки истории поиска - очищаем историю поиска
         binding.clearHistoryButton.setOnClickListener {
             clearTracksHistory()
         }
 
-
-
         binding.inputSearchForm.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && binding.inputSearchForm.text.isEmpty()) {
-                showContent(Content.SEARCH_RESULT)
+                showState(Content.SEARCH_RESULT)
             }
         }
-
-
 
         // если нажата кнопка done на клавиатуре - ищем
         binding.inputSearchForm.setOnEditorActionListener { _, actionId, _ ->
@@ -158,15 +147,19 @@ class SearchActivity : AppCompatActivity() {
         when (state) {
             is SearchState.SearchResult -> {
                 searchAdapter.tracks = state.tracks
-                showContent(Content.SEARCH_RESULT)
+                showState(Content.SEARCH_RESULT)
             }
-            is SearchState.NotFound -> showContent(Content.NOT_FOUND)
+            is SearchState.History -> {
+                historyAdapter.tracks = state.tracks
+                showState(Content.TRACKS_HISTORY)
+            }
+            is SearchState.NotFound -> showState(Content.NOT_FOUND)
             is SearchState.Error -> {
                 binding.errorText.text = state.message
-                showContent(Content.ERROR)
+                showState(Content.ERROR)
             }
-            is SearchState.Loading -> showContent(Content.LOADING)
-            is SearchState.History -> showContent(Content.TRACKS_HISTORY)
+            is SearchState.Loading -> showState(Content.LOADING)
+
         }
     }
 
@@ -191,7 +184,7 @@ class SearchActivity : AppCompatActivity() {
             // если пользователь нажал на кнопку done на клавиатуре до того как отработал автоматический поиск - отменяем его
             handler.removeCallbacks(searchRunnable)
 
-            viewModel.searchDebounce(binding.inputSearchForm.toString())
+            viewModel.searchDebounce(binding.inputSearchForm.text.toString())
 
         }
     }
@@ -227,7 +220,7 @@ class SearchActivity : AppCompatActivity() {
 //    }
 
     // показывает нужный контент
-    private fun showContent(content: Content) {
+    private fun showState(content: Content) {
         when (content) {
             Content.NOT_FOUND -> {
                 binding.rvSearchResults.visibility = View.GONE
@@ -274,7 +267,7 @@ class SearchActivity : AppCompatActivity() {
     // очищаем историю
     private fun clearTracksHistory() {
         tracksHistory.clear()
-        showContent(Content.SEARCH_RESULT)
+        showState(Content.SEARCH_RESULT)
         Toast.makeText(applicationContext, "История очищена", Toast.LENGTH_SHORT).show()
     }
 
@@ -284,9 +277,9 @@ class SearchActivity : AppCompatActivity() {
         // показываем контент
         historyAdapter.tracks = tracksHistory.get()
         if (historyAdapter.tracks.isNotEmpty()) {
-            showContent(Content.TRACKS_HISTORY)
+            showState(Content.TRACKS_HISTORY)
         } else {
-            showContent(Content.SEARCH_RESULT)
+            showState(Content.SEARCH_RESULT)
         }
         // Прячем клавиатуру
         val view = this.currentFocus

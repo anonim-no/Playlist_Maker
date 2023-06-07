@@ -12,11 +12,12 @@ sealed interface SearchState {
         val tracks: ArrayList<Track>
     ) : SearchState
 
+    data class History(
+        val tracks: ArrayList<Track>
+    ) : SearchState
+
     data class Error(
         val message: String
     ) : SearchState
 
-    data class History(
-        val message: String
-    ) : SearchState
 }

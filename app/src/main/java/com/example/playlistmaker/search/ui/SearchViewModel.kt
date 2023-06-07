@@ -30,7 +30,9 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    private val moviesInteractor = Creator.provideSearchInteractor(getApplication())
+    private val searchInteractor = Creator.provideSearchInteractor(getApplication())
+    //private val tracksInteractor = Creator.provideSearchInteractor(this)
+
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -82,7 +84,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
             renderState(SearchState.Loading)
 
-            moviesInteractor.searchTracks(newSearchText, object : SearchInteractor.SearchConsumer {
+            searchInteractor.searchTracks(newSearchText, object : SearchInteractor.SearchConsumer {
                 override fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?) {
                     Log.i("SEARCH", foundTracks.toString())
                     val tracks = arrayListOf<Track>()
@@ -92,11 +94,17 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
                     when {
                         errorMessage != null -> {
+
                             renderState(
                                 SearchState.Error(
                                     message = getApplication<Application>().getString(R.string.check_internet_connection),
                                 )
                             )
+                            // в случае ошибки не срабатывает кнопка "Обновить"
+                            // потому что текст отправляет тот же самый и не срабатывает searchDebounce
+                            // возможно будет лучше обнулять эту переменную через пару секунд
+                            // пока так
+                            latestSearchText = ""
                         }
 
                         tracks.isEmpty() -> {
