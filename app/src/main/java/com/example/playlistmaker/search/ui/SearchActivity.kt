@@ -9,26 +9,20 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.PLAYLIST_MAKER_PREFERENCE
-import com.example.playlistmaker.R
 import com.example.playlistmaker.TRACK
 import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.PlayerActivity
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivitySearchBinding
 
     private val tracksInteractor = Creator.provideTracksInteractor(this)
 
@@ -52,18 +46,18 @@ class SearchActivity : AppCompatActivity() {
         clickOnTrack(it)
     }
 
-    private lateinit var toolbar: Toolbar
-    private lateinit var searchInput: EditText
-    private lateinit var searchClearInputButton: ImageView
-    private lateinit var rvSearchResults: RecyclerView
-    private lateinit var rvTracksHistory: RecyclerView
-    private lateinit var placeholderNotFound: TextView
-    private lateinit var placeholderError: LinearLayout
-    private lateinit var errorText: TextView
-    private lateinit var errorButton: Button
-    private lateinit var youSearched: LinearLayout
-    private lateinit var clearHistoryButton: Button
-    private lateinit var progressBar: ProgressBar
+//    private lateinit var toolbar: Toolbar
+//    private lateinit var searchInput: EditText
+//    private lateinit var searchClearInputButton: ImageView
+//    private lateinit var rvSearchResults: RecyclerView
+//    private lateinit var rvTracksHistory: RecyclerView
+//    private lateinit var placeholderNotFound: TextView
+//    private lateinit var placeholderError: LinearLayout
+//    private lateinit var errorText: TextView
+//    private lateinit var errorButton: Button
+//    private lateinit var youSearched: LinearLayout
+//    private lateinit var clearHistoryButton: Button
+//    private lateinit var progressBar: ProgressBar
 
 
     private lateinit var tracksHistory: TracksHistory
@@ -71,11 +65,11 @@ class SearchActivity : AppCompatActivity() {
     private val searchInputTextWatcher = object : TextWatcher {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             // при изменении текста скрываем или показываем кнопку очистки формы
-            searchClearInputButton.visibility = clearButtonVisibility(s)
+            binding.clearSearchFormButton.visibility = clearButtonVisibility(s)
             // сохраняем тест в переменную
             searchInputQuery = s.toString()
             // если начали заполнять поле ввода - скрываем историю треков
-            if (searchInput.hasFocus() && searchInputQuery.isNotEmpty()) {
+            if (binding.inputSearchForm.hasFocus() && searchInputQuery.isNotEmpty()) {
                 showContent(Content.SEARCH_RESULT)
             }
             // выполняем поиск автоматически через две секунды, после последних изменений
@@ -88,70 +82,58 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
-
-        toolbar = findViewById(R.id.toolbar)
-        searchInput = findViewById(R.id.inputSearchForm)
-        searchClearInputButton = findViewById(R.id.clearSearchForm)
-        rvSearchResults = findViewById(R.id.rvSearchResults)
-        rvTracksHistory = findViewById(R.id.rvTracksHistory)
-        placeholderNotFound = findViewById(R.id.placeholderNotFound)
-        placeholderError = findViewById(R.id.placeholderError)
-        errorText = findViewById(R.id.errorText)
-        errorButton = findViewById(R.id.errorButton)
-        youSearched = findViewById(R.id.youSearched)
-        clearHistoryButton = findViewById(R.id.clearHistoryButton)
-        progressBar = findViewById(R.id.progressBar)
+        binding = ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // по клику назад закрываем SearchActivity и возвращаемся на предыдущее
-        toolbar.setNavigationOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
             finish()
         }
 
         //  по клику на корестике очищаем форму и результаты поиска
-        searchClearInputButton.setOnClickListener {
+        binding.clearSearchFormButton.setOnClickListener {
             clearSearch()
         }
 
         // по клику на кнопке очистки истории поиска - очищаем историю поиска
-        clearHistoryButton.setOnClickListener {
+        binding.clearHistoryButton.setOnClickListener {
             clearTracksHistory()
         }
 
         // к форме поиска добавляем обработчик ввода текста
-        searchInput.addTextChangedListener(searchInputTextWatcher)
+        binding.inputSearchForm.addTextChangedListener(searchInputTextWatcher)
 
-        searchInput.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus && searchInput.text.isEmpty()) {
+        binding.inputSearchForm.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && binding.inputSearchForm.text.isEmpty()) {
                 showContent(Content.SEARCH_RESULT)
             }
         }
 
         // при запуске скрываем или показываем кнопку очистки формы
-        searchClearInputButton.visibility = clearButtonVisibility(searchInputQuery)
+        binding.clearSearchFormButton.visibility = clearButtonVisibility(searchInputQuery)
 
         // ставим фокус на форму поиска
-        searchInput.requestFocus()
+        binding.inputSearchForm.requestFocus()
 
         // настраиваем адаптер для поиска
-        rvSearchResults.adapter = searchAdapter
+        binding.rvSearchResults.adapter = searchAdapter
         // если нажата кнопка done на клавиатуре - ищем
-        searchInput.setOnEditorActionListener { _, actionId, _ ->
+        binding.inputSearchForm.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 search()
             }
             false
         }
         // нажатие кнопки Обновить на экране с ошибкой повторяет поиск
-        errorButton.setOnClickListener {
+        binding.errorButton.setOnClickListener {
             search()
         }
 
         // настраиваем адаптер для истории треков
-        rvTracksHistory.adapter = historyAdapter
+        binding.rvTracksHistory.adapter = historyAdapter
         tracksHistory = TracksHistory(getSharedPreferences(PLAYLIST_MAKER_PREFERENCE, MODE_PRIVATE))
         // если поле поиска пустое - показываем историю треков
-        if (searchInput.text.isEmpty()) {
+        if (binding.inputSearchForm.text.isEmpty()) {
             historyAdapter.tracks = tracksHistory.get()
             if (historyAdapter.tracks.isNotEmpty()) {
                 showContent(Content.TRACKS_HISTORY)
@@ -190,43 +172,13 @@ class SearchActivity : AppCompatActivity() {
                                 showContent(Content.SEARCH_RESULT)
                             }
                         } else if (errorMessage != null) {
-                            errorText.text = errorMessage
+                            binding.errorText.text = errorMessage
                             showContent(Content.ERROR)
                         }
                     }
                 }
 
             })
-
-//            ITunesApiService.search(searchInputQuery).enqueue(object : Callback<TracksSearchResponse> {
-//                override fun onResponse(
-//                    call: Call<TracksSearchResponse>,
-//                    response: Response<TracksSearchResponse>
-//                ) {
-//                    when (response.code()) {
-//                        // сервер ответил успехом
-//                        200 -> {
-//                            // результаты поиска не пустые
-//                            if (response.body()?.results?.isNotEmpty() == true) {
-//                                searchAdapter.tracks = response.body()?.results!!
-//                                showContent(Content.SEARCH_RESULT)
-//                            } else {
-//                                // ничего не найдено, показываем соответствующий плейсхолдер
-//                                showContent(Content.NOT_FOUND)
-//                            }
-//                        }
-//                        // сервер вернул ошибку - показываем соответствующий плейсхолдер
-//                        else -> {
-//                            showContent(Content.ERROR)
-//                        }
-//                    }
-//                }
-//
-//                // ошибка сети, показываем соответствующий плейсхолдер
-//                override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
-//                    showContent(Content.ERROR)
-//                }
-//            })
         }
     }
 
@@ -234,43 +186,43 @@ class SearchActivity : AppCompatActivity() {
     private fun showContent(content: Content) {
         when (content) {
             Content.NOT_FOUND -> {
-                rvSearchResults.visibility = View.GONE
-                placeholderError.visibility = View.GONE
-                youSearched.visibility = View.GONE
-                progressBar.visibility = View.GONE
-                placeholderNotFound.visibility = View.VISIBLE
+                binding.rvSearchResults.visibility = View.GONE
+                binding.placeholderError.visibility = View.GONE
+                binding.youSearched.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
+                binding.placeholderNotFound.visibility = View.VISIBLE
             }
 
             Content.ERROR -> {
-                rvSearchResults.visibility = View.GONE
-                placeholderNotFound.visibility = View.GONE
-                youSearched.visibility = View.GONE
-                progressBar.visibility = View.GONE
-                placeholderError.visibility = View.VISIBLE
+                binding.rvSearchResults.visibility = View.GONE
+                binding.placeholderNotFound.visibility = View.GONE
+                binding.youSearched.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
+                binding.placeholderError.visibility = View.VISIBLE
             }
 
             Content.TRACKS_HISTORY -> {
-                rvSearchResults.visibility = View.GONE
-                placeholderNotFound.visibility = View.GONE
-                placeholderError.visibility = View.GONE
-                progressBar.visibility = View.GONE
-                youSearched.visibility = View.VISIBLE
+                binding.rvSearchResults.visibility = View.GONE
+                binding.placeholderNotFound.visibility = View.GONE
+                binding.placeholderError.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
+                binding.youSearched.visibility = View.VISIBLE
             }
 
             Content.SEARCH_RESULT -> {
-                youSearched.visibility = View.GONE
-                placeholderNotFound.visibility = View.GONE
-                placeholderError.visibility = View.GONE
-                progressBar.visibility = View.GONE
-                rvSearchResults.visibility = View.VISIBLE
+                binding.youSearched.visibility = View.GONE
+                binding.placeholderNotFound.visibility = View.GONE
+                binding.placeholderError.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
+                binding.rvSearchResults.visibility = View.VISIBLE
             }
 
             Content.PROGRESS_BAR -> {
-                youSearched.visibility = View.GONE
-                placeholderNotFound.visibility = View.GONE
-                placeholderError.visibility = View.GONE
-                rvSearchResults.visibility = View.GONE
-                progressBar.visibility = View.VISIBLE
+                binding.youSearched.visibility = View.GONE
+                binding.placeholderNotFound.visibility = View.GONE
+                binding.placeholderError.visibility = View.GONE
+                binding.rvSearchResults.visibility = View.GONE
+                binding.progressBar.visibility = View.VISIBLE
             }
         }
     }
@@ -284,7 +236,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clearSearch() {
         // обнуляем поле ввода
-        searchInput.setText("")
+        binding.inputSearchForm.setText("")
         // показываем контент
         historyAdapter.tracks = tracksHistory.get()
         if (historyAdapter.tracks.isNotEmpty()) {
@@ -334,7 +286,7 @@ class SearchActivity : AppCompatActivity() {
         searchInputQuery = savedInstanceState.getString(SEARCH_QUERY, "")
         if (searchInputQuery.isNotEmpty()) {
             // восстанавливаем состояние после восстановления
-            searchInput.setText(searchInputQuery)
+            binding.inputSearchForm.setText(searchInputQuery)
             search()
         }
     }

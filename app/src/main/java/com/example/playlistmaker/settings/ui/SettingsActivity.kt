@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.settings.presentation.SettingsViewModel
 
 class SettingsActivity : AppCompatActivity() {
 
