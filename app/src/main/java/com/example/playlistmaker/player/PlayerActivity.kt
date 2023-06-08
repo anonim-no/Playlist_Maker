@@ -5,15 +5,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.TRACK
+import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.search.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.*
@@ -30,56 +27,31 @@ class PlayerActivity : AppCompatActivity() {
 
     private val updatePlayingTimeRunnable = Runnable { updatePlayingTime() }
 
-    private lateinit var toolbar: Toolbar
-    private lateinit var trackName: TextView
-    private lateinit var trackTime: TextView
-    private lateinit var artistName: TextView
-    private lateinit var albumArt: ImageView
-    private lateinit var collectionName: TextView
-    private lateinit var collectionNameTitle: TextView
-    private lateinit var releaseDate: TextView
-    private lateinit var primaryGenreName: TextView
-    private lateinit var country: TextView
-    private lateinit var playButton: ImageView
-    private lateinit var playingTime: TextView
-    private lateinit var progressBar: ProgressBar
+    private lateinit var binding: ActivityPlayerBinding
 
     private var mediaPlayer = MediaPlayer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_player)
+        binding = ActivityPlayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        toolbar = findViewById(R.id.toolbar)
-        trackName = findViewById(R.id.trackName)
-        artistName = findViewById(R.id.artistName)
-        trackTime = findViewById(R.id.trackTime)
-        albumArt = findViewById(R.id.albumArt)
-        collectionName = findViewById(R.id.collectionName)
-        collectionNameTitle = findViewById(R.id.collectionNameTitle)
-        releaseDate = findViewById(R.id.releaseDate)
-        primaryGenreName = findViewById(R.id.primaryGenreName)
-        country = findViewById(R.id.country)
-        playButton = findViewById(R.id.playButton)
-        playingTime = findViewById(R.id.playingTime)
-        progressBar = findViewById(R.id.progressBar)
-
-        toolbar.setNavigationOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
             finish()
         }
 
-        playButton.isEnabled = false
+        binding.playButton.isEnabled = false
 
         val track = intent.getSerializableExtra(TRACK) as Track
 
         preparePlayer(track.previewUrl)
 
-        playButton.setOnClickListener {
+        binding.playButton.setOnClickListener {
             playbackControl()
         }
 
         Glide
-            .with(albumArt)
+            .with(binding.albumArt)
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.ic_placeholder)
             .centerCrop()
@@ -90,29 +62,29 @@ class PlayerActivity : AppCompatActivity() {
                     )
                 )
             )
-            .into(albumArt)
+            .into(binding.albumArt)
 
-        trackName.text = track.trackName
-        trackName.isSelected = true
-        artistName.text = track.artistName
-        trackName.isSelected = true
-        primaryGenreName.text = track.primaryGenreName
-        country.text = track.country
+        binding.trackName.text = track.trackName
+        binding.trackName.isSelected = true
+        binding.artistName.text = track.artistName
+        binding.trackName.isSelected = true
+        binding.primaryGenreName.text = track.primaryGenreName
+        binding.country.text = track.country
 
-        trackTime.text =
+        binding.trackTime.text =
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
         val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(track.releaseDate)
         if (date != null) {
             val formattedDatesString = SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
-            releaseDate.text = formattedDatesString
+            binding.releaseDate.text = formattedDatesString
         }
 
         if (track.collectionName.isNotEmpty()) {
-            collectionName.text = track.collectionName
+            binding.collectionName.text = track.collectionName
         } else {
-            collectionName.visibility = View.GONE
-            collectionNameTitle.visibility = View.GONE
+            binding.collectionName.visibility = View.GONE
+            binding.collectionNameTitle.visibility = View.GONE
         }
     }
 
@@ -120,29 +92,29 @@ class PlayerActivity : AppCompatActivity() {
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            playButton.isEnabled = true
-            playButton.setImageResource(R.drawable.ic_play)
-            progressBar.visibility = View.GONE
+            binding.playButton.isEnabled = true
+            binding.playButton.setImageResource(R.drawable.ic_play)
+            binding.progressBar.visibility = View.GONE
             playerState = PlayerState.STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
-            playButton.setImageResource(R.drawable.ic_play)
+            binding.playButton.setImageResource(R.drawable.ic_play)
             playerState = PlayerState.STATE_PREPARED
-            playingTime.setText(R.string._00_00)
+            binding.playingTime.setText(R.string._00_00)
             handler.removeCallbacks(updatePlayingTimeRunnable)
         }
     }
 
     private fun startPlayer() {
         mediaPlayer.start()
-        playButton.setImageResource(R.drawable.ic_pause)
+        binding.playButton.setImageResource(R.drawable.ic_pause)
         playerState = PlayerState.STATE_PLAYING
         updatePlayingTime()
     }
 
     private fun pausePlayer() {
         mediaPlayer.pause()
-        playButton.setImageResource(R.drawable.ic_play)
+        binding.playButton.setImageResource(R.drawable.ic_play)
         playerState = PlayerState.STATE_PAUSED
         handler.removeCallbacks(updatePlayingTimeRunnable)
     }
@@ -162,7 +134,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun updatePlayingTime() {
-        playingTime.text =
+        binding.playingTime.text =
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
         handler.postDelayed(updatePlayingTimeRunnable, UPDATE_PLAYING_TIME_DELAY)
     }
