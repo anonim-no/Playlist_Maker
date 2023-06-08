@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.TRACK
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.player.PlayerActivity
+import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.ui.models.SearchState
 
 class SearchActivity : AppCompatActivity() {

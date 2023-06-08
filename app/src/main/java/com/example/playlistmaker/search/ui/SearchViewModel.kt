@@ -16,8 +16,9 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     private val searchInteractor = Creator.provideSearchInteractor(getApplication())
 
     private val stateLiveData = MutableLiveData<SearchState>()
-
     private val showToast = SingleLiveEvent<String>()
+    fun observeState(): LiveData<SearchState> = stateLiveData
+    fun observeShowToast(): LiveData<String> = showToast
 
     // при старте активити показываем историю треков, если есть
     init {
@@ -27,8 +28,6 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun observeState(): LiveData<SearchState> = stateLiveData
-    fun observeShowToast(): LiveData<String> = showToast
 
     fun search(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
