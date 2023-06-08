@@ -1,17 +1,9 @@
 package com.example.playlistmaker.search.ui
 
 import android.app.Application
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.R
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.search.domain.api.SearchInteractor
@@ -19,74 +11,33 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.models.SearchState
 
 class SearchViewModel(application: Application) : AndroidViewModel(application) {
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private val SEARCH_REQUEST_TOKEN = Any()
 
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SearchViewModel(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
-            }
-        }
-    }
 
     private val searchInteractor = Creator.provideSearchInteractor(getApplication())
-    //private val tracksInteractor = Creator.provideSearchInteractor(this)
-
-
-    private val handler = Handler(Looper.getMainLooper())
 
     private val stateLiveData = MutableLiveData<SearchState>()
 
-    private val mediatorStateLiveData = MediatorLiveData<SearchState>().also { liveData ->
-        liveData.addSource(stateLiveData) { searchState ->
-            liveData.value = when (searchState) {
-                is SearchState.SearchResult -> SearchState.SearchResult(searchState.tracks)
-                is SearchState.NotFound -> searchState
-                is SearchState.History -> searchState
-                is SearchState.Error -> searchState
-                is SearchState.Loading -> searchState
-            }
+    private val showToast = SingleLiveEvent<String>()
+
+    // при старте активити показываем историю треков, если есть
+    init {
+        val historyTracks = getTracksHistory()
+        if (historyTracks.isNotEmpty()) {
+            renderState(SearchState.History(historyTracks))
         }
     }
 
-    fun observeState(): LiveData<SearchState> = mediatorStateLiveData
-
-    private val showToast = SingleLiveEvent<String>()
+    fun observeState(): LiveData<SearchState> = stateLiveData
     fun observeShowToast(): LiveData<String> = showToast
 
-    private var latestSearchText: String? = null
-
-    override fun onCleared() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-    }
-
-    fun searchDebounce(changedText: String) {
-        if (latestSearchText == changedText) {
-            return
-        }
-
-        this.latestSearchText = changedText
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-
-        val searchRunnable = Runnable { search(changedText) }
-
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-        handler.postAtTime(
-            searchRunnable,
-            SEARCH_REQUEST_TOKEN,
-            postTime,
-        )
-    }
-
-    private fun search(newSearchText: String) {
+    fun search(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
 
             renderState(SearchState.Loading)
 
             searchInteractor.searchTracks(newSearchText, object : SearchInteractor.SearchConsumer {
                 override fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?) {
-                    Log.i("SEARCH", foundTracks.toString())
+
                     val tracks = arrayListOf<Track>()
                     if (foundTracks != null) {
                         tracks.addAll(foundTracks)
@@ -94,17 +45,11 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
                     when {
                         errorMessage != null -> {
-
                             renderState(
                                 SearchState.Error(
                                     message = getApplication<Application>().getString(R.string.check_internet_connection),
                                 )
                             )
-                            // в случае ошибки не срабатывает кнопка "Обновить"
-                            // потому что текст отправляет тот же самый и не срабатывает searchDebounce
-                            // возможно будет лучше обнулять эту переменную через пару секунд
-                            // пока так
-                            latestSearchText = ""
                         }
 
                         tracks.isEmpty() -> {
@@ -124,6 +69,29 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
                 }
             })
         }
+    }
+
+    fun clearSearch() {
+        val historyTracks = getTracksHistory()
+        if (historyTracks.isNotEmpty()) {
+            renderState(SearchState.History(historyTracks))
+        } else {
+            renderState(SearchState.SearchResult(arrayListOf()))
+        }
+    }
+
+    fun addTracksHistory(track: Track) {
+        searchInteractor.addTracksHistory(track)
+    }
+
+    fun clearTracksHistory() {
+        searchInteractor.clearTracksHistory()
+        renderState(SearchState.SearchResult(arrayListOf()))
+        showToast.postValue(getApplication<Application>().getString(R.string.history_was_clear))
+    }
+
+    private fun getTracksHistory(): ArrayList<Track> {
+        return searchInteractor.getTracksHistory()
     }
 
     private fun renderState(state: SearchState) {

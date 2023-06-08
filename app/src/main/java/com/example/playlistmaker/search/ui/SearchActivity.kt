@@ -12,13 +12,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.PLAYLIST_MAKER_PREFERENCE
 import com.example.playlistmaker.TRACK
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.PlayerActivity
 import com.example.playlistmaker.search.ui.models.SearchState
-import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
 
@@ -38,24 +36,16 @@ class SearchActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
 
-    //private val tracksInteractor = Creator.provideSearchInteractor(this)
-
     private val searchRunnable = Runnable { search() }
-
-    //private var searchInputQuery = ""
 
     enum class Content {
         SEARCH_RESULT, NOT_FOUND, ERROR, TRACKS_HISTORY, LOADING
     }
 
-    private lateinit var tracksHistory: TracksHistory
-
     private val searchInputTextWatcher = object : TextWatcher {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             // при изменении текста скрываем или показываем кнопку очистки формы
             binding.clearSearchFormButton.visibility = clearButtonVisibility(s)
-            // сохраняем тест в переменную
-            //searchInputQuery = s.toString()
             // если начали заполнять поле ввода - скрываем историю треков
             if (binding.inputSearchForm.hasFocus() && s.toString().isNotEmpty()) {
                 showState(Content.SEARCH_RESULT)
@@ -73,60 +63,35 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this, SearchViewModel.getViewModelFactory())[SearchViewModel::class.java]
+        viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
+
+        // подписываемся на изменения состояния
+        viewModel.observeState().observe(this) {
+            render(it)
+        }
+
+        // подписываемся на тосты
+        viewModel.observeShowToast().observe(this) {
+            showToast(it)
+        }
+
+        // адаптер для поиска
+        binding.rvSearchResults.adapter = searchAdapter
+        // адаптер для истории треков
+        binding.rvTracksHistory.adapter = historyAdapter
 
         // по клику назад закрываем SearchActivity и возвращаемся на предыдущее
         binding.toolbar.setNavigationOnClickListener {
             finish()
         }
 
-        //  по клику на корестике очищаем форму и результаты поиска
+        //  по клику на крестике очищаем форму и результаты поиска
         binding.clearSearchFormButton.setOnClickListener {
             clearSearch()
         }
 
-        // при запуске скрываем или показываем кнопку очистки формы
-        binding.clearSearchFormButton.visibility = clearButtonVisibility(binding.inputSearchForm.text)
-
-        // ставим фокус на форму поиска
-        binding.inputSearchForm.requestFocus()
-
-        // настраиваем адаптер для поиска
-        binding.rvSearchResults.adapter = searchAdapter
-
         // к форме поиска добавляем обработчик ввода текста
         binding.inputSearchForm.addTextChangedListener(searchInputTextWatcher)
-
-        viewModel.observeState().observe(this) {
-            render(it)
-        }
-
-        viewModel.observeShowToast().observe(this) {
-            showToast(it)
-        }
-
-
-        // настраиваем адаптер для истории треков
-        binding.rvTracksHistory.adapter = historyAdapter
-        tracksHistory = TracksHistory(getSharedPreferences(PLAYLIST_MAKER_PREFERENCE, MODE_PRIVATE))
-        // если поле поиска пустое - показываем историю треков
-        if (binding.inputSearchForm.text.isEmpty()) {
-            historyAdapter.tracks = tracksHistory.get()
-            if (historyAdapter.tracks.isNotEmpty()) {
-                showState(Content.TRACKS_HISTORY)
-            }
-        }
-
-        // по клику на кнопке очистки истории поиска - очищаем историю поиска
-        binding.clearHistoryButton.setOnClickListener {
-            clearTracksHistory()
-        }
-
-        binding.inputSearchForm.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus && binding.inputSearchForm.text.isEmpty()) {
-                showState(Content.SEARCH_RESULT)
-            }
-        }
 
         // если нажата кнопка done на клавиатуре - ищем
         binding.inputSearchForm.setOnEditorActionListener { _, actionId, _ ->
@@ -135,12 +100,72 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
+
         // нажатие кнопки Обновить на экране с ошибкой повторяет поиск
         binding.errorButton.setOnClickListener {
             search()
         }
 
+        // по клику на кнопке очистки истории поиска - очищаем историю поиска
+        binding.clearHistoryButton.setOnClickListener {
+            viewModel.clearTracksHistory()
+        }
 
+        // при запуске скрываем или показываем кнопку очистки формы
+        binding.clearSearchFormButton.visibility = clearButtonVisibility(binding.inputSearchForm.text)
+
+        // ставим фокус на форму поиска
+        binding.inputSearchForm.requestFocus()
+    }
+
+    private fun search() {
+        if (binding.inputSearchForm.toString().isNotEmpty()) {
+            handler.removeCallbacks(searchRunnable)
+            viewModel.search(binding.inputSearchForm.text.toString())
+        }
+    }
+
+    private fun clearSearch() {
+        searchAdapter.tracks = arrayListOf()
+        binding.inputSearchForm.setText("")
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+        viewModel.clearSearch()
+    }
+
+    private fun clickOnTrack(track: Track) {
+        if (clickDebounce()) {
+            viewModel.addTracksHistory(track)
+            val intent = Intent(this, PlayerActivity::class.java).apply {
+                putExtra(TRACK, track)
+            }
+            startActivity(intent)
+        }
+    }
+
+    private fun showToast(additionalMessage: String) {
+        Toast.makeText(this, additionalMessage, Toast.LENGTH_LONG).show()
+    }
+
+    private fun clearButtonVisibility(s: CharSequence?): Int {
+        return if (s.isNullOrEmpty()) { View.GONE } else { View.VISIBLE }
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
     private fun render(state: SearchState) {
@@ -153,73 +178,16 @@ class SearchActivity : AppCompatActivity() {
                 historyAdapter.tracks = state.tracks
                 showState(Content.TRACKS_HISTORY)
             }
-            is SearchState.NotFound -> showState(Content.NOT_FOUND)
             is SearchState.Error -> {
                 binding.errorText.text = state.message
                 showState(Content.ERROR)
             }
+            is SearchState.NotFound -> showState(Content.NOT_FOUND)
             is SearchState.Loading -> showState(Content.LOADING)
 
         }
     }
 
-    private fun clickOnTrack(track: Track) {
-        if (clickDebounce()) {
-            tracksHistory.add(track)
-            val intent = Intent(this, PlayerActivity::class.java).apply {
-                putExtra(TRACK, Gson().toJson(track))
-            }
-            startActivity(intent)
-        }
-    }
-
-    private fun showToast(additionalMessage: String) {
-        Toast.makeText(this, additionalMessage, Toast.LENGTH_LONG).show()
-    }
-
-    // функция берет строку поиска, делает запрос в апи и показывает результат
-    private fun search() {
-        if (binding.inputSearchForm.toString().isNotEmpty()) {
-
-            // если пользователь нажал на кнопку done на клавиатуре до того как отработал автоматический поиск - отменяем его
-            handler.removeCallbacks(searchRunnable)
-
-            viewModel.searchDebounce(binding.inputSearchForm.text.toString())
-
-        }
-    }
-
-//    private fun search() {
-//        if (searchInputQuery.isNotEmpty()) {
-//
-//            // если пользователь нажал на кнопку done на клавиатуре до того как отработал автоматический поиск - отменяем его
-//            handler.removeCallbacks(searchRunnable)
-//            showContent(Content.LOADING)
-//
-//            tracksInteractor.searchTracks(searchInputQuery, object : SearchInteractor.SearchConsumer {
-//                override fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?) {
-//                    handler.post {
-//                        if (foundTracks!=null) {
-//                            if (foundTracks.isEmpty()) {
-//                                // ничего не найдено, показываем соответствующий плейсхолдер
-//                                showContent(Content.NOT_FOUND)
-//                            } else {
-//                                // показываем результаты поиска
-//                                searchAdapter.tracks = foundTracks
-//                                showContent(Content.SEARCH_RESULT)
-//                            }
-//                        } else if (errorMessage != null) {
-//                            binding.errorText.text = errorMessage
-//                            showContent(Content.ERROR)
-//                        }
-//                    }
-//                }
-//
-//            })
-//        }
-//    }
-
-    // показывает нужный контент
     private fun showState(content: Content) {
         when (content) {
             Content.NOT_FOUND -> {
@@ -264,72 +232,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    // очищаем историю
-    private fun clearTracksHistory() {
-        tracksHistory.clear()
-        showState(Content.SEARCH_RESULT)
-        Toast.makeText(applicationContext, "История очищена", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun clearSearch() {
-        // обнуляем поле ввода
-        binding.inputSearchForm.setText("")
-        // показываем контент
-        historyAdapter.tracks = tracksHistory.get()
-        if (historyAdapter.tracks.isNotEmpty()) {
-            showState(Content.TRACKS_HISTORY)
-        } else {
-            showState(Content.SEARCH_RESULT)
-        }
-        // Прячем клавиатуру
-        val view = this.currentFocus
-        if (view != null) {
-            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
-        }
-    }
-
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
-    }
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
-
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-    }
-
-    // перед уничтожением активити сохраняем всё что введено в поле поискового запроса
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        outState.putString(SEARCH_QUERY, searchInputQuery)
-//    }
-
-    // восстанавливаем текст и помещаем в EditText
-//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-//        super.onRestoreInstanceState(savedInstanceState)
-//        searchInputQuery = savedInstanceState.getString(SEARCH_QUERY, "")
-//        if (searchInputQuery.isNotEmpty()) {
-//            // восстанавливаем состояние после восстановления
-//            binding.inputSearchForm.setText(searchInputQuery)
-//            search()
-//        }
-//    }
-
     companion object {
-        //private const val SEARCH_QUERY = "SEARCH_QUERY"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }

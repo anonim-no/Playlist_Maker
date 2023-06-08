@@ -8,7 +8,10 @@ import com.example.playlistmaker.util.Resource
 
 // Класс SearchRepositoryImpl - реализация интерфейса SearchRepository
 // Задача этой реализации — сделать запрос и получить ответ от сервера, используя сетевой клиент
-class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRepository {
+class SearchRepositoryImpl(
+    private val networkClient: NetworkClient,
+    private val localStorage: LocalStorage
+    ) : SearchRepository {
 
     override fun searchTracks(expression: String): Resource<ArrayList<Track>> {
         val response = networkClient.doRequest(SearchRequest(expression))
@@ -43,5 +46,17 @@ class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRep
             }
         }
 
+    }
+
+    override fun addTracksHistory(track: Track) {
+        localStorage.addTracksHistory(track)
+    }
+
+    override fun clearTracksHistory() {
+        localStorage.clearTracksHistory()
+    }
+
+    override fun getTracksHistory(): ArrayList<Track> {
+        return localStorage.getTracksHistory()
     }
 }

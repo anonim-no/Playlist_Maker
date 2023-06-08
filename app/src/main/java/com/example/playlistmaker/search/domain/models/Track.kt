@@ -1,5 +1,7 @@
 package com.example.playlistmaker.search.domain.models
 
+import java.io.Serializable
+
 data class Track(
     val trackId: Int,
     val trackName: String, // Название композиции
@@ -11,4 +13,17 @@ data class Track(
     val primaryGenreName: String, // Жанр трека
     val country: String, // Страна исполнителя
     val previewUrl: String,
-)
+) : Serializable {
+
+    override fun equals(other: Any?): Boolean {
+        return if (other !is Track) {
+            false
+        } else {
+            other.trackId == trackId
+        }
+    }
+
+    override fun hashCode(): Int {
+        return trackId
+    }
+}

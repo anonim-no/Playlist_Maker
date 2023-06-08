@@ -28,6 +28,7 @@
     <string name="check_internet_connection">Загрузка не удалась. Проверьте подключение к интернету</string>
     <string name="you_searched">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
+    <string name="history_was_clear">История очищена</string>
     <string name="duration">Длительность</string>
     <string name="collection">Альбом</string>
     <string name="year">Год</string>

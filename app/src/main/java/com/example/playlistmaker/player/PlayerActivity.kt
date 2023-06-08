@@ -15,7 +15,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.TRACK
 import com.example.playlistmaker.search.domain.models.Track
-import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -71,7 +70,7 @@ class PlayerActivity : AppCompatActivity() {
 
         playButton.isEnabled = false
 
-        val track = Gson().fromJson(intent.getStringExtra(TRACK), Track::class.java)
+        val track = intent.getSerializableExtra(TRACK) as Track
 
         preparePlayer(track.previewUrl)
 

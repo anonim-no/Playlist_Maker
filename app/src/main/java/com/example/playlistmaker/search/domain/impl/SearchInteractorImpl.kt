@@ -2,6 +2,7 @@ package com.example.playlistmaker.search.domain.impl
 
 import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.SearchRepository
+import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.util.Resource
 import java.util.concurrent.Executors
 
@@ -20,4 +21,18 @@ class SearchInteractorImpl(private val repository: SearchRepository) : SearchInt
             }
         }
     }
+
+    override fun addTracksHistory(track: Track) {
+        repository.addTracksHistory(track)
+    }
+
+    override fun clearTracksHistory() {
+        repository.clearTracksHistory()
+    }
+
+    override fun getTracksHistory(): ArrayList<Track> {
+        return repository.getTracksHistory()
+    }
+
+
 }
