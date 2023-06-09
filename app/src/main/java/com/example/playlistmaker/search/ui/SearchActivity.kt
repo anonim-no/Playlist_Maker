@@ -2,15 +2,12 @@ package com.example.playlistmaker.search.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.TRACK
 import com.example.playlistmaker.databinding.ActivitySearchBinding
@@ -32,30 +29,8 @@ class SearchActivity : AppCompatActivity() {
         clickOnTrack(it)
     }
 
-    private var isClickAllowed = true
-
-    private val handler = Handler(Looper.getMainLooper())
-
-    private val searchRunnable = Runnable { search() }
-
     enum class Content {
         SEARCH_RESULT, NOT_FOUND, ERROR, TRACKS_HISTORY, LOADING
-    }
-
-    private val searchInputTextWatcher = object : TextWatcher {
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            // при изменении текста скрываем или показываем кнопку очистки формы
-            binding.clearSearchFormButton.visibility = clearButtonVisibility(s)
-            // если начали заполнять поле ввода - скрываем историю треков
-            if (binding.inputSearchForm.hasFocus() && s.toString().isNotEmpty()) {
-                showState(Content.SEARCH_RESULT)
-            }
-            // выполняем поиск автоматически через две секунды, после последних изменений
-            searchDebounce()
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-        override fun afterTextChanged(s: Editable?) {}
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,19 +66,28 @@ class SearchActivity : AppCompatActivity() {
         }
 
         // к форме поиска добавляем обработчик ввода текста
-        binding.inputSearchForm.addTextChangedListener(searchInputTextWatcher)
+        binding.inputSearchForm.doOnTextChanged { s: CharSequence?, _, _, _ ->
+            // при изменении текста скрываем или показываем кнопку очистки формы
+            binding.clearSearchFormButton.visibility = clearButtonVisibility(s)
+            // если начали заполнять поле ввода - скрываем историю треков
+            if (binding.inputSearchForm.hasFocus() && s.toString().isNotEmpty()) {
+                showState(Content.SEARCH_RESULT)
+            }
+            // выполняем поиск автоматически через две секунды, после последних изменений
+            viewModel.searchDebounce(binding.inputSearchForm.text.toString())
+        }
 
         // если нажата кнопка done на клавиатуре - ищем
         binding.inputSearchForm.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                search()
+                viewModel.search(binding.inputSearchForm.text.toString())
             }
             false
         }
 
         // нажатие кнопки Обновить на экране с ошибкой повторяет поиск
         binding.errorButton.setOnClickListener {
-            search()
+            viewModel.search(binding.inputSearchForm.text.toString())
         }
 
         // по клику на кнопке очистки истории поиска - очищаем историю поиска
@@ -118,13 +102,6 @@ class SearchActivity : AppCompatActivity() {
         binding.inputSearchForm.requestFocus()
     }
 
-    private fun search() {
-        if (binding.inputSearchForm.toString().isNotEmpty()) {
-            handler.removeCallbacks(searchRunnable)
-            viewModel.search(binding.inputSearchForm.text.toString())
-        }
-    }
-
     private fun clearSearch() {
         searchAdapter.tracks = arrayListOf()
         binding.inputSearchForm.setText("")
@@ -137,7 +114,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clickOnTrack(track: Track) {
-        if (clickDebounce()) {
+        if (viewModel.clickDebounce()) {
             viewModel.addTracksHistory(track)
             val intent = Intent(this, PlayerActivity::class.java).apply {
                 putExtra(TRACK, track)
@@ -152,20 +129,6 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) { View.GONE } else { View.VISIBLE }
-    }
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
-
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
     private fun render(state: SearchState) {
@@ -230,11 +193,6 @@ class SearchActivity : AppCompatActivity() {
                 binding.progressBar.visibility = View.VISIBLE
             }
         }
-    }
-
-    companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
 }

@@ -1,6 +1,9 @@
 package com.example.playlistmaker.search.ui
 
 import android.app.Application
+import android.os.Handler
+import android.os.Looper
+import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,6 +23,9 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     fun observeState(): LiveData<SearchState> = stateLiveData
     fun observeShowToast(): LiveData<String> = showToast
 
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
+
     // при старте активити показываем историю треков, если есть
     init {
         val historyTracks = getTracksHistory()
@@ -28,13 +34,26 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun searchDebounce(SearchText: String) {
+        if (SearchText.isNotEmpty()) {
+            val searchRunnable = Runnable { search(SearchText) }
+            val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
+            handler.postAtTime(
+                searchRunnable,
+                SEARCH_REQUEST_TOKEN,
+                postTime,
+            )
+        }
+    }
 
-    fun search(newSearchText: String) {
-        if (newSearchText.isNotEmpty()) {
+    fun search(SearchText: String) {
+        if (SearchText.isNotEmpty()) {
+
+            handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
 
             renderState(SearchState.Loading)
 
-            searchInteractor.searchTracks(newSearchText, object : SearchInteractor.SearchConsumer {
+            searchInteractor.searchTracks(SearchText, object : SearchInteractor.SearchConsumer {
                 override fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?) {
 
                     val tracks = arrayListOf<Track>()
@@ -93,8 +112,23 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         return searchInteractor.getTracksHistory()
     }
 
+    fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
     private fun renderState(state: SearchState) {
         stateLiveData.postValue(state)
+    }
+
+    companion object {
+        private val SEARCH_REQUEST_TOKEN = Any()
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
 }

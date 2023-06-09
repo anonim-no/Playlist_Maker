@@ -1,17 +1,16 @@
 package com.example.playlistmaker.player.ui
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.player.ui.models.PlayerState
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerViewModel(application: Application) : AndroidViewModel(application) {
+class PlayerViewModel : ViewModel() {
 
     private val playerInteractor = Creator.providePlayerInteractor()
 
