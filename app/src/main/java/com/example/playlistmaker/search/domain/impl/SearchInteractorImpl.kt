@@ -1,0 +1,38 @@
+package com.example.playlistmaker.search.domain.impl
+
+import com.example.playlistmaker.search.domain.api.SearchInteractor
+import com.example.playlistmaker.search.domain.api.SearchRepository
+import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.util.Resource
+import java.util.concurrent.Executors
+
+// В конструктор передаётся экземпляр класса, реализующего SearchRepositroy
+class SearchInteractorImpl(private val repository: SearchRepository) : SearchInteractor {
+
+    private val executor = Executors.newCachedThreadPool()
+
+    override fun searchTracks(expression: String, consumer: SearchInteractor.SearchConsumer) {
+        executor.execute {
+            when(val resource = repository.searchTracks(expression)) {
+                is Resource.Success -> {
+                    consumer.consume(resource.data, null)
+                }
+                is Resource.Error -> { consumer.consume(null, resource.message) }
+            }
+        }
+    }
+
+    override fun addTracksHistory(track: Track) {
+        repository.addTracksHistory(track)
+    }
+
+    override fun clearTracksHistory() {
+        repository.clearTracksHistory()
+    }
+
+    override fun getTracksHistory(): ArrayList<Track> {
+        return repository.getTracksHistory()
+    }
+
+
+}
