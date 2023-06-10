@@ -96,7 +96,8 @@ class SearchActivity : AppCompatActivity() {
         }
 
         // при запуске скрываем или показываем кнопку очистки формы
-        binding.clearSearchFormButton.visibility = clearButtonVisibility(binding.inputSearchForm.text)
+        binding.clearSearchFormButton.visibility =
+            clearButtonVisibility(binding.inputSearchForm.text)
 
         // ставим фокус на форму поиска
         binding.inputSearchForm.requestFocus()
@@ -128,7 +129,11 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) { View.GONE } else { View.VISIBLE }
+        return if (s.isNullOrEmpty()) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
     }
 
     private fun render(state: SearchState) {
@@ -137,14 +142,17 @@ class SearchActivity : AppCompatActivity() {
                 searchAdapter.tracks = state.tracks
                 showState(Content.SEARCH_RESULT)
             }
+
             is SearchState.History -> {
                 historyAdapter.tracks = state.tracks
                 showState(Content.TRACKS_HISTORY)
             }
+
             is SearchState.Error -> {
                 binding.errorText.text = state.message
                 showState(Content.ERROR)
             }
+
             is SearchState.NotFound -> showState(Content.NOT_FOUND)
             is SearchState.Loading -> showState(Content.LOADING)
 
