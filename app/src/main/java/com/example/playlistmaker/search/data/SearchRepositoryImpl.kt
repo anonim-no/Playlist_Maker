@@ -11,7 +11,7 @@ import com.example.playlistmaker.util.Resource
 class SearchRepositoryImpl(
     private val networkClient: NetworkClient,
     private val localStorage: LocalStorage
-    ) : SearchRepository {
+) : SearchRepository {
 
     override fun searchTracks(expression: String): Resource<ArrayList<Track>> {
         val response = networkClient.doRequest(SearchRequest(expression))
@@ -20,6 +20,7 @@ class SearchRepositoryImpl(
             -1 -> {
                 return Resource.Error("Проверьте подключение к интернету")
             }
+
             200 -> {
                 // ArrayList<TrackDto> -> ArrayList<Track>
                 val arrayListTracks = arrayListOf<Track>()
@@ -41,6 +42,7 @@ class SearchRepositoryImpl(
                 }
                 return Resource.Success(arrayListTracks)
             }
+
             else -> {
                 return Resource.Error("Ошибка сервера")
             }

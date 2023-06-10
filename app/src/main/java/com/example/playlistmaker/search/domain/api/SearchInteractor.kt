@@ -7,6 +7,7 @@ import com.example.playlistmaker.search.domain.models.Track
 interface SearchInteractor {
 
     fun searchTracks(expression: String, consumer: SearchConsumer)
+
     // callback для передачи результатов поискового запроса
     interface SearchConsumer {
         fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?)

@@ -7,7 +7,7 @@ import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.domain.api.PlayerRepository
 import com.example.playlistmaker.player.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.search.data.SearchRepositoryImpl
-import com.example.playlistmaker.search.data.local.sharedPreferencesClient
+import com.example.playlistmaker.search.data.local.SharedPreferencesClient
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.SearchRepository
@@ -23,10 +23,14 @@ object Creator {
     private fun getSearchRepository(context: Context): SearchRepository {
         return SearchRepositoryImpl(
             RetrofitNetworkClient(context),
-            sharedPreferencesClient(context.getSharedPreferences(PLAYLIST_MAKER_PREFERENCE, Context.MODE_PRIVATE))
+            SharedPreferencesClient(
+                context.getSharedPreferences(
+                    PLAYLIST_MAKER_PREFERENCE,
+                    Context.MODE_PRIVATE
+                )
+            )
         )
     }
-
     fun provideSearchInteractor(context: Context): SearchInteractor {
         return SearchInteractorImpl(getSearchRepository(context))
     }
@@ -34,14 +38,18 @@ object Creator {
     private fun getPlayerRepository(): PlayerRepository {
         return PlayerRepositoryImpl()
     }
-
     fun providePlayerInteractor(): PlayerInteractor {
         return PlayerInteractorImpl(getPlayerRepository())
     }
 
     private fun getThemeSwitchRepository(context: Context): ThemeSwitchRepository {
         return ThemeSwitchRepositoryImpl(
-            ThemeStorage(context.getSharedPreferences(PLAYLIST_MAKER_PREFERENCE, Context.MODE_PRIVATE))
+            ThemeStorage(
+                context.getSharedPreferences(
+                    PLAYLIST_MAKER_PREFERENCE,
+                    Context.MODE_PRIVATE
+                )
+            )
         )
     }
     fun provideThemeSwitchInteractor(context: Context): ThemeSwitchInteractor {
