@@ -1,7 +1,11 @@
 package com.example.playlistmaker.player.data
 
 interface PlayerClient {
-    fun preparePlayer(url: String, onPreparedListener: () -> Unit, onCompletionListener: () -> Unit)
+    fun preparePlayer(
+        url: String,
+        onPreparedListener: () -> Unit,
+        onCompletionListener: () -> Unit
+    )
 
     fun startPlayer()
 

@@ -10,9 +10,9 @@ class PlayerRepositoryImpl(private val playerClient: PlayerClient) : PlayerRepos
         onCompletionListener: () -> Unit
     ) {
         playerClient.preparePlayer(
-            url,
-            onPreparedListener,
-            onCompletionListener
+            url = url,
+            onPreparedListener = onPreparedListener,
+            onCompletionListener = onCompletionListener
         )
     }
 

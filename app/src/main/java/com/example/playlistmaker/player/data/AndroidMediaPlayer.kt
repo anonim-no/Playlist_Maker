@@ -2,7 +2,7 @@ package com.example.playlistmaker.player.data
 
 import android.media.MediaPlayer
 
-class AndroidMediaPlayer(private val mediaPlayer: MediaPlayer): PlayerClient {
+class AndroidMediaPlayer(private val mediaPlayer: MediaPlayer) : PlayerClient {
 
     override fun preparePlayer(
         url: String,

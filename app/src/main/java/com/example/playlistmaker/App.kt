@@ -1,20 +1,19 @@
 package com.example.playlistmaker
 
 import android.app.Application
-import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.player.di.playerDataModule
-import com.example.playlistmaker.player.di.playerDomainModule
-import com.example.playlistmaker.player.di.playerViewModelModule
+import org.koin.android.ext.android.inject
+import com.example.playlistmaker.player.di.*
+import com.example.playlistmaker.search.di.*
+import com.example.playlistmaker.settings.di.*
 import com.example.playlistmaker.settings.domain.api.ThemeSwitchInteractor
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 const val PLAYLIST_MAKER_PREFERENCE = "playlist_maker_preference"
 const val TRACK = "track"
+const val APPLE_MUSIC_API_BASE_URL = "http://itunes.apple.com"
 
 class App : Application() {
-
-    lateinit var themeSwitcherInteractor: ThemeSwitchInteractor
 
     override fun onCreate() {
         super.onCreate()
@@ -25,13 +24,28 @@ class App : Application() {
 
             modules(
                 playerDataModule,
-                playerDomainModule,
-                playerViewModelModule
+                playerRepositoryModule,
+                playerInteractorModule,
+                playerViewModelModule,
+            )
+
+            modules(
+                searchDataModule,
+                searchRepositoryModule,
+                searchInteractorModule,
+                searchViewModelModule,
+            )
+
+            modules(
+                settingsDataModule,
+                settingsRepositoryModule,
+                settingsInteractorModule,
+                settingsViewModelModule,
             )
 
         }
 
-        themeSwitcherInteractor = Creator.provideThemeSwitchInteractor(this)
+        val themeSwitcherInteractor: ThemeSwitchInteractor by inject()
         themeSwitcherInteractor.applyCurrentTheme()
     }
 

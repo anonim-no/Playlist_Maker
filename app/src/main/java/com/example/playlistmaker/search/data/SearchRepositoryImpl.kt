@@ -14,6 +14,7 @@ class SearchRepositoryImpl(
 ) : SearchRepository {
 
     override fun searchTracks(expression: String): Resource<ArrayList<Track>> {
+
         val response = networkClient.doRequest(SearchRequest(expression))
 
         when (response.resultCode) {
