@@ -2,10 +2,6 @@ package com.example.playlistmaker.creator
 
 import android.content.Context
 import com.example.playlistmaker.PLAYLIST_MAKER_PREFERENCE
-import com.example.playlistmaker.player.data.PlayerRepositoryImpl
-import com.example.playlistmaker.player.domain.api.PlayerInteractor
-import com.example.playlistmaker.player.domain.api.PlayerRepository
-import com.example.playlistmaker.player.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.search.data.SearchRepositoryImpl
 import com.example.playlistmaker.search.data.local.SharedPreferencesClient
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -33,13 +29,6 @@ object Creator {
     }
     fun provideSearchInteractor(context: Context): SearchInteractor {
         return SearchInteractorImpl(getSearchRepository(context))
-    }
-
-    private fun getPlayerRepository(): PlayerRepository {
-        return PlayerRepositoryImpl()
-    }
-    fun providePlayerInteractor(): PlayerInteractor {
-        return PlayerInteractorImpl(getPlayerRepository())
     }
 
     private fun getThemeSwitchRepository(context: Context): ThemeSwitchRepository {
