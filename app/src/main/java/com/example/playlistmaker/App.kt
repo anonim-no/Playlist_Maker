@@ -27,16 +27,10 @@ class App : Application() {
                 playerRepositoryModule,
                 playerInteractorModule,
                 playerViewModelModule,
-            )
-
-            modules(
                 searchDataModule,
                 searchRepositoryModule,
                 searchInteractorModule,
                 searchViewModelModule,
-            )
-
-            modules(
                 settingsDataModule,
                 settingsRepositoryModule,
                 settingsInteractorModule,

@@ -24,12 +24,8 @@ class PlayerRepositoryImpl(private val playerClient: PlayerClient) : PlayerRepos
         playerClient.pausePlayer()
     }
 
-    override fun isPlaying(): Boolean {
-        return playerClient.isPlaying()
-    }
+    override fun isPlaying(): Boolean = playerClient.isPlaying()
 
-    override fun getCurrentPosition(): Int {
-        return playerClient.getCurrentPosition()
-    }
+    override fun getCurrentPosition(): Int = playerClient.getCurrentPosition()
 
 }

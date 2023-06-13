@@ -28,7 +28,6 @@
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">@dimen/main_button_icon_padding</item>
         <item name="iconTint">@color/text_color_primary_variant</item>
-        <item name="android:foreground">?attr/selectableItemBackground</item>
 
     </style>
 

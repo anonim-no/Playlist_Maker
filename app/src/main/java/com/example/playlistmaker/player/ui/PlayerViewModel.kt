@@ -20,18 +20,22 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
 
     private val updatePlayingTimeRunnable = Runnable { updatePlayingTime() }
 
-    fun preparePlayer(url: String) {
+    fun preparePlayer(url: String?) {
         renderState(PlayerState.Preparing)
-        playerInteractor.preparePlayer(
-            url = url,
-            onPreparedListener = {
-                renderState(PlayerState.Stopped)
-            },
-            onCompletionListener = {
-                handler.removeCallbacks(updatePlayingTimeRunnable)
-                renderState(PlayerState.Stopped)
-            }
-        )
+        if (url != null) {
+            playerInteractor.preparePlayer(
+                url = url,
+                onPreparedListener = {
+                    renderState(PlayerState.Stopped)
+                },
+                onCompletionListener = {
+                    handler.removeCallbacks(updatePlayingTimeRunnable)
+                    renderState(PlayerState.Stopped)
+                }
+            )
+        } else {
+            renderState(PlayerState.Unplayable)
+        }
     }
 
     private fun startPlayer() {

@@ -30,6 +30,9 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
 
     fun searchDebounce(SearchText: String) {
         if (SearchText.isNotEmpty()) {
+
+            handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+
             val searchRunnable = Runnable { search(SearchText) }
             val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
             handler.postAtTime(
