@@ -6,6 +6,8 @@ sealed interface PlayerState {
 
     object Stopped : PlayerState
 
+    object Unplayable : PlayerState
+
     object Playing : PlayerState
 
     object Paused : PlayerState

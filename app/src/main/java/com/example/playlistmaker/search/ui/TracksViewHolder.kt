@@ -20,21 +20,30 @@ class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(track: Track) {
         trackName.text = track.trackName
-        artistName.text = track.artistName
-        trackTime.text =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
-        Glide
-            .with(itemView)
-            .load(track.artworkUrl100)
-            .placeholder(R.drawable.ic_placeholder)
-            .centerCrop()
-            .transform(
-                RoundedCorners(
-                    itemView.resources.getDimensionPixelSize(
-                        R.dimen.track_list_album_corner_radius
+        track.artistName?.let {
+            artistName.text = it
+        }
+        if (track.trackTimeMillis != null) {
+            trackTime.text =
+                SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+        } else {
+            trackTime.setText(R.string._00_00)
+        }
+
+        track.artworkUrl100?.let {
+            Glide
+                .with(itemView)
+                .load(it)
+                .placeholder(R.drawable.ic_placeholder)
+                .centerCrop()
+                .transform(
+                    RoundedCorners(
+                        itemView.resources.getDimensionPixelSize(
+                            R.dimen.track_list_album_corner_radius
+                        )
                     )
                 )
-            )
-            .into(artworkUrl100)
+                .into(artworkUrl100)
+        }
     }
 }

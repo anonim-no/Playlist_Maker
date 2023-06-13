@@ -1,22 +1,16 @@
 package com.example.playlistmaker.search.ui
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
+import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.models.SearchState
 
-class SearchViewModel(application: Application) : AndroidViewModel(application) {
-
-
-    private val searchInteractor = Creator.provideSearchInteractor(getApplication())
+class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewModel() {
 
     private val stateLiveData = MutableLiveData<SearchState>()
     private val showToast = SingleLiveEvent<String>()
@@ -36,6 +30,9 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
     fun searchDebounce(SearchText: String) {
         if (SearchText.isNotEmpty()) {
+
+            handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+
             val searchRunnable = Runnable { search(SearchText) }
             val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
             handler.postAtTime(
@@ -65,7 +62,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
                         errorMessage != null -> {
                             renderState(
                                 SearchState.Error(
-                                    message = getApplication<Application>().getString(R.string.check_internet_connection),
+                                    message = errorMessage,
                                 )
                             )
                         }
@@ -102,10 +99,10 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         searchInteractor.addTracksHistory(track)
     }
 
-    fun clearTracksHistory() {
+    fun clearTracksHistory(text: String) {
         searchInteractor.clearTracksHistory()
         renderState(SearchState.SearchResult(arrayListOf()))
-        showToast.postValue(getApplication<Application>().getString(R.string.history_was_clear))
+        showToast.postValue(text)
     }
 
     private fun getTracksHistory(): ArrayList<Track> {

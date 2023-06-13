@@ -1,12 +1,10 @@
 package com.example.playlistmaker.settings.ui
 
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.App
+import com.example.playlistmaker.settings.domain.api.ThemeSwitchInteractor
 
-class SettingsViewModel(application: App) : AndroidViewModel(application) {
-    private val switchThemeInteractor = application.themeSwitcherInteractor
+class SettingsViewModel(private val switchThemeInteractor: ThemeSwitchInteractor) : ViewModel() {
+
     fun switchTheme(isChecked: Boolean) {
         switchThemeInteractor.switch(isChecked)
     }
@@ -15,15 +13,4 @@ class SettingsViewModel(application: App) : AndroidViewModel(application) {
         return switchThemeInteractor.isDarkModeOn()
     }
 
-    companion object {
-        fun getViewModelFactory(application: App): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SettingsViewModel(
-                        application = application
-                    ) as T
-                }
-            }
-    }
 }

@@ -3,7 +3,6 @@ package com.example.playlistmaker.player.ui
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -11,6 +10,7 @@ import com.example.playlistmaker.TRACK
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.ui.models.PlayerState
 import com.example.playlistmaker.search.domain.models.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,14 +18,14 @@ class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
 
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel by viewModel<PlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this)[PlayerViewModel::class.java]
+
         viewModel.observeState().observe(this) {
             render(it)
         }
@@ -61,6 +61,13 @@ class PlayerActivity : AppCompatActivity() {
                 binding.playingTime.setText(R.string._00_00)
             }
 
+            is PlayerState.Unplayable -> {
+                binding.playButton.isEnabled = false
+                binding.progressBar.visibility = View.GONE
+                binding.playButton.setImageResource(R.drawable.ic_play)
+                binding.playingTime.setText(R.string._00_00)
+            }
+
             is PlayerState.Paused -> {
                 binding.playButton.setImageResource(R.drawable.ic_play)
             }
@@ -78,38 +85,66 @@ class PlayerActivity : AppCompatActivity() {
     private fun showTrack(track: Track) {
 
         binding.apply {
-            Glide
-                .with(albumArt)
-                .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
-                .placeholder(R.drawable.ic_placeholder)
-                .centerCrop()
-                .transform(
-                    RoundedCorners(
-                        resources.getDimensionPixelSize(
-                            R.dimen.track_album_corner_radius
-                        )
-                    )
-                )
-                .into(albumArt)
 
             trackName.text = track.trackName
             trackName.isSelected = true
-            artistName.text = track.artistName
-            trackName.isSelected = true
-            primaryGenreName.text = track.primaryGenreName
-            country.text = track.country
 
-            trackTime.text =
-                SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
-
-            val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(track.releaseDate)
-            if (date != null) {
-                val formattedDatesString =
-                    SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
-                releaseDate.text = formattedDatesString
+            track.artworkUrl100?.let {
+                Glide
+                    .with(albumArt)
+                    .load(it.replaceAfterLast('/', "512x512bb.jpg"))
+                    .placeholder(R.drawable.ic_placeholder)
+                    .centerCrop()
+                    .transform(
+                        RoundedCorners(
+                            resources.getDimensionPixelSize(
+                                R.dimen.track_album_corner_radius
+                            )
+                        )
+                    )
+                    .into(albumArt)
             }
 
-            if (track.collectionName.isNotEmpty()) {
+
+            track.artistName?.let {
+                artistName.text = it
+                trackName.isSelected = true
+            }
+
+            if (track.trackTimeMillis != null) {
+                trackTime.text =
+                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+            } else {
+                trackTime.setText(R.string._00_00)
+            }
+
+            if (track.primaryGenreName != null) {
+                primaryGenreName.text = track.primaryGenreName
+            } else {
+                country.visibility = View.GONE
+                countryTitle.visibility = View.GONE
+            }
+
+            if (track.country != null) {
+                country.text = track.country
+            } else {
+                country.visibility = View.GONE
+                countryTitle.visibility = View.GONE
+            }
+
+            if (track.releaseDate != null) {
+                val parseDate =
+                    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(track.releaseDate)
+                releaseDate.text =
+                    parseDate?.let { date ->
+                        SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
+                    }
+            } else {
+                releaseDate.visibility = View.GONE
+                releaseDateTitle.visibility = View.GONE
+            }
+
+            if (track.collectionName != null) {
                 collectionName.text = track.collectionName
             } else {
                 collectionName.visibility = View.GONE

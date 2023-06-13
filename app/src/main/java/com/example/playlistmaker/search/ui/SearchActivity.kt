@@ -8,18 +8,19 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
+import com.example.playlistmaker.R
 import com.example.playlistmaker.TRACK
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.ui.models.SearchState
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel by viewModel<SearchViewModel>()
 
     private val searchAdapter = TracksAdapter {
         clickOnTrack(it)
@@ -37,8 +38,6 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
 
         // подписываемся на изменения состояния
         viewModel.observeState().observe(this) {
@@ -92,7 +91,7 @@ class SearchActivity : AppCompatActivity() {
 
         // по клику на кнопке очистки истории поиска - очищаем историю поиска
         binding.clearHistoryButton.setOnClickListener {
-            viewModel.clearTracksHistory()
+            viewModel.clearTracksHistory(getString(R.string.history_was_clear))
         }
 
         // при запуске скрываем или показываем кнопку очистки формы
