@@ -40,5 +40,8 @@ class FavoritesTracksFragment: Fragment() {
 
     }
 
+    companion object {
+        fun newInstance() = FavoritesTracksFragment()
+    }
 
 }

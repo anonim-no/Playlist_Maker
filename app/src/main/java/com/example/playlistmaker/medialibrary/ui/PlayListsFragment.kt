@@ -39,5 +39,8 @@ class PlayListsFragment : Fragment() {
         }
     }
 
+    companion object {
+        fun newInstance() = PlayListsFragment()
+    }
 
 }
