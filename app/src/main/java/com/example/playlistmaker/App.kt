@@ -1,6 +1,8 @@
 package com.example.playlistmaker
 
 import android.app.Application
+import com.example.playlistmaker.medialibrary.di.favoritesTracksViewModelModule
+import com.example.playlistmaker.medialibrary.di.playListsViewModelModule
 import org.koin.android.ext.android.inject
 import com.example.playlistmaker.player.di.*
 import com.example.playlistmaker.search.di.*
@@ -35,6 +37,8 @@ class App : Application() {
                 settingsRepositoryModule,
                 settingsInteractorModule,
                 settingsViewModelModule,
+                favoritesTracksViewModelModule,
+                playListsViewModelModule
             )
 
         }
