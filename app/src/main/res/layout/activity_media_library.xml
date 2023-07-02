@@ -28,7 +28,6 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         style="@style/TabStyle"
-        android:background="@color/screen_background"
         app:tabIndicatorColor="@color/text_color_primary"
         app:tabRippleColor="@color/light_gray"
         app:tabTextAppearance="@style/TabTextAppearance"
