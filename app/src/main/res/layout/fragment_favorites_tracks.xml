@@ -1,0 +1,17 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/placeholderNotFound"
+        style="@style/TextPlaceholder"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center_horizontal"
+        android:drawablePadding="15dp"
+        android:text="@string/medialibrary_empty"
+        android:textColor="@color/text_color_primary"
+        android:visibility="gone"
+        app:drawableTopCompat="@drawable/ic_not_found" />
+
+</FrameLayout>
