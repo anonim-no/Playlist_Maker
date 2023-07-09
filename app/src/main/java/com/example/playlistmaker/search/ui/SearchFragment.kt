@@ -1,24 +1,28 @@
 package com.example.playlistmaker.search.ui
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
 import com.example.playlistmaker.TRACK
-import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.models.SearchState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySearchBinding
+class SearchFragment : Fragment() {
+
+    private lateinit var binding: FragmentSearchBinding
 
     private val viewModel by viewModel<SearchViewModel>()
 
@@ -34,18 +38,24 @@ class SearchActivity : AppCompatActivity() {
         SEARCH_RESULT, NOT_FOUND, ERROR, TRACKS_HISTORY, LOADING
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         // подписываемся на изменения состояния
-        viewModel.observeState().observe(this) {
+        viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
 
         // подписываемся на тосты
-        viewModel.observeShowToast().observe(this) {
+        viewModel.observeShowToast().observe(viewLifecycleOwner) {
             showToast(it)
         }
 
@@ -53,11 +63,6 @@ class SearchActivity : AppCompatActivity() {
         binding.rvSearchResults.adapter = searchAdapter
         // адаптер для истории треков
         binding.rvTracksHistory.adapter = historyAdapter
-
-        // по клику назад закрываем SearchActivity и возвращаемся на предыдущее
-        binding.toolbar.setNavigationOnClickListener {
-            finish()
-        }
 
         //  по клику на крестике очищаем форму и результаты поиска
         binding.clearSearchFormButton.setOnClickListener {
@@ -105,18 +110,16 @@ class SearchActivity : AppCompatActivity() {
     private fun clearSearch() {
         searchAdapter.tracks = arrayListOf()
         binding.inputSearchForm.setText("")
-        val view = this.currentFocus
-        if (view != null) {
-            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
-        }
+        val imm =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
         viewModel.clearSearch()
     }
 
     private fun clickOnTrack(track: Track) {
         if (viewModel.clickDebounce()) {
             viewModel.addTracksHistory(track)
-            val intent = Intent(this, PlayerActivity::class.java).apply {
+            val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
                 putExtra(TRACK, track)
             }
             startActivity(intent)
@@ -124,7 +127,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showToast(additionalMessage: String) {
-        Toast.makeText(this, additionalMessage, Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), additionalMessage, Toast.LENGTH_LONG).show()
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -201,5 +204,4 @@ class SearchActivity : AppCompatActivity() {
             }
         }
     }
-
 }
