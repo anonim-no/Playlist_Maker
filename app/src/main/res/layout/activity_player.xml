@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="16dp">
+    android:paddingBottom="16dp"
+    tools:context=".player.ui.PlayerActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -37,49 +38,49 @@
         android:id="@+id/albumArt"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="24dp"
         android:contentDescription="@string/back"
         android:foreground="?attr/selectableItemBackground"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_placeholder"
+        app:layout_constraintBottom_toTopOf="@id/trackName"
         app:layout_constraintDimensionRatio="1:1"
-        android:layout_marginBottom="24dp"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintBottom_toTopOf="@id/trackName"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <TextView
         android:id="@+id/trackName"
         style="@style/TrackNameArtist"
-        android:textSize="@dimen/header_text_size"
         android:layout_marginBottom="12dp"
+        android:textSize="@dimen/header_text_size"
+        app:layout_constraintBottom_toTopOf="@id/artistName"
         app:layout_constraintEnd_toEndOf="@+id/rightBorder"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/leftBorder"
-        app:layout_constraintBottom_toTopOf="@id/artistName"
         tools:text="Yesterday (Remastered 2009) Yesterday (Remastered 2009) " />
 
     <TextView
         android:id="@+id/artistName"
         style="@style/TrackNameArtist"
-        android:textSize="14sp"
         android:layout_marginBottom="24dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/playButton"
         app:layout_constraintEnd_toStartOf="@+id/rightBorder"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/leftBorder"
-        app:layout_constraintBottom_toTopOf="@id/playButton"
         tools:text="The Beatles" />
 
     <ImageView
         android:id="@+id/playButton"
         android:layout_width="84dp"
         android:layout_height="84dp"
-        android:contentDescription="@string/play"
         android:layout_marginBottom="12dp"
-        app:layout_constraintEnd_toStartOf="@+id/rightBorder"
-        app:layout_constraintStart_toStartOf="@+id/leftBorder"
+        android:contentDescription="@string/play"
+        android:src="@drawable/ic_blank_button"
         app:layout_constraintBottom_toTopOf="@id/playingTime"
-        android:src="@drawable/ic_blank_button"/>
+        app:layout_constraintEnd_toStartOf="@+id/rightBorder"
+        app:layout_constraintStart_toStartOf="@+id/leftBorder" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -91,39 +92,39 @@
         app:layout_constraintStart_toStartOf="@+id/playButton"
         app:layout_constraintTop_toTopOf="@+id/playButton" />
 
-            <ImageView
-                android:id="@+id/playlistButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/add_to_playlist"
-                app:layout_constraintBottom_toBottomOf="@+id/playButton"
-                app:layout_constraintStart_toStartOf="@+id/leftBorder"
-                app:layout_constraintTop_toTopOf="@+id/playButton"
-                app:srcCompat="@drawable/ic_add_to_playlist" />
+    <ImageView
+        android:id="@+id/playlistButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/add_to_playlist"
+        app:layout_constraintBottom_toBottomOf="@+id/playButton"
+        app:layout_constraintStart_toStartOf="@+id/leftBorder"
+        app:layout_constraintTop_toTopOf="@+id/playButton"
+        app:srcCompat="@drawable/ic_add_to_playlist" />
 
-            <ImageView
-                android:id="@+id/favoritesButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/add_to_favorites"
-                app:layout_constraintBottom_toBottomOf="@+id/playButton"
-                app:layout_constraintEnd_toStartOf="@+id/rightBorder"
-                app:layout_constraintTop_toTopOf="@+id/playButton"
-                app:srcCompat="@drawable/ic_add_to_favorites" />
+    <ImageView
+        android:id="@+id/favoritesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/add_to_favorites"
+        app:layout_constraintBottom_toBottomOf="@+id/playButton"
+        app:layout_constraintEnd_toStartOf="@+id/rightBorder"
+        app:layout_constraintTop_toTopOf="@+id/playButton"
+        app:srcCompat="@drawable/ic_add_to_favorites" />
 
     <TextView
         android:id="@+id/playingTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         android:gravity="center"
         android:maxLines="1"
         android:text="@string/_00_00"
         android:textColor="@android:color/darker_gray"
         android:textSize="14sp"
-        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@id/trackTimeTitle"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintBottom_toTopOf="@id/trackTimeTitle"
         app:layout_constraintWidth_max="64dp" />
 
 
@@ -140,33 +141,33 @@
         android:id="@+id/collectionNameTitle"
         style="@style/TrackTitle"
         android:text="@string/collection"
+        app:layout_constraintBottom_toTopOf="@id/releaseDateTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTag="collectionNameTag"
-        app:layout_constraintBottom_toTopOf="@id/releaseDateTitle" />
+        app:layout_constraintTag="collectionNameTag" />
 
     <TextView
         android:id="@+id/releaseDateTitle"
         style="@style/TrackTitle"
         android:text="@string/year"
+        app:layout_constraintBottom_toTopOf="@id/primaryGenreNameTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTag="releaseDateTag"
-        app:layout_constraintBottom_toTopOf="@id/primaryGenreNameTitle" />
+        app:layout_constraintTag="releaseDateTag" />
 
     <TextView
         android:id="@+id/primaryGenreNameTitle"
         style="@style/TrackTitle"
         android:text="@string/genre"
+        app:layout_constraintBottom_toTopOf="@id/countryTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTag="primaryGenreNameTag"
-        app:layout_constraintBottom_toTopOf="@id/countryTitle" />
+        app:layout_constraintTag="primaryGenreNameTag" />
 
     <TextView
         android:id="@+id/countryTitle"
         style="@style/TrackTitle"
         android:text="@string/country"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTag="countryTag"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTag="countryTag" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/textsBarrier"

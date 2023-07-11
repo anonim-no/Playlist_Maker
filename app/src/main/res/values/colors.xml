@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="main_screen_background">#3772E7</color>
+    <color name="main_menu_selected_background">#3772E7</color>
 
     <color name="screen_background">#FFFFFF</color>
 
@@ -21,8 +21,6 @@
 
     <color name="button_background_color">#1A1B22</color>
     <color name="button_text_color">#FFFFFF</color>
-
-    <color name="main_button_background_color">#FFFFFF</color>
 
     <color name="settings_button_background_color">#FFFFFF</color>
 

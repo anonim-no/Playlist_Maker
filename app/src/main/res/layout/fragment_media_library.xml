@@ -4,17 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/screen_background"
     android:orientation="vertical"
     android:paddingBottom="16dp"
-    tools:context=".medialibrary.ui.MediaLibraryActivity">
+    tools:context=".medialibrary.ui.MediaLibraryFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_marginBottom="24dp"
-        app:navigationIcon="@drawable/ic_back"
-        app:navigationIconTint="@color/text_color_primary">
+        android:layout_marginBottom="24dp">
 
         <TextView
             style="@style/header"

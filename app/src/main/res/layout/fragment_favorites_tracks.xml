@@ -1,13 +1,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".medialibrary.ui.favorites.FavoritesTracksFragment">
 
     <TextView
         android:id="@+id/placeholderNotFound"
         style="@style/TextPlaceholder"
-        android:layout_marginTop="100dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
         android:drawablePadding="15dp"
         android:text="@string/medialibrary_empty"
         android:textColor="@color/text_color_primary"
