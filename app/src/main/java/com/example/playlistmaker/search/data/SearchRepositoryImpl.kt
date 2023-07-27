@@ -4,7 +4,7 @@ import com.example.playlistmaker.search.data.dto.SearchRequest
 import com.example.playlistmaker.search.data.dto.SearchResponse
 import com.example.playlistmaker.search.domain.api.SearchRepository
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.util.Resource
+import com.example.playlistmaker.utils.Resource
 
 // Класс SearchRepositoryImpl - реализация интерфейса SearchRepository
 // Задача этой реализации — сделать запрос и получить ответ от сервера, используя сетевой клиент

@@ -3,7 +3,7 @@ package com.example.playlistmaker.search.domain.impl
 import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.SearchRepository
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.util.Resource
+import com.example.playlistmaker.utils.Resource
 import java.util.concurrent.Executors
 
 // В конструктор передаётся экземпляр класса, реализующего SearchRepositroy

@@ -1,7 +1,7 @@
 package com.example.playlistmaker.search.domain.api
 
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.util.Resource
+import com.example.playlistmaker.utils.Resource
 
 // интерфейс для связи слоя Domain со слоем Data
 // интерфейс SearchRepository реализует SearchRepositoryImpl в data
