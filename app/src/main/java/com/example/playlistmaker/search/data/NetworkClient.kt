@@ -6,5 +6,5 @@ import com.example.playlistmaker.search.data.dto.Response
 // в виде экземпляра класса из пакета dto
 // после чего клиент должен вернуть какой-то ответ.
 interface NetworkClient {
-    fun doRequest(dto: Any): Response
+    suspend fun doRequest(dto: Any): Response
 }

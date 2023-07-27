@@ -43,39 +43,34 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
 
             renderState(SearchState.Loading)
 
-            searchInteractor.searchTracks(searchText, object : SearchInteractor.SearchConsumer {
-                override fun consume(foundTracks: ArrayList<Track>?, errorMessage: String?) {
-
-                    val tracks = arrayListOf<Track>()
-                    if (foundTracks != null) {
-                        tracks.addAll(foundTracks)
+            viewModelScope.launch {
+                searchInteractor
+                    .searchTracks(searchText)
+                    .collect { pair ->
+                        processResult(pair.first, pair.second)
                     }
+            }
+        }
+    }
 
-                    when {
-                        errorMessage != null -> {
-                            renderState(
-                                SearchState.Error(
-                                    message = errorMessage,
-                                )
-                            )
-                        }
+    private fun processResult(foundTracks: ArrayList<Track>?, errorMessage: String?) {
+        val tracks = arrayListOf<Track>()
+        if (foundTracks != null) {
+            tracks.addAll(foundTracks)
+        }
 
-                        tracks.isEmpty() -> {
-                            renderState(
-                                SearchState.NotFound
-                            )
-                        }
+        when {
+            errorMessage != null -> {
+                renderState(SearchState.Error(message = errorMessage))
+            }
 
-                        else -> {
-                            renderState(
-                                SearchState.SearchResult(
-                                    tracks = tracks,
-                                )
-                            )
-                        }
-                    }
-                }
-            })
+            tracks.isEmpty() -> {
+                renderState(SearchState.NotFound)
+            }
+
+            else -> {
+                renderState(SearchState.SearchResult(tracks = tracks))
+            }
         }
     }
 

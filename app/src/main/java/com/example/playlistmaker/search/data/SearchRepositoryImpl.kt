@@ -5,6 +5,8 @@ import com.example.playlistmaker.search.data.dto.SearchResponse
 import com.example.playlistmaker.search.domain.api.SearchRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.utils.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 // Класс SearchRepositoryImpl - реализация интерфейса SearchRepository
 // Задача этой реализации — сделать запрос и получить ответ от сервера, используя сетевой клиент
@@ -13,13 +15,13 @@ class SearchRepositoryImpl(
     private val localStorage: LocalStorage
 ) : SearchRepository {
 
-    override fun searchTracks(expression: String): Resource<ArrayList<Track>> {
+    override fun searchTracks(expression: String): Flow<Resource<ArrayList<Track>>> = flow {
 
         val response = networkClient.doRequest(SearchRequest(expression))
 
         when (response.resultCode) {
             -1 -> {
-                return Resource.Error("Проверьте подключение к интернету")
+                emit(Resource.Error("Проверьте подключение к интернету"))
             }
 
             200 -> {
@@ -41,11 +43,11 @@ class SearchRepositoryImpl(
                         )
                     )
                 }
-                return Resource.Success(arrayListTracks)
+                emit(Resource.Success(arrayListTracks))
             }
 
             else -> {
-                return Resource.Error("Ошибка сервера")
+                emit(Resource.Error("Ошибка сервера"))
             }
         }
 
