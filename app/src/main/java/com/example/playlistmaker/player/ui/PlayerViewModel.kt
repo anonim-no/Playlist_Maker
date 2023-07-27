@@ -1,12 +1,14 @@
 package com.example.playlistmaker.player.ui
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.ui.models.PlayerState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -16,9 +18,7 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
 
     fun observeState(): LiveData<PlayerState> = stateLiveData
 
-    private val handler = Handler(Looper.getMainLooper())
-
-    private val updatePlayingTimeRunnable = Runnable { updatePlayingTime() }
+    private var timerJob: Job? = null
 
     fun preparePlayer(url: String?) {
         renderState(PlayerState.Preparing)
@@ -29,7 +29,7 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
                     renderState(PlayerState.Stopped)
                 },
                 onCompletionListener = {
-                    handler.removeCallbacks(updatePlayingTimeRunnable)
+                    timerJob?.cancel()
                     renderState(PlayerState.Stopped)
                 }
             )
@@ -41,13 +41,13 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
     private fun startPlayer() {
         playerInteractor.startPlayer()
         renderState(PlayerState.Playing)
-        handler.postDelayed(updatePlayingTimeRunnable, UPDATE_PLAYING_TIME_DELAY)
+        updatePlayingTime()
     }
 
     fun pausePlayer() {
         playerInteractor.pausePlayer()
         renderState(PlayerState.Paused)
-        handler.removeCallbacks(updatePlayingTimeRunnable)
+        timerJob?.cancel()
     }
 
     private fun isPlaying(): Boolean {
@@ -67,17 +67,21 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
     }
 
     private fun updatePlayingTime() {
-        renderState(
-            PlayerState.UpdatePlayingTime(
-                SimpleDateFormat(
-                    "mm:ss",
-                    Locale.getDefault()
-                ).format(
-                    getCurrentPosition()
+        timerJob = viewModelScope.launch {
+            while (isPlaying()) {
+                delay(UPDATE_PLAYING_TIME_DELAY)
+                renderState(
+                    PlayerState.UpdatePlayingTime(
+                        SimpleDateFormat(
+                            "mm:ss",
+                            Locale.getDefault()
+                        ).format(
+                            getCurrentPosition()
+                        )
+                    )
                 )
-            )
-        )
-        handler.postDelayed(updatePlayingTimeRunnable, UPDATE_PLAYING_TIME_DELAY)
+            }
+        }
     }
 
     private fun renderState(state: PlayerState) {
@@ -85,6 +89,6 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
     }
 
     companion object {
-        private const val UPDATE_PLAYING_TIME_DELAY = 500L
+        private const val UPDATE_PLAYING_TIME_DELAY = 300L
     }
 }
