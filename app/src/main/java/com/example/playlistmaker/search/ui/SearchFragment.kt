@@ -74,7 +74,11 @@ class SearchFragment : Fragment() {
             // при изменении текста скрываем или показываем кнопку очистки формы
             binding.clearSearchFormButton.visibility = clearButtonVisibility(s)
             // если начали заполнять поле ввода - скрываем историю треков
-            if (binding.inputSearchForm.hasFocus() && s.toString().isNotEmpty()) {
+            if (
+                binding.inputSearchForm.hasFocus()
+                && s.toString().isNotEmpty()
+                && binding.youSearched.visibility == View.VISIBLE
+            ) {
                 showState(Content.SEARCH_RESULT)
             }
             // выполняем поиск автоматически через две секунды, после последних изменений
