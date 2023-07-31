@@ -26,7 +26,11 @@ class PlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        viewModel.observeState().observe(this) {
+        viewModel.observePlayerStateState().observe(this) {
+            render(it)
+        }
+
+        viewModel.observeTrackTimeState().observe(this) {
             render(it)
         }
 
@@ -40,7 +44,9 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.playButton.isEnabled = false
 
-        viewModel.preparePlayer(track.previewUrl)
+        if (savedInstanceState==null) {
+            viewModel.preparePlayer(track.previewUrl)
+        }
 
         binding.playButton.setOnClickListener {
             viewModel.playbackControl()
@@ -69,10 +75,12 @@ class PlayerActivity : AppCompatActivity() {
             }
 
             is PlayerState.Paused -> {
+                binding.playButton.isEnabled = true
                 binding.playButton.setImageResource(R.drawable.ic_play)
             }
 
             is PlayerState.Playing -> {
+                binding.playButton.isEnabled = true
                 binding.playButton.setImageResource(R.drawable.ic_pause)
             }
 

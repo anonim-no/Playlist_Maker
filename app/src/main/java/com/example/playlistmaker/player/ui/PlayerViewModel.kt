@@ -14,9 +14,13 @@ import java.util.Locale
 
 class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewModel() {
 
-    private val stateLiveData = MutableLiveData<PlayerState>()
+    private val playerStateLiveData = MutableLiveData<PlayerState>()
 
-    fun observeState(): LiveData<PlayerState> = stateLiveData
+    private val trackTimeStateLiveData = MutableLiveData<PlayerState.UpdatePlayingTime>()
+
+    fun observePlayerStateState(): LiveData<PlayerState> = playerStateLiveData
+
+    fun observeTrackTimeState(): LiveData<PlayerState.UpdatePlayingTime> = trackTimeStateLiveData
 
     private var timerJob: Job? = null
 
@@ -70,7 +74,7 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
         timerJob = viewModelScope.launch {
             while (isPlaying()) {
                 delay(UPDATE_PLAYING_TIME_DELAY)
-                renderState(
+                trackTimeStateLiveData.postValue(
                     PlayerState.UpdatePlayingTime(
                         SimpleDateFormat(
                             "mm:ss",
@@ -85,7 +89,12 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
     }
 
     private fun renderState(state: PlayerState) {
-        stateLiveData.postValue(state)
+        playerStateLiveData.postValue(state)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        playerInteractor.releasePlayer()
     }
 
     companion object {

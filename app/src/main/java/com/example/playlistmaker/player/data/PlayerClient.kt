@@ -14,4 +14,6 @@ interface PlayerClient {
     fun isPlaying(): Boolean
 
     fun getCurrentPosition(): Int
+
+    fun releasePlayer()
 }
