@@ -21,7 +21,7 @@ class SearchRepositoryImpl(
 
         when (response.resultCode) {
             -1 -> {
-                emit(Resource.Error("Проверьте подключение к интернету"))
+                emit(Resource.Error(response.resultCode)) // "Проверьте подключение к интернету"
             }
 
             200 -> {
@@ -47,7 +47,7 @@ class SearchRepositoryImpl(
             }
 
             else -> {
-                emit(Resource.Error("Ошибка сервера"))
+                emit(Resource.Error(response.resultCode)) // другая ошибка
             }
         }
 

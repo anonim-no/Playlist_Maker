@@ -155,7 +155,11 @@ class SearchFragment : Fragment() {
             }
 
             is SearchState.Error -> {
-                binding.errorText.text = state.message
+                when (state.errorCode) {
+                    -1 -> binding.errorText.text = resources.getText(R.string.check_internet_connection)
+                    else -> binding.errorText.text = String.format(resources.getText(R.string.error).toString(), state.errorCode)
+                }
+
                 showState(Content.ERROR)
             }
 
