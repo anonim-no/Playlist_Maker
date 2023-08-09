@@ -90,7 +90,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/playButton"
         app:layout_constraintEnd_toEndOf="@+id/playButton"
         app:layout_constraintStart_toStartOf="@+id/playButton"
-        app:layout_constraintTop_toTopOf="@+id/playButton" />
+        app:layout_constraintTop_toTopOf="@+id/playButton"
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/playlistButton"

@@ -28,4 +28,8 @@ class PlayerRepositoryImpl(private val playerClient: PlayerClient) : PlayerRepos
 
     override fun getCurrentPosition(): Int = playerClient.getCurrentPosition()
 
+    override fun releasePlayer() {
+        playerClient.releasePlayer()
+    }
+
 }

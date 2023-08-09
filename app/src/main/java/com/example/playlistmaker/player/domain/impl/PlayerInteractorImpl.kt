@@ -28,4 +28,8 @@ class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInt
     override fun getCurrentPosition(): Int {
         return repository.getCurrentPosition()
     }
+
+    override fun releasePlayer() {
+        repository.releasePlayer()
+    }
 }
