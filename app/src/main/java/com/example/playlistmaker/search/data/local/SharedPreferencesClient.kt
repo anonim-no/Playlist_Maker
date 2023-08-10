@@ -17,7 +17,7 @@ class SharedPreferencesClient(
         tracksHistory.remove(track)
         tracksHistory.add(0, track)
         if (tracksHistory.size > TRACKS_HISTORY_MAX) tracksHistory.removeLast()
-        val json = gson.toJson(tracksHistory.toList())
+        val json = gson.toJson(tracksHistory)
         sharedPreferences.edit { putString(TRACKS_HISTORY, json) }
     }
 
