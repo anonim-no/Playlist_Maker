@@ -13,11 +13,11 @@ class SharedPreferencesClient(
 ) : LocalStorage {
 
     override fun addTracksHistory(track: Track) {
-        val tracksHistory = getTracksHistory()
+        val tracksHistory = getTracksHistory().toMutableList()
         tracksHistory.remove(track)
         tracksHistory.add(0, track)
         if (tracksHistory.size > TRACKS_HISTORY_MAX) tracksHistory.removeLast()
-        val json = gson.toJson(tracksHistory)
+        val json = gson.toJson(tracksHistory.toList())
         sharedPreferences.edit { putString(TRACKS_HISTORY, json) }
     }
 
@@ -25,9 +25,9 @@ class SharedPreferencesClient(
         sharedPreferences.edit { remove(TRACKS_HISTORY) }
     }
 
-    override fun getTracksHistory(): ArrayList<Track> {
-        val json = sharedPreferences.getString(TRACKS_HISTORY, null) ?: return arrayListOf()
-        return gson.fromJson(json, object : TypeToken<ArrayList<Track>>() {}.type)
+    override fun getTracksHistory(): List<Track> {
+        val json = sharedPreferences.getString(TRACKS_HISTORY, null) ?: return listOf()
+        return gson.fromJson(json, object : TypeToken<List<Track>>() {}.type)
     }
 
     companion object {

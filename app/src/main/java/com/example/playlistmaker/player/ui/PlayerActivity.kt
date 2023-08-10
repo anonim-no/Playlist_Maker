@@ -12,7 +12,7 @@ import com.example.playlistmaker.player.ui.models.PlayerState
 import com.example.playlistmaker.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -34,6 +34,10 @@ class PlayerActivity : AppCompatActivity() {
             render(it)
         }
 
+        viewModel.observeFavoriteState().observe(this) {
+            render(it)
+        }
+
         binding.toolbar.setNavigationOnClickListener {
             finish()
         }
@@ -42,9 +46,15 @@ class PlayerActivity : AppCompatActivity() {
 
         showTrack(track)
 
+        viewModel.isFavorite(track.trackId)
+
+        binding.favoriteButton.setOnClickListener {
+            viewModel.onFavoriteClicked(track)
+        }
+
         binding.playButton.isEnabled = false
 
-        if (savedInstanceState==null) {
+        if (savedInstanceState == null) {
             viewModel.preparePlayer(track.previewUrl)
         }
 
@@ -86,6 +96,14 @@ class PlayerActivity : AppCompatActivity() {
 
             is PlayerState.UpdatePlayingTime -> {
                 binding.playingTime.text = state.playingTime
+            }
+
+            is PlayerState.StateFavorite -> {
+                if (state.isFavorite) {
+                    binding.favoriteButton.setImageResource(R.drawable.ic_favorited)
+                } else {
+                    binding.favoriteButton.setImageResource(R.drawable.ic_add_to_favorites)
+                }
             }
         }
     }

@@ -1,12 +1,24 @@
 package com.example.playlistmaker
 
 import android.app.Application
+import com.example.playlistmaker.medialibrary.di.mediaLibraryDataModule
+import com.example.playlistmaker.medialibrary.di.mediaLibraryInteractorModule
+import com.example.playlistmaker.medialibrary.di.mediaLibraryRepositoryModule
 import com.example.playlistmaker.medialibrary.di.mediaLibraryViewModelsModule
-import org.koin.android.ext.android.inject
-import com.example.playlistmaker.player.di.*
-import com.example.playlistmaker.search.di.*
-import com.example.playlistmaker.settings.di.*
+import com.example.playlistmaker.player.di.playerDataModule
+import com.example.playlistmaker.player.di.playerInteractorModule
+import com.example.playlistmaker.player.di.playerRepositoryModule
+import com.example.playlistmaker.player.di.playerViewModelModule
+import com.example.playlistmaker.search.di.searchDataModule
+import com.example.playlistmaker.search.di.searchInteractorModule
+import com.example.playlistmaker.search.di.searchRepositoryModule
+import com.example.playlistmaker.search.di.searchViewModelModule
+import com.example.playlistmaker.settings.di.settingsDataModule
+import com.example.playlistmaker.settings.di.settingsInteractorModule
+import com.example.playlistmaker.settings.di.settingsRepositoryModule
+import com.example.playlistmaker.settings.di.settingsViewModelModule
 import com.example.playlistmaker.settings.domain.api.ThemeSwitchInteractor
+import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -36,7 +48,10 @@ class App : Application() {
                 settingsRepositoryModule,
                 settingsInteractorModule,
                 settingsViewModelModule,
-                mediaLibraryViewModelsModule
+                mediaLibraryViewModelsModule,
+                mediaLibraryDataModule,
+                mediaLibraryInteractorModule,
+                mediaLibraryRepositoryModule,
             )
 
         }

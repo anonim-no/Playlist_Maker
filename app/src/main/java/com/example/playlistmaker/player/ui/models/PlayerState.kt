@@ -16,4 +16,8 @@ sealed interface PlayerState {
         val playingTime: String
     ) : PlayerState
 
+    data class StateFavorite(
+        val isFavorite: Boolean
+    ) : PlayerState
+
 }

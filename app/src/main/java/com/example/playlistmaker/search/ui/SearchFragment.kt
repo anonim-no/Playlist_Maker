@@ -112,7 +112,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun clearSearch() {
-        searchAdapter.tracks = arrayListOf()
+        searchAdapter.tracks = listOf()
         binding.inputSearchForm.setText("")
         val imm =
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -156,8 +156,11 @@ class SearchFragment : Fragment() {
 
             is SearchState.Error -> {
                 when (state.errorCode) {
-                    -1 -> binding.errorText.text = resources.getText(R.string.check_internet_connection)
-                    else -> binding.errorText.text = String.format(resources.getText(R.string.error).toString(), state.errorCode)
+                    -1 -> binding.errorText.text =
+                        resources.getText(R.string.check_internet_connection)
+
+                    else -> binding.errorText.text =
+                        String.format(resources.getText(R.string.error).toString(), state.errorCode)
                 }
 
                 showState(Content.ERROR)

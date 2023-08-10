@@ -29,4 +29,13 @@
         android:name="com.example.playlistmaker.settings.ui.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/favoritesTracksFragment"
+        android:name="com.example.playlistmaker.medialibrary.ui.favorites.FavoritesTracksFragment"
+        android:label="fragment_favorites_tracks"
+        tools:layout="@layout/fragment_favorites_tracks" >
+        <action
+            android:id="@+id/action_favoritesTracksFragment_to_playerActivity"
+            app:destination="@id/playerActivity" />
+    </fragment>
 </navigation>

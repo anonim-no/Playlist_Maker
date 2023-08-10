@@ -9,11 +9,11 @@ sealed interface SearchState {
     object NotFound : SearchState
 
     data class SearchResult(
-        val tracks: ArrayList<Track>
+        val tracks: List<Track>
     ) : SearchState
 
     data class History(
-        val tracks: ArrayList<Track>
+        val tracks: List<Track>
     ) : SearchState
 
     data class Error(

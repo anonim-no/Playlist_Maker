@@ -4,25 +4,36 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.medialibrary.domain.db.FavoritesInteractor
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.ui.models.PlayerState
+import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewModel() {
+class PlayerViewModel(
+    private val playerInteractor: PlayerInteractor,
+    private val favoritesInteractor: FavoritesInteractor
+) : ViewModel() {
 
     private val playerStateLiveData = MutableLiveData<PlayerState>()
 
     private val trackTimeStateLiveData = MutableLiveData<PlayerState.UpdatePlayingTime>()
 
+    private val trackFavoriteStateLiveData = MutableLiveData<PlayerState.StateFavorite>()
+
     fun observePlayerStateState(): LiveData<PlayerState> = playerStateLiveData
 
     fun observeTrackTimeState(): LiveData<PlayerState.UpdatePlayingTime> = trackTimeStateLiveData
 
+    fun observeFavoriteState(): LiveData<PlayerState.StateFavorite> = trackFavoriteStateLiveData
+
     private var timerJob: Job? = null
+
+    private var isTrackFavorite = false
 
     fun preparePlayer(url: String?) {
         renderState(PlayerState.Preparing)
@@ -49,9 +60,11 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
     }
 
     fun pausePlayer() {
-        playerInteractor.pausePlayer()
-        renderState(PlayerState.Paused)
-        timerJob?.cancel()
+        if (isPlaying()) {
+            playerInteractor.pausePlayer()
+            renderState(PlayerState.Paused)
+            timerJob?.cancel()
+        }
     }
 
     private fun isPlaying(): Boolean {
@@ -95,6 +108,35 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
     override fun onCleared() {
         super.onCleared()
         playerInteractor.releasePlayer()
+    }
+
+    fun isFavorite(trackId: Int) {
+        viewModelScope.launch {
+            favoritesInteractor
+                .isFavoriteTrack(trackId)
+                .collect { isFavorite ->
+                    isTrackFavorite = isFavorite
+                    trackFavoriteStateLiveData.postValue(
+                        PlayerState.StateFavorite(isFavorite)
+                    )
+                }
+        }
+    }
+
+    fun onFavoriteClicked(track: Track) {
+        viewModelScope.launch {
+            if (isTrackFavorite) {
+                favoritesInteractor.deleteFromFavorites(track.trackId)
+                trackFavoriteStateLiveData.postValue(
+                    PlayerState.StateFavorite(false)
+                )
+            } else {
+                favoritesInteractor.addToFavorites(track)
+                trackFavoriteStateLiveData.postValue(
+                    PlayerState.StateFavorite(true)
+                )
+            }
+        }
     }
 
     companion object {

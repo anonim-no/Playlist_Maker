@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 // В конструктор передаётся экземпляр класса, реализующего SearchRepositroy
 class SearchInteractorImpl(private val repository: SearchRepository) : SearchInteractor {
 
-    override fun searchTracks(expression: String): Flow<Pair<ArrayList<Track>?, Int?>> {
+    override fun searchTracks(expression: String): Flow<Pair<List<Track>?, Int?>> {
         return repository.searchTracks(expression).map { result ->
             when (result) {
                 is Resource.Success -> {
@@ -32,7 +32,7 @@ class SearchInteractorImpl(private val repository: SearchRepository) : SearchInt
         repository.clearTracksHistory()
     }
 
-    override fun getTracksHistory(): ArrayList<Track> {
+    override fun getTracksHistory(): List<Track> {
         return repository.getTracksHistory()
     }
 

@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.Flow
 // интерфейс SearchInteractor реализует TracksInteractorImpl в Domain/Impl
 interface SearchInteractor {
 
-    fun searchTracks(expression: String): Flow<Pair<ArrayList<Track>?, Int?>>
+    fun searchTracks(expression: String): Flow<Pair<List<Track>?, Int?>>
 
     fun addTracksHistory(track: Track)
     fun clearTracksHistory()
-    fun getTracksHistory(): ArrayList<Track>
+    fun getTracksHistory(): List<Track>
 
 }
