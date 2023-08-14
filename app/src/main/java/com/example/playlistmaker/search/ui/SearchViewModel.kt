@@ -20,7 +20,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
 
     private var isClickAllowed = true
 
-    var debounceJob: Job? = null
+    private var debounceJob: Job? = null
 
     // при старте активити показываем историю треков, если есть
     init {
