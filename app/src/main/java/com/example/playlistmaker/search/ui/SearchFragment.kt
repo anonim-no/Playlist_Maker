@@ -15,7 +15,8 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.TRACK
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
-import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.common.models.Track
+import com.example.playlistmaker.common.ui.TracksAdapter
 import com.example.playlistmaker.search.ui.models.SearchState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

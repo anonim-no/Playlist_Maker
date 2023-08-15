@@ -1,7 +1,7 @@
 package com.example.playlistmaker.medialibrary.data.db.converters
 
 import com.example.playlistmaker.medialibrary.data.db.entity.TrackEntity
-import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.common.models.Track
 import java.util.Calendar
 
 class TrackDbConvertor {

@@ -1,6 +1,6 @@
 package com.example.playlistmaker.search.domain.api
 
-import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.common.models.Track
 import kotlinx.coroutines.flow.Flow
 
 // интерфейс, с помощью которого слой Presentation будет общаться со слоем Domain

@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.medialibrary.domain.db.FavoritesInteractor
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.ui.models.PlayerState
-import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.common.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

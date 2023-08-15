@@ -3,7 +3,7 @@ package com.example.playlistmaker.search.data.local
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.example.playlistmaker.search.data.LocalStorage
-import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.common.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
