@@ -4,7 +4,7 @@ import com.example.playlistmaker.search.data.dto.SearchRequest
 import com.example.playlistmaker.search.data.dto.SearchResponse
 import com.example.playlistmaker.search.domain.api.SearchRepository
 import com.example.playlistmaker.common.models.Track
-import com.example.playlistmaker.utils.Resource
+import com.example.playlistmaker.common.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

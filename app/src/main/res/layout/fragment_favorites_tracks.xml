@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".medialibrary.ui.favorites.FavoritesTracksFragment">
+    tools:context=".medialibrary.presentation.favorites.FavoritesTracksFragment">
 
     <TextView
         android:id="@+id/placeholderNotFound"
