@@ -2,15 +2,15 @@ package com.example.playlistmaker.search.domain.impl
 
 import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.SearchRepository
-import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.utils.Resource
+import com.example.playlistmaker.common.models.Track
+import com.example.playlistmaker.common.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 // В конструктор передаётся экземпляр класса, реализующего SearchRepositroy
 class SearchInteractorImpl(private val repository: SearchRepository) : SearchInteractor {
 
-    override fun searchTracks(expression: String): Flow<Pair<ArrayList<Track>?, Int?>> {
+    override fun searchTracks(expression: String): Flow<Pair<List<Track>?, Int?>> {
         return repository.searchTracks(expression).map { result ->
             when (result) {
                 is Resource.Success -> {
@@ -32,7 +32,7 @@ class SearchInteractorImpl(private val repository: SearchRepository) : SearchInt
         repository.clearTracksHistory()
     }
 
-    override fun getTracksHistory(): ArrayList<Track> {
+    override fun getTracksHistory(): List<Track> {
         return repository.getTracksHistory()
     }
 

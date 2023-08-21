@@ -3,7 +3,7 @@ package com.example.playlistmaker.search.data.local
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.example.playlistmaker.search.data.LocalStorage
-import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.common.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -13,7 +13,7 @@ class SharedPreferencesClient(
 ) : LocalStorage {
 
     override fun addTracksHistory(track: Track) {
-        val tracksHistory = getTracksHistory()
+        val tracksHistory = getTracksHistory().toMutableList()
         tracksHistory.remove(track)
         tracksHistory.add(0, track)
         if (tracksHistory.size > TRACKS_HISTORY_MAX) tracksHistory.removeLast()
@@ -25,9 +25,9 @@ class SharedPreferencesClient(
         sharedPreferences.edit { remove(TRACKS_HISTORY) }
     }
 
-    override fun getTracksHistory(): ArrayList<Track> {
-        val json = sharedPreferences.getString(TRACKS_HISTORY, null) ?: return arrayListOf()
-        return gson.fromJson(json, object : TypeToken<ArrayList<Track>>() {}.type)
+    override fun getTracksHistory(): List<Track> {
+        val json = sharedPreferences.getString(TRACKS_HISTORY, null) ?: return listOf()
+        return gson.fromJson(json, object : TypeToken<List<Track>>() {}.type)
     }
 
     companion object {

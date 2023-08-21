@@ -3,8 +3,8 @@ package com.example.playlistmaker.search.data
 import com.example.playlistmaker.search.data.dto.SearchRequest
 import com.example.playlistmaker.search.data.dto.SearchResponse
 import com.example.playlistmaker.search.domain.api.SearchRepository
-import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.utils.Resource
+import com.example.playlistmaker.common.models.Track
+import com.example.playlistmaker.common.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -15,7 +15,7 @@ class SearchRepositoryImpl(
     private val localStorage: LocalStorage
 ) : SearchRepository {
 
-    override fun searchTracks(expression: String): Flow<Resource<ArrayList<Track>>> = flow {
+    override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow {
 
         val response = networkClient.doRequest(SearchRequest(expression))
 
@@ -25,25 +25,21 @@ class SearchRepositoryImpl(
             }
 
             200 -> {
-                // ArrayList<TrackDto> -> ArrayList<Track>
-                val arrayListTracks = arrayListOf<Track>()
-                (response as SearchResponse).results.forEach {
-                    arrayListTracks.add(
-                        Track(
-                            it.trackId,
-                            it.trackName,
-                            it.artistName,
-                            it.trackTimeMillis,
-                            it.artworkUrl100,
-                            it.collectionName,
-                            it.releaseDate,
-                            it.primaryGenreName,
-                            it.country,
-                            it.previewUrl,
-                        )
+                val tracks: List<Track> = (response as SearchResponse).results.map {
+                    Track(
+                        it.trackId,
+                        it.trackName,
+                        it.artistName,
+                        it.trackTimeMillis,
+                        it.artworkUrl100,
+                        it.collectionName,
+                        it.releaseDate,
+                        it.primaryGenreName,
+                        it.country,
+                        it.previewUrl,
                     )
                 }
-                emit(Resource.Success(arrayListTracks))
+                emit(Resource.Success(tracks))
             }
 
             else -> {
@@ -61,7 +57,7 @@ class SearchRepositoryImpl(
         localStorage.clearTracksHistory()
     }
 
-    override fun getTracksHistory(): ArrayList<Track> {
+    override fun getTracksHistory(): List<Track> {
         return localStorage.getTracksHistory()
     }
 }

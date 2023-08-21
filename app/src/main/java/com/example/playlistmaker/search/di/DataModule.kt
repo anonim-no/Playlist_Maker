@@ -1,8 +1,8 @@
 package com.example.playlistmaker.search.di
 
 import android.content.Context
-import com.example.playlistmaker.APPLE_MUSIC_API_BASE_URL
-import com.example.playlistmaker.PLAYLIST_MAKER_PREFERENCE
+import com.example.playlistmaker.common.APPLE_MUSIC_API_BASE_URL
+import com.example.playlistmaker.common.PLAYLIST_MAKER_PREFERENCE
 import com.example.playlistmaker.search.data.LocalStorage
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.local.SharedPreferencesClient
