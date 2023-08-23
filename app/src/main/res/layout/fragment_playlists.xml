@@ -6,7 +6,7 @@
     tools:context=".medialibrary.presentation.playlists.PlayListsFragment">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/newPlayList"
+        android:id="@+id/addPlaylistButton"
         style="@style/Button"
         android:text="@string/new_playlist"
         app:cornerRadius="54dp" />

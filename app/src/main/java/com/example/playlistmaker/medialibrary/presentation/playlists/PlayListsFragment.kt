@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
+import androidx.navigation.fragment.findNavController
+import com.example.playlistmaker.R
 import com.example.playlistmaker.medialibrary.presentation.models.PlayListsState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -26,6 +28,13 @@ class PlayListsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.addPlaylistButton.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_mediaLibraryFragment_to_addPlayListFragment
+            )
+        }
+
         playListsViewModel.observeState().observe(viewLifecycleOwner) {
             when (it) {
                 is PlayListsState.Empty -> {

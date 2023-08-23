@@ -37,7 +37,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:autofillHints="username"
-            android:background="@drawable/rounded_edittext_backgroud"
+            android:background="@drawable/rounded_search_form_backgroud"
             android:drawableStart="@drawable/ic_search_form"
             android:drawablePadding="8dp"
             android:drawableTint="@color/search_form_text_hint_color"
