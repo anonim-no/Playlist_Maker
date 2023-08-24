@@ -13,9 +13,8 @@ interface PlayListsDao {
 
     @Insert(entity = PlayListsTrackEntity::class)
     suspend fun addTrackToPlayList(track: PlayListsTrackEntity)
-    //TODO("обновить поле count у плейлиста")
 
-    @Query("SELECT * FROM play_lists_table ORDER BY createdAt DESC")
+    @Query("SELECT playListId, name, description, image, (SELECT COUNT(trackId) FROM track_play_lists_table WHERE playListId=play_lists_table.playListId) as tracksCount, createdAt FROM play_lists_table ORDER BY createdAt DESC")
     suspend fun getPlayLists(): List<PlayListEntity>
 
     @Query("SELECT * FROM track_play_lists_table WHERE playListId = :playListId")

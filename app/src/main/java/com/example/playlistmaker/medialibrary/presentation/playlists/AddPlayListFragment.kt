@@ -130,7 +130,10 @@ class AddPlayListFragment : Fragment() {
     private fun saveImageToPrivateStorage(uri: Uri, fileName: String) {
 
         val filePath =
-            File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), PLAY_LISTS_IMAGES_DIRECTORY)
+            File(
+                requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                PLAY_LISTS_IMAGES_DIRECTORY
+            )
         if (!filePath.exists()) {
             filePath.mkdirs()
         }
