@@ -1,12 +1,12 @@
 package com.example.playlistmaker.medialibrary.di
 
 import com.example.playlistmaker.medialibrary.data.FavoritesRepositoryImpl
-import com.example.playlistmaker.medialibrary.data.db.converters.TrackDbConvertor
-import com.example.playlistmaker.medialibrary.domain.db.FavoritesRepository
+import com.example.playlistmaker.medialibrary.data.db.favorites.converters.FavoritesTrackDbConvertor
+import com.example.playlistmaker.medialibrary.domain.db.favorites.FavoritesRepository
 import org.koin.dsl.module
 
 val mediaLibraryRepositoryModule = module {
-    factory { TrackDbConvertor() }
+    factory { FavoritesTrackDbConvertor() }
 
     single<FavoritesRepository> {
         FavoritesRepositoryImpl(get(), get())

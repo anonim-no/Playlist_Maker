@@ -44,7 +44,7 @@
     </fragment>
     <fragment
         android:id="@+id/addPlayListFragment"
-        android:name="com.example.playlistmaker.medialibrary.presentation.playlists.add.AddPlayListFragment"
+        android:name="com.example.playlistmaker.medialibrary.presentation.playlists.AddPlayListFragment"
         android:label="fragment_addplaylist"
         tools:layout="@layout/fragment_addplaylist" />
     <fragment

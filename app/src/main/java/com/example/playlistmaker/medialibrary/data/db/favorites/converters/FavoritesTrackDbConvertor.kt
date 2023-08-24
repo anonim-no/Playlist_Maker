@@ -1,12 +1,12 @@
-package com.example.playlistmaker.medialibrary.data.db.converters
+package com.example.playlistmaker.medialibrary.data.db.favorites.converters
 
-import com.example.playlistmaker.medialibrary.data.db.entity.TrackEntity
+import com.example.playlistmaker.medialibrary.data.db.favorites.entity.FavoritesTrackEntity
 import com.example.playlistmaker.common.models.Track
 import java.util.Calendar
 
-class TrackDbConvertor {
-    fun map(track: Track): TrackEntity {
-        return TrackEntity(
+class FavoritesTrackDbConvertor {
+    fun map(track: Track): FavoritesTrackEntity {
+        return FavoritesTrackEntity(
             track.trackId,
             track.trackName,
             track.artistName,
@@ -21,7 +21,7 @@ class TrackDbConvertor {
         )
     }
 
-    fun map(track: TrackEntity): Track {
+    fun map(track: FavoritesTrackEntity): Track {
         return Track(
             track.trackId,
             track.trackName,

@@ -1,0 +1,63 @@
+package com.example.playlistmaker.medialibrary.data.db.playlists.converters
+
+import com.example.playlistmaker.common.models.Track
+import com.example.playlistmaker.medialibrary.data.db.playlists.dao.PlayListsDao
+import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListEntity
+import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListsTrackEntity
+import com.example.playlistmaker.medialibrary.domain.models.PlayList
+import java.util.Calendar
+
+class PlayListsTrackDbConvertor {
+
+    fun map(playList: PlayList): PlayListEntity {
+        return PlayListEntity(
+            playList.name,
+            playList.description,
+            playList.image,
+            0,
+            Calendar.getInstance().timeInMillis
+        )
+    }
+
+    fun map(playListEntity: PlayListEntity): PlayList {
+        return PlayList(
+            playListEntity.playListId,
+            playListEntity.name,
+            playListEntity.description,
+            playListEntity.image,
+            playListEntity.tracksCount,
+        )
+    }
+
+    fun map(track: Track, playListId: Int): PlayListsTrackEntity {
+        return PlayListsTrackEntity(
+            track.trackId,
+            track.trackName,
+            track.artistName,
+            track.trackTimeMillis,
+            track.artworkUrl100,
+            track.collectionName,
+            track.releaseDate,
+            track.primaryGenreName,
+            track.country,
+            track.previewUrl,
+            Calendar.getInstance().timeInMillis,
+            playListId
+        )
+    }
+
+    fun map(track: PlayListsTrackEntity): Track {
+        return Track(
+            track.trackId,
+            track.trackName,
+            track.artistName,
+            track.trackTimeMillis,
+            track.artworkUrl100,
+            track.collectionName,
+            track.releaseDate,
+            track.primaryGenreName,
+            track.country,
+            track.previewUrl
+        )
+    }
+}

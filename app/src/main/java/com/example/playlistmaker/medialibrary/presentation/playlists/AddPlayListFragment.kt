@@ -1,4 +1,4 @@
-package com.example.playlistmaker.medialibrary.presentation.playlists.add
+package com.example.playlistmaker.medialibrary.presentation.playlists
 
 import android.content.Context
 import android.net.Uri
@@ -69,6 +69,10 @@ class AddPlayListFragment : Fragment() {
             }
         binding.addImage.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
+        binding.playListCreateButton.setOnClickListener {
+            addPlayListViewModel.createPlayList()
         }
 
     }
