@@ -42,7 +42,7 @@ class PlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        val track = intent.getSerializableExtra(TRACK, Track::class.java) as Track
+        val track = intent.getSerializableExtra(TRACK) as Track
 
         showTrack(track)
 

@@ -1,11 +1,15 @@
 package com.example.playlistmaker.medialibrary.presentation.playlists
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,12 +20,15 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAddplaylistBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
+import java.io.FileOutputStream
+import java.util.Calendar
 
 class AddPlayListFragment : Fragment() {
 
     private lateinit var binding: FragmentAddplaylistBinding
 
-    private val addPlayListViewModel: AddPlayListViewModel by viewModel()
+    private val addPlayListViewModel by viewModel<AddPlayListViewModel>()
 
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
@@ -72,7 +79,24 @@ class AddPlayListFragment : Fragment() {
         }
 
         binding.playListCreateButton.setOnClickListener {
-            addPlayListViewModel.createPlayList()
+            val name = binding.playListNameEditText.text.toString()
+            val description = binding.playListDescriptionEditText.text.toString()
+            var image: String? = null
+            if (pickImageUri != null) {
+                image = Calendar.getInstance().timeInMillis.toString() + ".jpg"
+                saveImageToPrivateStorage(pickImageUri!!, image)
+            }
+            addPlayListViewModel.createPlayList(
+                name = name,
+                description = description,
+                image = image
+            )
+            Toast.makeText(
+                requireContext(),
+                String.format(resources.getText(R.string.playlist_created).toString(), name),
+                Toast.LENGTH_SHORT
+            ).show()
+            findNavController().popBackStack()
         }
 
     }
@@ -98,13 +122,30 @@ class AddPlayListFragment : Fragment() {
     private fun checkUnsavedData(): Boolean {
         return (
                 pickImageUri != null
-                || binding.playListNameEditText.text.toString().isNotEmpty()
-                || binding.playListDescriptionEditText.text.toString().isNotEmpty()
+                        || binding.playListNameEditText.text.toString().isNotEmpty()
+                        || binding.playListDescriptionEditText.text.toString().isNotEmpty()
                 )
     }
 
+    private fun saveImageToPrivateStorage(uri: Uri, fileName: String) {
+
+        val filePath =
+            File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
+
+        if (!filePath.exists()) {
+            filePath.mkdirs()
+        }
+
+        val file = File(filePath, fileName)
+        val inputStream = requireActivity().contentResolver.openInputStream(uri)
+        val outputStream = FileOutputStream(file)
+        BitmapFactory
+            .decodeStream(inputStream)
+            .compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, outputStream)
+    }
+
     companion object {
-        fun newInstance() = AddPlayListFragment()
+        private const val IMAGE_QUALITY = 80
     }
 
 

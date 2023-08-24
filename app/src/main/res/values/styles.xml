@@ -85,10 +85,9 @@
         <item name="boxCornerRadiusBottomStart">8dp</item>
         <item name="boxCornerRadiusTopEnd">8dp</item>
         <item name="boxCornerRadiusTopStart">8dp</item>
-    </style>
-
-    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-
+        <item name="android:singleLine">true</item>
+        <item name="android:lines">1</item>
+        <item name="android:maxLength">255</item>
     </style>
 
     <style name="PlayListCreateEditText">

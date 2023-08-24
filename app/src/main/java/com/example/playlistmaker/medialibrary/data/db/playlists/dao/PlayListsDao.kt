@@ -12,7 +12,7 @@ interface PlayListsDao {
     suspend fun addPlayList(playList: PlayListEntity)
 
     @Insert(entity = PlayListsTrackEntity::class)
-    suspend fun addTrackToPlayList(track: PlayListsTrackEntity, playListId: Int)
+    suspend fun addTrackToPlayList(track: PlayListsTrackEntity)
     //TODO("обновить поле count у плейлиста")
 
     @Query("SELECT * FROM play_lists_table ORDER BY createdAt DESC")
