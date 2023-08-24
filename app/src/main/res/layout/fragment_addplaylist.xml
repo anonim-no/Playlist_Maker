@@ -49,15 +49,15 @@
         style="@style/PlayListCreateTextInputLayout"
         android:hint="@string/playlist_name"
         android:layout_marginTop="32dp"
-        app:hintTextColor="@color/selected_item"
-        app:boxStrokeColor="@color/selected_item"
         app:layout_constraintEnd_toStartOf="@+id/rightBorder"
         app:layout_constraintStart_toStartOf="@+id/leftBorder"
         app:layout_constraintTop_toBottomOf="@+id/addImage">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/playListNameEditText"
-            style="@style/PlayListCreateEditText" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+             />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -66,15 +66,14 @@
         style="@style/PlayListCreateTextInputLayout"
         android:hint="@string/playlist_description"
         android:layout_marginTop="16dp"
-        app:hintTextColor="@color/selected_item"
-        app:boxStrokeColor="@color/selected_item"
         app:layout_constraintEnd_toStartOf="@+id/rightBorder"
         app:layout_constraintStart_toStartOf="@+id/leftBorder"
         app:layout_constraintTop_toBottomOf="@+id/playListNameTextInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/playListDescriptionEditText"
-            style="@style/PlayListCreateEditText" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

@@ -15,6 +15,4 @@
     <color name="search_form_background_color">#FFFFFF</color>
     <color name="search_form_text_hint_color">#1A1B22</color>
 
-    <color name="mtrl_textinput_default_box_stroke_color" tools:ignore="PrivateResource">#FFFFFF</color>
-
 </resources>

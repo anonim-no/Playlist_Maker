@@ -1,6 +1,7 @@
 package com.example.playlistmaker.medialibrary.presentation.playlists.add
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +25,7 @@ class AddPlayListFragment : Fragment() {
 
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
-    private var pickImage = false
+    private var pickImageUri: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,7 +64,7 @@ class AddPlayListFragment : Fragment() {
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
                     binding.addImage.setImageURI(uri)
-                    pickImage = true
+                    pickImageUri = uri
                 }
             }
         binding.addImage.setOnClickListener {
@@ -92,7 +93,7 @@ class AddPlayListFragment : Fragment() {
 
     private fun checkUnsavedData(): Boolean {
         return (
-                pickImage
+                pickImageUri != null
                 || binding.playListNameEditText.text.toString().isNotEmpty()
                 || binding.playListDescriptionEditText.text.toString().isNotEmpty()
                 )
