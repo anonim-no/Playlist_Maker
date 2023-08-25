@@ -31,8 +31,8 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     }
 
     fun searchDebounce(searchText: String) {
+        debounceJob?.cancel()
         if (searchText.isNotEmpty()) {
-            debounceJob?.cancel()
             debounceJob = viewModelScope.launch {
                 delay(SEARCH_DEBOUNCE_DELAY)
                 search(searchText)

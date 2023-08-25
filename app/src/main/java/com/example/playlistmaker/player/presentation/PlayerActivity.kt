@@ -2,6 +2,7 @@ package com.example.playlistmaker.player.presentation
 
 import android.os.Bundle
 import android.view.View
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -10,6 +11,9 @@ import com.example.playlistmaker.common.TRACK
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.presentation.models.PlayerState
 import com.example.playlistmaker.common.models.Track
+import com.example.playlistmaker.medialibrary.domain.models.PlayList
+import com.example.playlistmaker.player.presentation.models.PlayListsState
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -20,10 +24,41 @@ class PlayerActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<PlayerViewModel>()
 
+    private val playListsAdapter = PlayListsAdapter {
+        addTrackToPlayList(it)
+    }
+
+    private lateinit var track: Track
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.playListsRV.adapter = playListsAdapter
+
+        val bottomSheetContainer = findViewById<LinearLayout>(R.id.player_bottom_sheet)
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.visibility = View.GONE
+                    }
+                    else -> {
+                        binding.overlay.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
 
 
         viewModel.observePlayerStateState().observe(this) {
@@ -36,6 +71,20 @@ class PlayerActivity : AppCompatActivity() {
 
         viewModel.observeFavoriteState().observe(this) {
             render(it)
+        }
+
+        viewModel.observePlayListsState().observe(this) {
+            when (it) {
+                is PlayListsState.Empty -> binding.playListsRV.visibility = View.GONE
+                is PlayListsState.PlayLists -> {
+                    playListsAdapter.playLists = it.playLists
+                    binding.playListsRV.visibility = View.VISIBLE
+                }
+            }
+        }
+
+        binding.playlistButton.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
         binding.toolbar.setNavigationOnClickListener {
@@ -62,6 +111,15 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.playbackControl()
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getPlayLists()
+    }
+
+    private fun addTrackToPlayList(playList: PlayList) {
+        viewModel.addTrackToPlayList(track, playList)
     }
 
     private fun render(state: PlayerState) {

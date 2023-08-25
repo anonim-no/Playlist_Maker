@@ -17,6 +17,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
+import com.example.playlistmaker.common.PLAY_LISTS_IMAGES_DIRECTORY
 import com.example.playlistmaker.databinding.FragmentAddplaylistBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -147,7 +148,6 @@ class AddPlayListFragment : Fragment() {
     }
 
     companion object {
-        private const val PLAY_LISTS_IMAGES_DIRECTORY = "play_list_images"
         private const val IMAGE_QUALITY = 80
     }
 

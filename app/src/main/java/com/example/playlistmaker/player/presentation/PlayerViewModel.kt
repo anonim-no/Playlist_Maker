@@ -8,6 +8,9 @@ import com.example.playlistmaker.medialibrary.domain.db.favorites.FavoritesInter
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.presentation.models.PlayerState
 import com.example.playlistmaker.common.models.Track
+import com.example.playlistmaker.medialibrary.domain.db.playlists.PlayListsInteractor
+import com.example.playlistmaker.medialibrary.domain.models.PlayList
+import com.example.playlistmaker.player.presentation.models.PlayListsState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -16,7 +19,8 @@ import java.util.Locale
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
-    private val favoritesInteractor: FavoritesInteractor
+    private val favoritesInteractor: FavoritesInteractor,
+    private val playListsInteractor: PlayListsInteractor
 ) : ViewModel() {
 
     private val playerStateLiveData = MutableLiveData<PlayerState>()
@@ -25,11 +29,15 @@ class PlayerViewModel(
 
     private val trackFavoriteStateLiveData = MutableLiveData<PlayerState.StateFavorite>()
 
+    private val playListsStateLiveData = MutableLiveData<PlayListsState>()
+
     fun observePlayerStateState(): LiveData<PlayerState> = playerStateLiveData
 
     fun observeTrackTimeState(): LiveData<PlayerState.UpdatePlayingTime> = trackTimeStateLiveData
 
     fun observeFavoriteState(): LiveData<PlayerState.StateFavorite> = trackFavoriteStateLiveData
+
+    fun observePlayListsState(): LiveData<PlayListsState> = playListsStateLiveData
 
     private var timerJob: Job? = null
 
@@ -138,6 +146,23 @@ class PlayerViewModel(
                 )
                 true
             }
+        }
+    }
+
+    fun getPlayLists() {
+        viewModelScope.launch {
+            val playLists = playListsInteractor.getPlayLists()
+            if (playLists.isEmpty()) {
+                playListsStateLiveData.postValue(PlayListsState.Empty)
+            } else {
+                playListsStateLiveData.postValue(PlayListsState.PlayLists(playLists))
+            }
+        }
+    }
+
+    fun addTrackToPlayList(track: Track, playList: PlayList) {
+        viewModelScope.launch {
+            playListsInteractor.addTrackToPlayList(track, playList.playListId)
         }
     }
 

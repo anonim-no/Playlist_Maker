@@ -8,7 +8,7 @@ import com.example.playlistmaker.medialibrary.data.db.playlists.dao.PlayListsDao
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListEntity
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListsTrackEntity
 
-@Database(version = 2, entities = [FavoritesTrackEntity::class, PlayListsTrackEntity::class, PlayListEntity::class])
+@Database(version = 3, entities = [FavoritesTrackEntity::class, PlayListsTrackEntity::class, PlayListEntity::class])
 abstract class AppDatabase : RoomDatabase() {
     abstract fun favoritesTrackDao(): FavoritesTrackDao
 

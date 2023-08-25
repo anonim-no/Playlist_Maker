@@ -1,4 +1,4 @@
-package com.example.playlistmaker.medialibrary.presentation.models
+package com.example.playlistmaker.player.presentation.models
 
 import com.example.playlistmaker.medialibrary.domain.models.PlayList
 

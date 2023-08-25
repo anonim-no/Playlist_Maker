@@ -55,6 +55,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/playListNameEditText"
+            style="@style/PlayListCreateEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
              />
@@ -72,6 +73,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/playListDescriptionEditText"
+            style="@style/PlayListCreateEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
