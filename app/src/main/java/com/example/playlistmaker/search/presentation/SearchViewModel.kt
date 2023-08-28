@@ -22,6 +22,8 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
 
     private var debounceJob: Job? = null
 
+    private var lastSearchQuery = ""
+
     // при старте активити показываем историю треков, если есть
     init {
         val historyTracks = getTracksHistory()
@@ -40,19 +42,24 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
         }
     }
 
-    fun search(searchText: String) {
+    fun search(searchText: String, repeatSearch: Boolean = false) {
+        debounceJob?.cancel()
+
         if (searchText.isNotEmpty()) {
 
-            debounceJob?.cancel()
+            if (lastSearchQuery != searchText || repeatSearch) {
 
-            renderState(SearchState.Loading)
+                lastSearchQuery = searchText
 
-            viewModelScope.launch {
-                searchInteractor
-                    .searchTracks(searchText)
-                    .collect { pair ->
-                        processResult(pair.first, pair.second)
-                    }
+                renderState(SearchState.Loading)
+
+                viewModelScope.launch {
+                    searchInteractor
+                        .searchTracks(searchText)
+                        .collect { pair ->
+                            processResult(pair.first, pair.second)
+                        }
+                }
             }
         }
     }
