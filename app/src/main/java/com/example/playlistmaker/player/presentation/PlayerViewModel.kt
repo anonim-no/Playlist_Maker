@@ -31,6 +31,8 @@ class PlayerViewModel(
 
     private val playListsStateLiveData = MutableLiveData<PlayListsState>()
 
+    private var isPlayerPrepared = false
+
     fun observePlayerStateState(): LiveData<PlayerState> = playerStateLiveData
 
     fun observeTrackTimeState(): LiveData<PlayerState.UpdatePlayingTime> = trackTimeStateLiveData
@@ -39,25 +41,31 @@ class PlayerViewModel(
 
     fun observePlayListsState(): LiveData<PlayListsState> = playListsStateLiveData
 
+
     private var timerJob: Job? = null
 
     private var isTrackFavorite = false
 
+    private var isClickAllowed = true
+
     fun preparePlayer(url: String?) {
-        renderState(PlayerState.Preparing)
-        if (url != null) {
-            playerInteractor.preparePlayer(
-                url = url,
-                onPreparedListener = {
-                    renderState(PlayerState.Stopped)
-                },
-                onCompletionListener = {
-                    timerJob?.cancel()
-                    renderState(PlayerState.Stopped)
-                }
-            )
-        } else {
-            renderState(PlayerState.Unplayable)
+        if (!isPlayerPrepared) {
+            isPlayerPrepared = true
+            renderState(PlayerState.Preparing)
+            if (url != null) {
+                playerInteractor.preparePlayer(
+                    url = url,
+                    onPreparedListener = {
+                        renderState(PlayerState.Stopped)
+                    },
+                    onCompletionListener = {
+                        timerJob?.cancel()
+                        renderState(PlayerState.Stopped)
+                    }
+                )
+            } else {
+                renderState(PlayerState.Unplayable)
+            }
         }
     }
 
@@ -115,6 +123,7 @@ class PlayerViewModel(
 
     override fun onCleared() {
         super.onCleared()
+        isPlayerPrepared = false
         playerInteractor.releasePlayer()
     }
 
@@ -162,11 +171,33 @@ class PlayerViewModel(
 
     fun addTrackToPlayList(track: Track, playList: PlayList) {
         viewModelScope.launch {
-            playListsInteractor.addTrackToPlayList(track, playList.playListId)
+            if (playListsInteractor.isTrackInPlayList(track.trackId, playList.playListId)) {
+                playListsStateLiveData.postValue(
+                    PlayListsState.AddTrackToPlayListResult(false, playListName = playList.name)
+                )
+            } else {
+                playListsInteractor.addTrackToPlayList(track, playList.playListId)
+                playListsStateLiveData.postValue(
+                    PlayListsState.AddTrackToPlayListResult(true, playListName = playList.name)
+                )
+            }
         }
+    }
+
+    fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewModelScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
     }
 
     companion object {
         private const val UPDATE_PLAYING_TIME_DELAY = 300L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

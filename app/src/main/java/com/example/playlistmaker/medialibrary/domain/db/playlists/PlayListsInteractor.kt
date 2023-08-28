@@ -13,4 +13,6 @@ interface PlayListsInteractor {
 
     suspend fun getPlayListTracks(playListId: Int): List<Track>
 
+    suspend fun isTrackInPlayList(trackId: Int, playListId: Int): Boolean
+
 }

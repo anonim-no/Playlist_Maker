@@ -20,7 +20,6 @@ class PlayListsAdapter(private val clickListener: PlayListClickListener) : Recyc
     var playLists = listOf<PlayList>()
         set(newList) {
             val diffResult = DiffUtil.calculateDiff(
-                //DiffCallback(field, newList)
                 object:DiffCallback<PlayList>(field, newList){
                     override fun areContentsTheSame(oldItemPosition: Int,newItemPosition: Int)
                     : Boolean {
@@ -42,6 +41,9 @@ class PlayListsAdapter(private val clickListener: PlayListClickListener) : Recyc
 
     override fun onBindViewHolder(holder: PlayListViewHolder, position: Int) {
         holder.bind(playLists[position])
+        holder.itemView.setOnClickListener {
+            //clickListener.onClick(playLists[holder.adapterPosition])
+        }
     }
 }
 
@@ -67,8 +69,6 @@ class PlayListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .load(playList.image?.let { imageName -> File(filePath, imageName) })
             .placeholder(R.drawable.ic_placeholder)
             .into(playListImage)
-
-
     }
 }
 

@@ -1,7 +1,6 @@
 package com.example.playlistmaker.search.presentation
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +10,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.TRACK
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.player.presentation.PlayerActivity
 import com.example.playlistmaker.common.models.Track
 import com.example.playlistmaker.common.presentation.TracksAdapter
 import com.example.playlistmaker.search.presentation.models.SearchState
@@ -124,10 +123,12 @@ class SearchFragment : Fragment() {
     private fun clickOnTrack(track: Track) {
         if (viewModel.clickDebounce()) {
             viewModel.addTracksHistory(track)
-            val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
-                putExtra(TRACK, track)
-            }
-            startActivity(intent)
+            findNavController().navigate(
+                R.id.action_searchFragment_to_playerFragment,
+                Bundle().apply {
+                    putSerializable(TRACK, track)
+                }
+            )
         }
     }
 

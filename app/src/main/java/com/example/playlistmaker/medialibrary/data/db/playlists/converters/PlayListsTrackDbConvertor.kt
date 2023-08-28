@@ -2,7 +2,7 @@ package com.example.playlistmaker.medialibrary.data.db.playlists.converters
 
 import com.example.playlistmaker.common.models.Track
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListEntity
-import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListsTrackEntity
+import com.example.playlistmaker.medialibrary.data.db.playlists.entity.TrackEntity
 import com.example.playlistmaker.medialibrary.domain.models.PlayList
 import java.util.Calendar
 
@@ -29,7 +29,7 @@ class PlayListsTrackDbConvertor {
         )
     }
 
-    fun map(trackEntity: PlayListsTrackEntity): Track {
+    fun map(trackEntity: TrackEntity): Track {
         return Track(
             trackEntity.trackId,
             trackEntity.trackName,
@@ -44,8 +44,8 @@ class PlayListsTrackDbConvertor {
         )
     }
 
-    fun map(track: Track, playListId: Int): PlayListsTrackEntity {
-        return PlayListsTrackEntity(
+    fun map(track: Track, playListId: Int): TrackEntity {
+        return TrackEntity(
             null,
             track.trackId,
             track.trackName,
@@ -57,7 +57,6 @@ class PlayListsTrackDbConvertor {
             track.primaryGenreName,
             track.country,
             track.previewUrl,
-            Calendar.getInstance().timeInMillis,
             playListId
         )
     }

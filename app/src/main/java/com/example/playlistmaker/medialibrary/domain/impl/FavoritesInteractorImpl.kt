@@ -9,11 +9,9 @@ class FavoritesInteractorImpl(private val favoritesRepository: FavoritesReposito
     FavoritesInteractor {
     override fun getFavoritesTracks(): Flow<List<Track>> = favoritesRepository.getFavoritesTracks()
 
-    override fun isFavoriteTrack(trackId: Int): Flow<Boolean> =
-        favoritesRepository.isFavoriteTrack(trackId)
+    override fun isFavoriteTrack(trackId: Int): Flow<Boolean> = favoritesRepository.isFavoriteTrack(trackId)
 
     override suspend fun addToFavorites(track: Track) = favoritesRepository.addToFavorites(track)
 
-    override suspend fun deleteFromFavorites(trackId: Int) =
-        favoritesRepository.deleteFromFavorites(trackId)
+    override suspend fun deleteFromFavorites(trackId: Int) = favoritesRepository.deleteFromFavorites(trackId)
 }

@@ -1,26 +1,32 @@
 package com.example.playlistmaker.player.presentation
 
+import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.TRACK
-import com.example.playlistmaker.databinding.ActivityPlayerBinding
-import com.example.playlistmaker.player.presentation.models.PlayerState
 import com.example.playlistmaker.common.models.Track
+import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.medialibrary.domain.models.PlayList
 import com.example.playlistmaker.player.presentation.models.PlayListsState
+import com.example.playlistmaker.player.presentation.models.PlayerState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerFragment: Fragment() {
 
-    private lateinit var binding: ActivityPlayerBinding
+    private lateinit var binding: FragmentPlayerBinding
 
     private val viewModel by viewModel<PlayerViewModel>()
 
@@ -30,23 +36,122 @@ class PlayerActivity : AppCompatActivity() {
 
     private lateinit var track: Track
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.playListsRV.adapter = playListsAdapter
 
-        val bottomSheetContainer = findViewById<LinearLayout>(R.id.player_bottom_sheet)
+        showTrack(track)
 
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+        viewModel.preparePlayer(track.previewUrl)
+
+        viewModel.isFavorite(track.trackId)
+
+        initBottomSheet()
+
+        initObserveViewModel()
+
+        initOnClickListeners()
+
+        initOnBackPressedCallback()
+
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        track = arguments?.getSerializable(TRACK) as Track
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.pausePlayer()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getPlayLists()
+    }
+
+    private fun initOnBackPressedCallback() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                } else {
+                    findNavController().popBackStack()
+                }
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), callback)
+    }
+
+    private fun initOnClickListeners() {
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+        binding.playlistButton.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+        binding.favoriteButton.setOnClickListener {
+            viewModel.onFavoriteClicked(track)
+        }
+        binding.playButton.setOnClickListener {
+            viewModel.playbackControl()
+        }
+        binding.addPlaylistButton.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_playerFragment_to_addPlayListFragment
+            )
+        }
+    }
+
+    private fun initObserveViewModel() {
+        viewModel.observePlayerStateState().observe(viewLifecycleOwner) {
+            render(it)
+        }
+        viewModel.observeTrackTimeState().observe(viewLifecycleOwner) {
+            render(it)
+        }
+        viewModel.observeFavoriteState().observe(viewLifecycleOwner) {
+            render(it)
+        }
+        viewModel.observePlayListsState().observe(viewLifecycleOwner) {
+            when (it) {
+                is PlayListsState.Empty -> binding.playListsRV.visibility = View.GONE
+                is PlayListsState.PlayLists -> {
+                    playListsAdapter.playLists = it.playLists
+                    binding.playListsRV.visibility = View.VISIBLE
+                }
+                is PlayListsState.AddTrackToPlayListResult -> {
+                    if (it.isAdded) {
+                        showToast(getString(R.string.added_to_playlist, it.playListName))
+                    } else {
+                        showToast(getString(R.string.already_added_to_playlist, it.playListName))
+                    }
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+            }
+        }
+    }
+
+    private fun initBottomSheet() {
+        val bottomSheetContainer = binding.playerBottomSheet
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
-
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.overlay.visibility = View.GONE
@@ -56,70 +161,18 @@ class PlayerActivity : AppCompatActivity() {
                     }
                 }
             }
-
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
-
-
-        viewModel.observePlayerStateState().observe(this) {
-            render(it)
-        }
-
-        viewModel.observeTrackTimeState().observe(this) {
-            render(it)
-        }
-
-        viewModel.observeFavoriteState().observe(this) {
-            render(it)
-        }
-
-        viewModel.observePlayListsState().observe(this) {
-            when (it) {
-                is PlayListsState.Empty -> binding.playListsRV.visibility = View.GONE
-                is PlayListsState.PlayLists -> {
-                    playListsAdapter.playLists = it.playLists
-                    binding.playListsRV.visibility = View.VISIBLE
-                }
-            }
-        }
-
-        binding.playlistButton.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
-
-        binding.toolbar.setNavigationOnClickListener {
-            finish()
-        }
-
-        val track = intent.getSerializableExtra(TRACK) as Track
-
-        showTrack(track)
-
-        viewModel.isFavorite(track.trackId)
-
-        binding.favoriteButton.setOnClickListener {
-            viewModel.onFavoriteClicked(track)
-        }
-
-        binding.playButton.isEnabled = false
-
-        if (savedInstanceState == null) {
-            viewModel.preparePlayer(track.previewUrl)
-        }
-
-        binding.playButton.setOnClickListener {
-            viewModel.playbackControl()
-        }
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getPlayLists()
     }
 
     private fun addTrackToPlayList(playList: PlayList) {
-        viewModel.addTrackToPlayList(track, playList)
+        if (viewModel.clickDebounce()) {
+            viewModel.addTrackToPlayList(track, playList)
+        }
+    }
+
+    private fun showToast(additionalMessage: String) {
+        Toast.makeText(requireContext(), additionalMessage, Toast.LENGTH_LONG).show()
     }
 
     private fun render(state: PlayerState) {
@@ -235,11 +288,8 @@ class PlayerActivity : AppCompatActivity() {
                 collectionNameTitle.visibility = View.GONE
             }
         }
-    }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.pausePlayer()
-    }
+        binding.playButton.isEnabled = false
 
+    }
 }

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".player.presentation.PlayerActivity">
+    tools:context=".player.presentation.PlayerFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -245,16 +245,16 @@
         <View
             android:layout_width="50dp"
             android:layout_height="4dp"
-            android:layout_marginTop="8dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/rounded_balloon_background"/>
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_balloon_background" />
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
             android:text="@string/add_to_playlist"
             android:textColor="@color/text_color_primary"
             android:textSize="19sp"

@@ -64,9 +64,7 @@ class PlayListsFragment : Fragment() {
     }
 
     private fun clickOnPlayList(playList: PlayList) {
-        if (playListsViewModel.clickDebounce()) {
-            //TODO("implement")
-        }
+
     }
 
     companion object {

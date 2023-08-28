@@ -21,9 +21,8 @@ class TracksAdapter(private val clickListener: TrackClickListener) :
     var tracks = listOf<Track>()
         set(newList) {
             val diffResult = DiffUtil.calculateDiff(
-                object:DiffCallback<Track>(field, newList){
-                    override fun areContentsTheSame(oldItemPosition: Int,newItemPosition: Int)
-                            : Boolean {
+                object : DiffCallback<Track>(field, newList) {
+                    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                         return field[oldItemPosition].trackId == newList[newItemPosition].trackId
                     }
                 }

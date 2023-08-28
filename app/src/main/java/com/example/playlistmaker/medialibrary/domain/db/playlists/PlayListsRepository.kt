@@ -11,4 +11,6 @@ interface PlayListsRepository {
     suspend fun getPlayLists(): List<PlayList>
 
     suspend fun getPlayListTracks(playListId: Int): List<Track>
+
+    suspend fun isTrackInPlayList(trackId: Int, playListId: Int): Boolean
 }

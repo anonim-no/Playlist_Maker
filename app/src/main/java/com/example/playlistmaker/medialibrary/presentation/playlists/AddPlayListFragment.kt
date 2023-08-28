@@ -104,28 +104,25 @@ class AddPlayListFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                myHandleOnBackPressed()
+                if (checkUnsavedData()) {
+                    confirmDialog.show()
+                } else {
+                    findNavController().popBackStack()
+                }
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
-    private fun myHandleOnBackPressed() {
-        if (checkUnsavedData()) {
-            confirmDialog.show()
-        } else {
-            findNavController().popBackStack()
-        }
-    }
-
     private fun checkUnsavedData(): Boolean {
         return (
                 pickImageUri != null
-                        || binding.playListNameEditText.text.toString().isNotEmpty()
-                        || binding.playListDescriptionEditText.text.toString().isNotEmpty()
-                )
+                || binding.playListNameEditText.text.toString().isNotEmpty()
+                || binding.playListDescriptionEditText.text.toString().isNotEmpty()
+        )
     }
 
     private fun saveImageToPrivateStorage(uri: Uri, fileName: String) {

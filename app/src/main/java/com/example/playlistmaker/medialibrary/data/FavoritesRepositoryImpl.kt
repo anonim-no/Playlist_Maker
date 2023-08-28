@@ -22,15 +22,13 @@ class FavoritesRepositoryImpl(
         emit(isFavorite)
     }
 
-    override suspend fun addToFavorites(track: Track) {
+    override suspend fun addToFavorites(track: Track) =
         appDatabase.favoritesTrackDao().addToFavorites(favoritesTrackDbConvertor.map(track))
-    }
 
-    override suspend fun deleteFromFavorites(trackId: Int) {
+    override suspend fun deleteFromFavorites(trackId: Int) =
         appDatabase.favoritesTrackDao().deleteFromFavorites(trackId)
-    }
 
-    private fun convertFromTrackEntity(tracks: List<FavoritesTrackEntity>): List<Track> {
-        return tracks.map { track -> favoritesTrackDbConvertor.map(track) }
-    }
+    private fun convertFromTrackEntity(tracks: List<FavoritesTrackEntity>): List<Track> =
+        tracks.map { track -> favoritesTrackDbConvertor.map(track) }
+
 }
