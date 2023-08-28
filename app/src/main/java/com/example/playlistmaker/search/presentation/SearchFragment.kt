@@ -24,7 +24,7 @@ class SearchFragment : Fragment() {
 
     private lateinit var binding: FragmentSearchBinding
 
-    private val viewModel by viewModel<SearchViewModel>()
+    private val searchViewModel by viewModel<SearchViewModel>()
 
     private val searchAdapter = TracksAdapter {
         clickOnTrack(it)
@@ -50,12 +50,12 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // подписываемся на изменения состояния
-        viewModel.observeState().observe(viewLifecycleOwner) {
+        searchViewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
 
         // подписываемся на тосты
-        viewModel.observeShowToast().observe(viewLifecycleOwner) {
+        searchViewModel.observeShowToast().observe(viewLifecycleOwner) {
             showToast(it)
         }
 
@@ -82,25 +82,25 @@ class SearchFragment : Fragment() {
                 showState(Content.SEARCH_RESULT)
             }
             // выполняем поиск автоматически через две секунды, после последних изменений
-            viewModel.searchDebounce(binding.inputSearchForm.text.toString())
+            searchViewModel.searchDebounce(binding.inputSearchForm.text.toString())
         }
 
         // если нажата кнопка done на клавиатуре - ищем
         binding.inputSearchForm.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.search(binding.inputSearchForm.text.toString())
+                searchViewModel.search(binding.inputSearchForm.text.toString())
             }
             false
         }
 
         // нажатие кнопки Обновить на экране с ошибкой повторяет поиск
         binding.errorButton.setOnClickListener {
-            viewModel.search(binding.inputSearchForm.text.toString())
+            searchViewModel.search(binding.inputSearchForm.text.toString(), repeatSearch = true)
         }
 
         // по клику на кнопке очистки истории поиска - очищаем историю поиска
         binding.clearHistoryButton.setOnClickListener {
-            viewModel.clearTracksHistory(getString(R.string.history_was_clear))
+            searchViewModel.clearTracksHistory(getString(R.string.history_was_clear))
         }
 
         // при запуске скрываем или показываем кнопку очистки формы
@@ -117,12 +117,12 @@ class SearchFragment : Fragment() {
         val imm =
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)
-        viewModel.clearSearch()
+        searchViewModel.clearSearch()
     }
 
     private fun clickOnTrack(track: Track) {
-        if (viewModel.clickDebounce()) {
-            viewModel.addTracksHistory(track)
+        if (searchViewModel.clickDebounce()) {
+            searchViewModel.addTracksHistory(track)
             findNavController().navigate(
                 R.id.action_searchFragment_to_playerFragment,
                 Bundle().apply {
