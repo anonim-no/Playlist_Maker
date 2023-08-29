@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListEntity
+import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListWithCountTracks
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListsTrackEntity
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.TrackPlayListEntity
 
@@ -30,8 +31,8 @@ interface PlayListsDao {
     }
 
     // получает список плейлистов с колв-ом треков
-    @Query("SELECT playListId, name, description, image, (SELECT COUNT(id) FROM play_lists_track_table WHERE play_lists_track_table.playListId=play_lists_table.playListId) as tracksCount, createdAt FROM play_lists_table ORDER BY playListId DESC")
-    suspend fun getPlayLists(): List<PlayListEntity>
+    @Query("SELECT playListId, name, description, image, (SELECT COUNT(id) FROM play_lists_track_table WHERE play_lists_track_table.playListId=play_lists_table.playListId) as tracksCount FROM play_lists_table ORDER BY playListId DESC")
+    suspend fun getPlayLists(): List<PlayListWithCountTracks>
 
     // получает список треков плейлиста
     @Query("SELECT track_play_lists_table.* FROM track_play_lists_table LEFT JOIN play_lists_track_table ON track_play_lists_table.trackId=play_lists_track_table.trackId WHERE play_lists_track_table.playListId = :playListId  ORDER BY play_lists_track_table.id DESC")

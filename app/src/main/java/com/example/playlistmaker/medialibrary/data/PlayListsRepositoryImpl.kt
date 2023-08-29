@@ -3,7 +3,7 @@ package com.example.playlistmaker.medialibrary.data
 import com.example.playlistmaker.common.models.Track
 import com.example.playlistmaker.medialibrary.data.db.AppDatabase
 import com.example.playlistmaker.medialibrary.data.db.playlists.converters.PlayListsTrackDbConvertor
-import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListEntity
+import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListWithCountTracks
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListsTrackEntity
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.TrackPlayListEntity
 import com.example.playlistmaker.medialibrary.domain.db.playlists.PlayListsRepository
@@ -26,7 +26,7 @@ class PlayListsRepositoryImpl(
         )
 
     override suspend fun getPlayLists(): List<PlayList> =
-        convertPlayListEntityToPlayList(
+        convertPlayListWithCountTracksToPlayList(
             appDatabase.playListsTrackDao().getPlayLists()
         )
 
@@ -44,8 +44,8 @@ class PlayListsRepositoryImpl(
             playListsTrackDbConvertor.map(it)
         }
 
-    private fun convertPlayListEntityToPlayList(playListEntity: List<PlayListEntity>): List<PlayList> =
-        playListEntity.map {
+    private fun convertPlayListWithCountTracksToPlayList(playListWithCountTracks: List<PlayListWithCountTracks>): List<PlayList> =
+        playListWithCountTracks.map {
             playListsTrackDbConvertor.map(it)
         }
 
