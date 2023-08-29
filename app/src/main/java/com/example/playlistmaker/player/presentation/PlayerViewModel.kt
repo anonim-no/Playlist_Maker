@@ -8,9 +8,6 @@ import com.example.playlistmaker.medialibrary.domain.db.favorites.FavoritesInter
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.presentation.models.PlayerState
 import com.example.playlistmaker.common.models.Track
-import com.example.playlistmaker.medialibrary.domain.db.playlists.PlayListsInteractor
-import com.example.playlistmaker.medialibrary.domain.models.PlayList
-import com.example.playlistmaker.player.presentation.models.PlayListsState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -19,8 +16,7 @@ import java.util.Locale
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
-    private val favoritesInteractor: FavoritesInteractor,
-    private val playListsInteractor: PlayListsInteractor
+    private val favoritesInteractor: FavoritesInteractor
 ) : ViewModel() {
 
     private val playerStateLiveData = MutableLiveData<PlayerState>()
@@ -28,8 +24,6 @@ class PlayerViewModel(
     private val trackTimeStateLiveData = MutableLiveData<PlayerState.UpdatePlayingTime>()
 
     private val trackFavoriteStateLiveData = MutableLiveData<PlayerState.StateFavorite>()
-
-    private val playListsStateLiveData = MutableLiveData<PlayListsState>()
 
     private var isPlayerPrepared = false
 
@@ -39,14 +33,10 @@ class PlayerViewModel(
 
     fun observeFavoriteState(): LiveData<PlayerState.StateFavorite> = trackFavoriteStateLiveData
 
-    fun observePlayListsState(): LiveData<PlayListsState> = playListsStateLiveData
-
 
     private var timerJob: Job? = null
 
     private var isTrackFavorite = false
-
-    private var isClickAllowed = true
 
     fun preparePlayer(url: String?) {
         if (!isPlayerPrepared) {
@@ -158,46 +148,7 @@ class PlayerViewModel(
         }
     }
 
-    fun getPlayLists() {
-        viewModelScope.launch {
-            val playLists = playListsInteractor.getPlayLists()
-            if (playLists.isEmpty()) {
-                playListsStateLiveData.postValue(PlayListsState.Empty)
-            } else {
-                playListsStateLiveData.postValue(PlayListsState.PlayLists(playLists))
-            }
-        }
-    }
-
-    fun addTrackToPlayList(track: Track, playList: PlayList) {
-        viewModelScope.launch {
-            if (playListsInteractor.isTrackInPlayList(track.trackId, playList.playListId)) {
-                playListsStateLiveData.postValue(
-                    PlayListsState.AddTrackToPlayListResult(false, playListName = playList.name)
-                )
-            } else {
-                playListsInteractor.addTrackToPlayList(track, playList.playListId)
-                playListsStateLiveData.postValue(
-                    PlayListsState.AddTrackToPlayListResult(true, playListName = playList.name)
-                )
-            }
-        }
-    }
-
-    fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            viewModelScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY)
-                isClickAllowed = true
-            }
-        }
-        return current
-    }
-
     companion object {
         private const val UPDATE_PLAYING_TIME_DELAY = 300L
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

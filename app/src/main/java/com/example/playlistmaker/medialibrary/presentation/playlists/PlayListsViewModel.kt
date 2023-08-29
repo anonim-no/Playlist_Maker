@@ -18,7 +18,6 @@ class PlayListsViewModel(private val playListsInteractor: PlayListsInteractor) :
 
     fun clickDebounce(): Boolean {
         return true
-        //TODO("implement")
     }
 
     fun getPlayLists() {
