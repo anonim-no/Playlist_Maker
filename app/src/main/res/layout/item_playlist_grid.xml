@@ -15,7 +15,9 @@
         android:layout_height="160dp"
         android:elevation="10dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="0dp">
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/screen_background"
+        >
 
         <ImageView
             android:id="@+id/playListImage"

@@ -264,6 +264,7 @@
             android:id="@+id/addPlaylistButton"
             style="@style/Button"
             android:text="@string/new_playlist"
+            android:layout_marginBottom="24dp"
             app:cornerRadius="54dp" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -271,7 +272,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="13dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_playlist" />
 
