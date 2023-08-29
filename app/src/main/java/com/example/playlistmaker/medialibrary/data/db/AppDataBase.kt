@@ -6,9 +6,10 @@ import com.example.playlistmaker.medialibrary.data.db.favorites.dao.FavoritesTra
 import com.example.playlistmaker.medialibrary.data.db.favorites.entity.FavoritesTrackEntity
 import com.example.playlistmaker.medialibrary.data.db.playlists.dao.PlayListsDao
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListEntity
-import com.example.playlistmaker.medialibrary.data.db.playlists.entity.TrackEntity
+import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListsTrackEntity
+import com.example.playlistmaker.medialibrary.data.db.playlists.entity.TrackPlayListEntity
 
-@Database(version = 4, entities = [FavoritesTrackEntity::class, TrackEntity::class, PlayListEntity::class])
+@Database(version = 5, entities = [FavoritesTrackEntity::class, PlayListsTrackEntity::class, PlayListEntity::class, TrackPlayListEntity::class])
 abstract class AppDatabase : RoomDatabase() {
     abstract fun favoritesTrackDao(): FavoritesTrackDao
 

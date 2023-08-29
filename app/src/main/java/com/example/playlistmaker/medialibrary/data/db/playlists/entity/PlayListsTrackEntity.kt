@@ -4,9 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "track_play_lists_table")
-data class TrackEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int? = null,
+data class PlayListsTrackEntity(
+    @PrimaryKey
     val trackId: Int,
     val trackName: String, // Название композиции
     val artistName: String?, // Имя исполнителя
@@ -17,5 +16,4 @@ data class TrackEntity(
     val primaryGenreName: String?, // Жанр трека
     val country: String?, // Страна исполнителя
     val previewUrl: String?,
-    val playListId: Int
 )

@@ -2,7 +2,7 @@ package com.example.playlistmaker.medialibrary.data.db.playlists.converters
 
 import com.example.playlistmaker.common.models.Track
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListEntity
-import com.example.playlistmaker.medialibrary.data.db.playlists.entity.TrackEntity
+import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListsTrackEntity
 import com.example.playlistmaker.medialibrary.domain.models.PlayList
 import java.util.Calendar
 
@@ -29,36 +29,38 @@ class PlayListsTrackDbConvertor {
         )
     }
 
-    fun map(trackEntity: TrackEntity): Track {
-        return Track(
-            trackEntity.trackId,
-            trackEntity.trackName,
-            trackEntity.artistName,
-            trackEntity.trackTimeMillis,
-            trackEntity.artworkUrl100,
-            trackEntity.collectionName,
-            trackEntity.releaseDate,
-            trackEntity.primaryGenreName,
-            trackEntity.country,
-            trackEntity.previewUrl
-        )
+    fun map(playListsTrackEntity: PlayListsTrackEntity): Track {
+        playListsTrackEntity.apply {
+            return Track(
+                trackId,
+                trackName,
+                artistName,
+                trackTimeMillis,
+                artworkUrl100,
+                collectionName,
+                releaseDate,
+                primaryGenreName,
+                country,
+                previewUrl
+            )
+        }
     }
 
-    fun map(track: Track, playListId: Int): TrackEntity {
-        return TrackEntity(
-            null,
-            track.trackId,
-            track.trackName,
-            track.artistName,
-            track.trackTimeMillis,
-            track.artworkUrl100,
-            track.collectionName,
-            track.releaseDate,
-            track.primaryGenreName,
-            track.country,
-            track.previewUrl,
-            playListId
-        )
+    fun map(track: Track): PlayListsTrackEntity {
+        track.apply {
+            return PlayListsTrackEntity(
+                trackId,
+                trackName,
+                artistName,
+                trackTimeMillis,
+                artworkUrl100,
+                collectionName,
+                releaseDate,
+                primaryGenreName,
+                country,
+                previewUrl,
+            )
+        }
     }
 
 

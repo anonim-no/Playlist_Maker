@@ -4,7 +4,8 @@ import com.example.playlistmaker.common.models.Track
 import com.example.playlistmaker.medialibrary.data.db.AppDatabase
 import com.example.playlistmaker.medialibrary.data.db.playlists.converters.PlayListsTrackDbConvertor
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListEntity
-import com.example.playlistmaker.medialibrary.data.db.playlists.entity.TrackEntity
+import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListsTrackEntity
+import com.example.playlistmaker.medialibrary.data.db.playlists.entity.TrackPlayListEntity
 import com.example.playlistmaker.medialibrary.domain.db.playlists.PlayListsRepository
 import com.example.playlistmaker.medialibrary.domain.models.PlayList
 
@@ -20,7 +21,8 @@ class PlayListsRepositoryImpl(
 
     override suspend fun addTrackToPlayList(track: Track, playListId: Int) =
         appDatabase.playListsTrackDao().addTrackToPlayList(
-            playListsTrackDbConvertor.map(track, playListId)
+            playListsTrackEntity = playListsTrackDbConvertor.map(track),
+            trackPlayListEntity = TrackPlayListEntity(null, playListId, track.trackId)
         )
 
     override suspend fun getPlayLists(): List<PlayList> =
@@ -37,7 +39,7 @@ class PlayListsRepositoryImpl(
         appDatabase.playListsTrackDao().isTrackInPlayList(trackId, playListId)
 
 
-    private fun convertPlayListsTrackEntityToTrack(tracks: List<TrackEntity>): List<Track> =
+    private fun convertPlayListsTrackEntityToTrack(tracks: List<PlayListsTrackEntity>): List<Track> =
         tracks.map {
             playListsTrackDbConvertor.map(it)
         }
