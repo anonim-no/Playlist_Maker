@@ -3,7 +3,7 @@ package com.example.playlistmaker.medialibrary.presentation.playlists
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.medialibrary.domain.db.playlists.PlayListsInteractor
-import com.example.playlistmaker.medialibrary.domain.models.PlayList
+import com.example.playlistmaker.common.models.PlayList
 import kotlinx.coroutines.launch
 
 class AddPlayListViewModel(private val playListsInteractor: PlayListsInteractor) : ViewModel() {

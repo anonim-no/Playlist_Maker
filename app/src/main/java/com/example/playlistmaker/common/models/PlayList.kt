@@ -1,4 +1,4 @@
-package com.example.playlistmaker.medialibrary.domain.models
+package com.example.playlistmaker.common.models
 
 data class PlayList(
     val playListId: Int,

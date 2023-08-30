@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.models.Track
 import com.example.playlistmaker.databinding.FragmentBottomSheetBinding
-import com.example.playlistmaker.medialibrary.domain.models.PlayList
+import com.example.playlistmaker.common.models.PlayList
 import com.example.playlistmaker.player.presentation.models.PlayListsState
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel

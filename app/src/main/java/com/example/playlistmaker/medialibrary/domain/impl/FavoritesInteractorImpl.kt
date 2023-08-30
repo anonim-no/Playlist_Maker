@@ -5,8 +5,7 @@ import com.example.playlistmaker.medialibrary.domain.db.favorites.FavoritesRepos
 import com.example.playlistmaker.common.models.Track
 import kotlinx.coroutines.flow.Flow
 
-class FavoritesInteractorImpl(private val favoritesRepository: FavoritesRepository) :
-    FavoritesInteractor {
+class FavoritesInteractorImpl(private val favoritesRepository: FavoritesRepository) : FavoritesInteractor {
     override fun getFavoritesTracks(): Flow<List<Track>> = favoritesRepository.getFavoritesTracks()
 
     override fun isFavoriteTrack(trackId: Int): Flow<Boolean> = favoritesRepository.isFavoriteTrack(trackId)

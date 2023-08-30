@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.PLAY_LISTS_IMAGES_DIRECTORY
 import com.example.playlistmaker.common.utils.DiffCallback
-import com.example.playlistmaker.medialibrary.domain.models.PlayList
+import com.example.playlistmaker.common.models.PlayList
 import java.io.File
 
 class PlayListsAdapter(private val clickListener: PlayListClickListener) : RecyclerView.Adapter<PlayListViewHolder>() {

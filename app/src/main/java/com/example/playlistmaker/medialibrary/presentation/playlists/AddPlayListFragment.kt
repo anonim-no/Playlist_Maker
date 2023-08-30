@@ -87,17 +87,19 @@ class AddPlayListFragment : Fragment() {
                 image = Calendar.getInstance().timeInMillis.toString() + ".jpg"
                 saveImageToPrivateStorage(pickImageUri!!, image)
             }
-            addPlayListViewModel.createPlayList(
-                name = name,
-                description = description,
-                image = image
-            )
-            Toast.makeText(
-                requireContext(),
-                String.format(resources.getText(R.string.playlist_created).toString(), name),
-                Toast.LENGTH_SHORT
-            ).show()
-            findNavController().popBackStack()
+            if (name.isNotEmpty()) {
+                addPlayListViewModel.createPlayList(
+                    name = name,
+                    description = description,
+                    image = image
+                )
+                Toast.makeText(
+                    requireContext(),
+                    String.format(resources.getText(R.string.playlist_created).toString(), name),
+                    Toast.LENGTH_SHORT
+                ).show()
+                findNavController().popBackStack()
+            }
         }
 
     }

@@ -1,6 +1,6 @@
 package com.example.playlistmaker.player.presentation.models
 
-import com.example.playlistmaker.medialibrary.domain.models.PlayList
+import com.example.playlistmaker.common.models.PlayList
 
 sealed interface PlayListsState {
 

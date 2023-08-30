@@ -7,7 +7,7 @@ import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListW
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListsTrackEntity
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.TrackPlayListEntity
 import com.example.playlistmaker.medialibrary.domain.db.playlists.PlayListsRepository
-import com.example.playlistmaker.medialibrary.domain.models.PlayList
+import com.example.playlistmaker.common.models.PlayList
 
 class PlayListsRepositoryImpl(
     private val appDatabase: AppDatabase,

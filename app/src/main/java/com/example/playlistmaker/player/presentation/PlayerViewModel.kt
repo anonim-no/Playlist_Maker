@@ -25,8 +25,6 @@ class PlayerViewModel(
 
     private val trackFavoriteStateLiveData = MutableLiveData<PlayerState.StateFavorite>()
 
-    private var isPlayerPrepared = false
-
     fun observePlayerStateState(): LiveData<PlayerState> = playerStateLiveData
 
     fun observeTrackTimeState(): LiveData<PlayerState.UpdatePlayingTime> = trackTimeStateLiveData
@@ -37,6 +35,8 @@ class PlayerViewModel(
     private var timerJob: Job? = null
 
     private var isTrackFavorite = false
+
+    private var isPlayerPrepared = false
 
     fun preparePlayer(url: String?) {
         if (!isPlayerPrepared) {

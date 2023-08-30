@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.medialibrary.domain.models.PlayList
+import com.example.playlistmaker.common.models.PlayList
 import com.example.playlistmaker.medialibrary.presentation.models.PlayListsState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

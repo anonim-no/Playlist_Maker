@@ -6,33 +6,37 @@ import java.util.Calendar
 
 class FavoritesTrackDbConvertor {
     fun map(track: Track): FavoritesTrackEntity {
-        return FavoritesTrackEntity(
-            track.trackId,
-            track.trackName,
-            track.artistName,
-            track.trackTimeMillis,
-            track.artworkUrl100,
-            track.collectionName,
-            track.releaseDate,
-            track.primaryGenreName,
-            track.country,
-            track.previewUrl,
-            Calendar.getInstance().timeInMillis
-        )
+        track.apply {
+            return FavoritesTrackEntity(
+                trackId,
+                trackName,
+                artistName,
+                trackTimeMillis,
+                artworkUrl100,
+                collectionName,
+                releaseDate,
+                primaryGenreName,
+                country,
+                previewUrl,
+                Calendar.getInstance().timeInMillis
+            )
+        }
     }
 
     fun map(track: FavoritesTrackEntity): Track {
-        return Track(
-            track.trackId,
-            track.trackName,
-            track.artistName,
-            track.trackTimeMillis,
-            track.artworkUrl100,
-            track.collectionName,
-            track.releaseDate,
-            track.primaryGenreName,
-            track.country,
-            track.previewUrl
-        )
+        track.apply {
+            return Track(
+                trackId,
+                trackName,
+                artistName,
+                trackTimeMillis,
+                artworkUrl100,
+                collectionName,
+                releaseDate,
+                primaryGenreName,
+                country,
+                previewUrl
+            )
+        }
     }
 }
