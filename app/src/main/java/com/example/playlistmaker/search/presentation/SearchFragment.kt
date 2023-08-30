@@ -115,9 +115,9 @@ class SearchFragment : Fragment() {
 
         confirmDialog = MaterialAlertDialogBuilder(requireContext()).apply {
             setTitle(getString(R.string.clear_history_q))
-            setNegativeButton(getString(R.string.cancel)) { dialog, which ->
+            setNegativeButton(getString(R.string.cancel)) { _, _ ->
             }
-            setPositiveButton(getString(R.string.clear)) { dialog, which ->
+            setPositiveButton(getString(R.string.clear)) { _, _ ->
                 searchViewModel.clearTracksHistory(getString(R.string.history_was_clear))
             }
         }
