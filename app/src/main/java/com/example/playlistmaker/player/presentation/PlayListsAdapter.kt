@@ -60,18 +60,15 @@ class PlayListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         playListCountTracks.text = playListCountTracks.resources.getQuantityString(
             R.plurals.plural_count_tracks, playList.tracksCount, playList.tracksCount
         )
-        val filePath =
-            File(
-                itemView.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                PLAY_LISTS_IMAGES_DIRECTORY
-            )
+        val filePath = File(
+            itemView.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            PLAY_LISTS_IMAGES_DIRECTORY
+        )
 
         Glide
             .with(itemView)
             .load(playList.image?.let { imageName -> File(filePath, imageName) })
             .placeholder(R.drawable.ic_placeholder)
             .into(playListImage)
-
     }
 }
-

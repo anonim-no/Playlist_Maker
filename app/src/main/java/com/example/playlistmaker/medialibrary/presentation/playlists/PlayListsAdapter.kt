@@ -40,16 +40,20 @@ class PlayListsAdapter(private val clickListener: PlayListClickListener) : Recyc
     override fun onBindViewHolder(holder: PlayListViewHolder, position: Int) {
         holder.bind(playLists[position])
         holder.itemView.setOnClickListener {
-            //clickListener.onClick(playLists[holder.adapterPosition])
+            clickListener.onClick(playLists[holder.adapterPosition])
         }
+    }
+
+    fun interface PlayListClickListener {
+        fun onClick(playList: PlayList)
     }
 }
 
 class PlayListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val playListImage: ImageView = itemView.findViewById(R.id.playListImage)
-    private val playListName: TextView = itemView.findViewById(R.id.playListNameTextView)
-    private val playListCountTracks: TextView = itemView.findViewById(R.id.playListCountTracksTextView)
+    private val playListName: TextView = itemView.findViewById(R.id.playListName)
+    private val playListCountTracks: TextView = itemView.findViewById(R.id.playListTracksCount)
 
     fun bind(playList: PlayList) {
         playListName.text = playList.name
@@ -67,8 +71,4 @@ class PlayListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .placeholder(R.drawable.ic_placeholder)
             .into(playListImage)
     }
-}
-
-fun interface PlayListClickListener {
-    fun onClick(playList: PlayList)
 }
