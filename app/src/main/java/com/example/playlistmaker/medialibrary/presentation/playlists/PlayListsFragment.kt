@@ -9,6 +9,7 @@ import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.models.PlayList
+import com.example.playlistmaker.common.presentation.PlayListsAdapter
 import com.example.playlistmaker.medialibrary.presentation.models.PlayListsState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -18,9 +19,12 @@ class PlayListsFragment : Fragment() {
 
     private val playListsViewModel: PlayListsViewModel by viewModel()
 
-    private val playListsAdapter = PlayListsAdapter {
-        clickOnPlayList(it)
-    }
+    private val playListsAdapter = PlayListsAdapter(
+        clickListener = {
+            clickOnPlayList(it)
+        },
+        grid = true
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,

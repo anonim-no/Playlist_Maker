@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.presentation
+package com.example.playlistmaker.common.presentation
 
 import android.os.Environment
 import android.view.LayoutInflater
@@ -15,7 +15,8 @@ import com.example.playlistmaker.common.utils.DiffCallback
 import com.example.playlistmaker.common.models.PlayList
 import java.io.File
 
-class PlayListsAdapter(private val clickListener: PlayListClickListener) : RecyclerView.Adapter<PlayListViewHolder>() {
+class PlayListsAdapter(private val clickListener: PlayListClickListener, private val grid: Boolean) :
+    RecyclerView.Adapter<PlayListViewHolder>() {
 
     var playLists = listOf<PlayList>()
         set(newList) {
@@ -31,7 +32,15 @@ class PlayListsAdapter(private val clickListener: PlayListClickListener) : Recyc
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_playlist, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(
+            if (grid) {
+                R.layout.item_playlist_grid
+            } else {
+                R.layout.item_playlist
+            },
+            parent,
+            false
+        )
         return PlayListViewHolder(view)
     }
 
