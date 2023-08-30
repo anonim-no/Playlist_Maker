@@ -17,6 +17,7 @@ import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.common.models.Track
 import com.example.playlistmaker.common.presentation.TracksAdapter
 import com.example.playlistmaker.search.presentation.models.SearchState
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -25,6 +26,8 @@ class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
 
     private val searchViewModel by viewModel<SearchViewModel>()
+
+    private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
     private val searchAdapter = TracksAdapter {
         clickOnTrack(it)
@@ -100,7 +103,7 @@ class SearchFragment : Fragment() {
 
         // по клику на кнопке очистки истории поиска - очищаем историю поиска
         binding.clearHistoryButton.setOnClickListener {
-            searchViewModel.clearTracksHistory(getString(R.string.history_was_clear))
+            confirmDialog.show()
         }
 
         // при запуске скрываем или показываем кнопку очистки формы
@@ -109,6 +112,15 @@ class SearchFragment : Fragment() {
 
         // ставим фокус на форму поиска
         binding.inputSearchForm.requestFocus()
+
+        confirmDialog = MaterialAlertDialogBuilder(requireContext()).apply {
+            setTitle(getString(R.string.clear_history_q))
+            setNegativeButton(getString(R.string.cancel)) { dialog, which ->
+            }
+            setPositiveButton(getString(R.string.clear)) { dialog, which ->
+                searchViewModel.clearTracksHistory(getString(R.string.history_was_clear))
+            }
+        }
     }
 
     private fun clearSearch() {

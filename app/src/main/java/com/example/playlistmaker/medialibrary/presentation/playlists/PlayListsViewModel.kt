@@ -16,10 +16,6 @@ class PlayListsViewModel(private val playListsInteractor: PlayListsInteractor) :
         stateLiveData.postValue(state)
     }
 
-    fun clickDebounce(): Boolean {
-        return true
-    }
-
     fun getPlayLists() {
         viewModelScope.launch {
             val playLists = playListsInteractor.getPlayLists()

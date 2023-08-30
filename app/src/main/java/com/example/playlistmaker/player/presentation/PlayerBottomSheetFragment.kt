@@ -45,6 +45,7 @@ class PlayerBottomSheetFragment(val track: Track) : BottomSheetDialogFragment() 
                     playListsAdapter.playLists = it.playLists
                     binding.playListsRV.visibility = View.VISIBLE
                 }
+
                 is PlayListsState.AddTrackToPlayListResult -> {
                     if (it.isAdded) {
                         showToast(getString(R.string.added_to_playlist, it.playListName))
@@ -80,7 +81,7 @@ class PlayerBottomSheetFragment(val track: Track) : BottomSheetDialogFragment() 
     }
 
     companion object {
-        const val TAG = "ModalBottomSheet"
+        const val TAG = "PlayerBottomSheet"
 
         fun newInstance(track: Track): PlayerBottomSheetFragment {
             return PlayerBottomSheetFragment(track)

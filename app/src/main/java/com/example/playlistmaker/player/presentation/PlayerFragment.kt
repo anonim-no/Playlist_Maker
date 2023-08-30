@@ -18,11 +18,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerFragment: Fragment() {
+class PlayerFragment : Fragment() {
 
     private lateinit var binding: FragmentPlayerBinding
 
-    private val viewModel by viewModel<PlayerViewModel>()
+    private val playerViewModel by viewModel<PlayerViewModel>()
 
     private lateinit var track: Track
 
@@ -40,9 +40,9 @@ class PlayerFragment: Fragment() {
 
         showTrack(track)
 
-        viewModel.preparePlayer(track.previewUrl)
+        playerViewModel.preparePlayer(track.previewUrl)
 
-        viewModel.isFavorite(track.trackId)
+        playerViewModel.isFavorite(track.trackId)
 
         initObserveViewModel()
 
@@ -57,7 +57,7 @@ class PlayerFragment: Fragment() {
 
     override fun onPause() {
         super.onPause()
-        viewModel.pausePlayer()
+        playerViewModel.pausePlayer()
     }
 
     private fun initOnClickListeners() {
@@ -65,24 +65,24 @@ class PlayerFragment: Fragment() {
             findNavController().popBackStack()
         }
         binding.playlistButton.setOnClickListener {
-            PlayerBottomSheetFragment.newInstance(track).show(childFragmentManager,PlayerBottomSheetFragment.TAG)
+            PlayerBottomSheetFragment.newInstance(track).show(childFragmentManager, PlayerBottomSheetFragment.TAG)
         }
         binding.favoriteButton.setOnClickListener {
-            viewModel.onFavoriteClicked(track)
+            playerViewModel.onFavoriteClicked(track)
         }
         binding.playButton.setOnClickListener {
-            viewModel.playbackControl()
+            playerViewModel.playbackControl()
         }
     }
 
     private fun initObserveViewModel() {
-        viewModel.observePlayerStateState().observe(viewLifecycleOwner) {
+        playerViewModel.observePlayerStateState().observe(viewLifecycleOwner) {
             render(it)
         }
-        viewModel.observeTrackTimeState().observe(viewLifecycleOwner) {
+        playerViewModel.observeTrackTimeState().observe(viewLifecycleOwner) {
             render(it)
         }
-        viewModel.observeFavoriteState().observe(viewLifecycleOwner) {
+        playerViewModel.observeFavoriteState().observe(viewLifecycleOwner) {
             render(it)
         }
     }
