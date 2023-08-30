@@ -1,7 +1,6 @@
 package com.example.playlistmaker.common.presentation
 
 import android.os.Environment
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -15,7 +14,7 @@ import com.example.playlistmaker.common.utils.DiffCallback
 import com.example.playlistmaker.common.models.PlayList
 import java.io.File
 
-class PlayListsAdapter(private val clickListener: PlayListClickListener, private val grid: Boolean) :
+abstract class PlayListsAdapter(private val clickListener: PlayListClickListener) :
     RecyclerView.Adapter<PlayListViewHolder>() {
 
     var playLists = listOf<PlayList>()
@@ -31,18 +30,7 @@ class PlayListsAdapter(private val clickListener: PlayListClickListener, private
             diffResult.dispatchUpdatesTo(this)
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(
-            if (grid) {
-                R.layout.item_playlist_grid
-            } else {
-                R.layout.item_playlist
-            },
-            parent,
-            false
-        )
-        return PlayListViewHolder(view)
-    }
+    abstract override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListViewHolder
 
     override fun getItemCount(): Int = playLists.size
 

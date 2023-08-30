@@ -10,6 +10,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.common.models.Track
 import com.example.playlistmaker.databinding.FragmentBottomSheetBinding
 import com.example.playlistmaker.common.models.PlayList
+import com.example.playlistmaker.common.presentation.PlayListViewHolder
 import com.example.playlistmaker.common.presentation.PlayListsAdapter
 import com.example.playlistmaker.player.presentation.models.PlayListsState
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -21,12 +22,17 @@ class PlayerBottomSheetFragment(val track: Track) : BottomSheetDialogFragment() 
 
     private val viewModelPlayerBottomSheet by viewModel<PlayerBottomSheetViewModel>()
 
-    private val playListsAdapter = PlayListsAdapter(
+    private val playListsAdapter = object : PlayListsAdapter(
         clickListener = {
             addTrackToPlayList(it)
-        },
-        grid = false
-    )
+        }
+    ) {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListViewHolder {
+            return PlayListViewHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.item_playlist, parent, false)
+            )
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
