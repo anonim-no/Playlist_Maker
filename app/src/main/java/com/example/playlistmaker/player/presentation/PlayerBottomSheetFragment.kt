@@ -59,10 +59,10 @@ class PlayerBottomSheetFragment(val track: Track) : BottomSheetDialogFragment() 
                 is PlayListsState.AddTrackToPlayListResult -> {
                     if (it.isAdded) {
                         showToast(getString(R.string.added_to_playlist, it.playListName))
+                        dismiss()
                     } else {
                         showToast(getString(R.string.already_added_to_playlist, it.playListName))
                     }
-                    dismiss()
                 }
             }
         }
