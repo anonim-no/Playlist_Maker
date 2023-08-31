@@ -69,7 +69,7 @@ class PlayerBottomSheetFragment(val track: Track) : BottomSheetDialogFragment() 
 
         binding.addPlaylistButton.setOnClickListener {
             findNavController().navigate(
-                R.id.action_playerFragment_to_addPlayListFragment
+                R.id.action_to_addPlayListFragment
             )
         }
 

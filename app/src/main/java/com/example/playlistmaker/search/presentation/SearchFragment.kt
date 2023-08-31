@@ -136,7 +136,7 @@ class SearchFragment : Fragment() {
         if (searchViewModel.clickDebounce()) {
             searchViewModel.addTracksHistory(track)
             findNavController().navigate(
-                R.id.action_searchFragment_to_playerFragment,
+                R.id.action_to_PlayerFragment,
                 Bundle().apply {
                     putSerializable(TRACK, track)
                 }

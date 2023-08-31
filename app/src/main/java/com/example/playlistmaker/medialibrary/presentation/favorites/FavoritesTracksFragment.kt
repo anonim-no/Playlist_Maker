@@ -67,7 +67,7 @@ class FavoritesTracksFragment : Fragment() {
     private fun clickOnTrack(track: Track) {
         if (favoritesTracksViewModel.clickDebounce()) {
             findNavController().navigate(
-                R.id.action_mediaLibraryFragment_to_playerFragment,
+                R.id.action_to_PlayerFragment,
                 Bundle().apply {
                     putSerializable(TRACK, track)
                 }
