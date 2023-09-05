@@ -1,67 +1,90 @@
 package com.example.playlistmaker.player.presentation
 
+import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.TRACK
-import com.example.playlistmaker.databinding.ActivityPlayerBinding
-import com.example.playlistmaker.player.presentation.models.PlayerState
 import com.example.playlistmaker.common.models.Track
+import com.example.playlistmaker.databinding.FragmentPlayerBinding
+import com.example.playlistmaker.player.presentation.models.PlayerState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerFragment : Fragment() {
 
-    private lateinit var binding: ActivityPlayerBinding
+    private lateinit var binding: FragmentPlayerBinding
 
-    private val viewModel by viewModel<PlayerViewModel>()
+    private val playerViewModel by viewModel<PlayerViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    private lateinit var track: Track
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        viewModel.observePlayerStateState().observe(this) {
-            render(it)
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observeTrackTimeState().observe(this) {
-            render(it)
-        }
-
-        viewModel.observeFavoriteState().observe(this) {
-            render(it)
-        }
-
-        binding.toolbar.setNavigationOnClickListener {
-            finish()
-        }
-
-        val track = intent.getSerializableExtra(TRACK) as Track
+        initObserveViewModel()
 
         showTrack(track)
 
-        viewModel.isFavorite(track.trackId)
+        playerViewModel.preparePlayer(track.previewUrl)
 
+        playerViewModel.isFavorite(track.trackId)
+
+        initOnClickListeners()
+
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        track = arguments?.getSerializable(TRACK) as Track
+    }
+
+    override fun onPause() {
+        super.onPause()
+        playerViewModel.pausePlayer()
+    }
+
+    private fun initOnClickListeners() {
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+        binding.playlistButton.setOnClickListener {
+            PlayerBottomSheetFragment.newInstance(track).show(childFragmentManager, PlayerBottomSheetFragment.TAG)
+        }
         binding.favoriteButton.setOnClickListener {
-            viewModel.onFavoriteClicked(track)
+            playerViewModel.onFavoriteClicked(track)
         }
-
-        binding.playButton.isEnabled = false
-
-        if (savedInstanceState == null) {
-            viewModel.preparePlayer(track.previewUrl)
-        }
-
         binding.playButton.setOnClickListener {
-            viewModel.playbackControl()
+            playerViewModel.playbackControl()
         }
+    }
 
+    private fun initObserveViewModel() {
+        playerViewModel.observePlayerStateState().observe(viewLifecycleOwner) {
+            render(it)
+        }
+        playerViewModel.observeTrackTimeState().observe(viewLifecycleOwner) {
+            render(it)
+        }
+        playerViewModel.observeFavoriteState().observe(viewLifecycleOwner) {
+            render(it)
+        }
     }
 
     private fun render(state: PlayerState) {
@@ -177,11 +200,8 @@ class PlayerActivity : AppCompatActivity() {
                 collectionNameTitle.visibility = View.GONE
             }
         }
-    }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.pausePlayer()
-    }
+        binding.playButton.isEnabled = false
 
+    }
 }

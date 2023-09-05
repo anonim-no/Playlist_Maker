@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.medialibrary.domain.db.FavoritesInteractor
+import com.example.playlistmaker.medialibrary.domain.db.favorites.FavoritesInteractor
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.presentation.models.PlayerState
 import com.example.playlistmaker.common.models.Track
@@ -31,25 +31,31 @@ class PlayerViewModel(
 
     fun observeFavoriteState(): LiveData<PlayerState.StateFavorite> = trackFavoriteStateLiveData
 
+
     private var timerJob: Job? = null
 
     private var isTrackFavorite = false
 
+    private var isPlayerPrepared = false
+
     fun preparePlayer(url: String?) {
-        renderState(PlayerState.Preparing)
-        if (url != null) {
-            playerInteractor.preparePlayer(
-                url = url,
-                onPreparedListener = {
-                    renderState(PlayerState.Stopped)
-                },
-                onCompletionListener = {
-                    timerJob?.cancel()
-                    renderState(PlayerState.Stopped)
-                }
-            )
-        } else {
-            renderState(PlayerState.Unplayable)
+        if (!isPlayerPrepared) {
+            isPlayerPrepared = true
+            renderState(PlayerState.Preparing)
+            if (url != null) {
+                playerInteractor.preparePlayer(
+                    url = url,
+                    onPreparedListener = {
+                        renderState(PlayerState.Stopped)
+                    },
+                    onCompletionListener = {
+                        timerJob?.cancel()
+                        renderState(PlayerState.Stopped)
+                    }
+                )
+            } else {
+                renderState(PlayerState.Unplayable)
+            }
         }
     }
 
@@ -107,6 +113,7 @@ class PlayerViewModel(
 
     override fun onCleared() {
         super.onCleared()
+        isPlayerPrepared = false
         playerInteractor.releasePlayer()
     }
 

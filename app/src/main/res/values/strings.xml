@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Playlist Maker</string>
-    <string name="title">Playlist Maker</string>
     <string name="search">Поиск</string>
     <string name="media_library">Медиатека</string>
     <string name="settings">Настройки</string>
@@ -27,7 +26,9 @@
     <string name="connection_problem">Проблемы со связью</string>
     <string name="check_internet_connection">Загрузка не удалась. Проверьте подключение к интернету</string>
     <string name="you_searched">Вы искали</string>
+    <string name="clear_history_q">Очистить историю?</string>
     <string name="clear_history">Очистить историю</string>
+    <string name="clear">Очистить</string>
     <string name="history_was_clear">История очищена</string>
     <string name="duration">Длительность</string>
     <string name="collection">Альбом</string>
@@ -48,4 +49,26 @@
     <string name="new_playlist">Новый плейлист</string>
 
     <string name="error">Ошибка %d</string>
+
+    <string name="playlist_name">Название *</string>
+    <string name="playlist_description">Описание</string>
+    <string name="playlist_create">Создать</string>
+    <string name="add_image">Добавить картинку</string>
+    <string name="finish_creating_playlist">Завершить создание плейлиста?</string>
+    <string name="all_unsaved_data_will_be_lost">Все несохраненные данные будут потеряны</string>
+    <string name="cancel">Отмена</string>
+    <string name="finish">Завершить</string>
+    <string name="playlist_created">Плейлист %s создан</string>
+    <string name="playlist_image">Обложка плейлиста</string>
+    <string name="added_to_playlist">Добавлено в плейлист %1$s</string>
+    <string name="already_added_to_playlist">Трек уже добавлен в плейлист %1$s</string>
+
+    <plurals name="plural_count_tracks">
+        <item quantity="zero">%1$d треков</item>
+        <item quantity="one">%1$d трек</item>
+        <item quantity="two">%1$d трека</item>
+        <item quantity="few">%1$d трека</item>
+        <item quantity="many">%1$d треков</item>
+        <item quantity="other">%1$d треков</item>
+    </plurals>
 </resources>

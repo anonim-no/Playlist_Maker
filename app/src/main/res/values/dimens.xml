@@ -13,6 +13,8 @@
 
     <dimen name="button_text_size">14sp</dimen>
 
+    <dimen name="playlist_create_button_text_size">16sp</dimen>
+
     <dimen name="error_placeholder_text_size">19sp</dimen>
 
     <dimen name="main_button_height">0dp</dimen>

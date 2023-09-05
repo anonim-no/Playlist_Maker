@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="8dp"
     tools:context=".medialibrary.presentation.playlists.PlayListsFragment">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/newPlayList"
+        android:id="@+id/addPlaylistButton"
         style="@style/Button"
         android:text="@string/new_playlist"
         app:cornerRadius="54dp" />
@@ -21,5 +22,15 @@
         android:textColor="@color/text_color_primary"
         android:visibility="gone"
         app:drawableTopCompat="@drawable/ic_not_found" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playListsRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:listitem="@layout/item_playlist_grid" />
 
 </FrameLayout>

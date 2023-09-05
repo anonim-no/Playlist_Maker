@@ -1,10 +1,10 @@
-package com.example.playlistmaker.medialibrary.data.db.entity
+package com.example.playlistmaker.medialibrary.data.db.playlists.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "track_favorites_table")
-data class TrackEntity(
+@Entity(tableName = "track_play_lists_table")
+data class PlayListsTrackEntity(
     @PrimaryKey
     val trackId: Int,
     val trackName: String, // Название композиции
@@ -16,5 +16,4 @@ data class TrackEntity(
     val primaryGenreName: String?, // Жанр трека
     val country: String?, // Страна исполнителя
     val previewUrl: String?,
-    val createdAt: Long // дата создания записи для сортировки
 )
