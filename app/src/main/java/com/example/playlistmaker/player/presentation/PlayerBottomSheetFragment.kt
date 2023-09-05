@@ -73,6 +73,8 @@ class PlayerBottomSheetFragment(val track: Track) : BottomSheetDialogFragment() 
             )
         }
 
+        viewModelPlayerBottomSheet.requestPlayLists()
+
     }
 
     override fun onResume() {

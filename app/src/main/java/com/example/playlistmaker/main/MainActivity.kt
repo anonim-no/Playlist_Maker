@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.addPlayListFragment, R.id.playerFragment -> {
+                R.id.addPlayListFragment, R.id.playerFragment, R.id.playListFragment -> {
                     binding.navigationView.visibility = View.GONE
                     window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                 }

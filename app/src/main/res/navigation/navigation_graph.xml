@@ -55,5 +55,13 @@
         android:label="fragment_bottom_sheet"
         tools:layout="@layout/fragment_bottom_sheet" >
     </dialog>
+    <fragment
+        android:id="@+id/playListFragment"
+        android:name="com.example.playlistmaker.medialibrary.presentation.playlists.PlayListFragment"
+        android:label="fragment_playlist"
+        tools:layout="@layout/fragment_playlist" />
+        <action
+            android:id="@+id/action_to_PlayListFragment"
+            app:destination="@id/playListFragment" />
 
 </navigation>
