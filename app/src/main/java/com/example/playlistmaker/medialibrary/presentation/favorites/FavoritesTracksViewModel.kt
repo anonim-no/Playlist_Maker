@@ -16,7 +16,7 @@ class FavoritesTracksViewModel(private val favoritesInteractor: FavoritesInterac
 
     private var isClickAllowed = true
 
-    fun getFavoritesTracks() {
+    fun requestFavoritesTracks() {
         viewModelScope.launch {
             favoritesInteractor
                 .getFavoritesTracks()
