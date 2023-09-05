@@ -77,7 +77,7 @@ class PlayerBottomSheetFragment(val track: Track) : BottomSheetDialogFragment() 
 
     override fun onResume() {
         super.onResume()
-        viewModelPlayerBottomSheet.getPlayLists()
+        viewModelPlayerBottomSheet.requestPlayLists()
     }
 
     private fun addTrackToPlayList(playList: PlayList) {

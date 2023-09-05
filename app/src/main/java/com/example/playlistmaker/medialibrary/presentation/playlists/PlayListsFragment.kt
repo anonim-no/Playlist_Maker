@@ -70,7 +70,7 @@ class PlayListsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        playListsViewModel.getPlayLists()
+        playListsViewModel.requestPlayLists()
     }
 
     private fun clickOnPlayList(playList: PlayList) {

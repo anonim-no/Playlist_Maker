@@ -16,7 +16,7 @@ class PlayListsViewModel(private val playListsInteractor: PlayListsInteractor) :
         stateLiveData.postValue(state)
     }
 
-    fun getPlayLists() {
+    fun requestPlayLists() {
         viewModelScope.launch {
             val playLists = playListsInteractor.getPlayLists()
             if (playLists.isEmpty()) {
