@@ -38,13 +38,13 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initObserveViewModel()
+
         showTrack(track)
 
         playerViewModel.preparePlayer(track.previewUrl)
 
         playerViewModel.isFavorite(track.trackId)
-
-        initObserveViewModel()
 
         initOnClickListeners()
 
