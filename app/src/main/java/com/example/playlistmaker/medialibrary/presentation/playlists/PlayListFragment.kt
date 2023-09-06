@@ -65,8 +65,12 @@ class PlayListFragment : Fragment() {
 
         playListViewModel.observeState().observe(viewLifecycleOwner) {
             when (it) {
-                is PlayListState.PlayList -> {
+                is PlayListState.PlayListTracks -> {
                     showTracks(it.tracks)
+                }
+                is PlayListState.PlayListInfo -> {
+                    playList = it.playList
+                    showPlayList()
                 }
             }
         }
@@ -78,8 +82,8 @@ class PlayListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        playListViewModel.requestTracks(playList.playListId)
-
+        playListViewModel.requestPlayListInfo(playList.playListId)
+        playListViewModel.requestPlayListTracks(playList.playListId)
     }
 
     override fun onAttach(context: Context) {
@@ -135,6 +139,9 @@ class PlayListFragment : Fragment() {
             if (playList.description.isNotEmpty()) {
                 playListDescription.text = playList.description
                 playListDescription.visibility = View.VISIBLE
+            } else {
+                playListDescription.text = ""
+                playListDescription.visibility = View.GONE
             }
 
         }

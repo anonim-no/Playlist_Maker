@@ -22,9 +22,17 @@ class PlayListViewModel(
         stateLiveData.postValue(state)
     }
 
-    fun requestTracks(playListId: Int) {
+    fun requestPlayListInfo(playListId: Int) {
         viewModelScope.launch {
-            renderState(PlayListState.PlayList(
+            renderState(PlayListState.PlayListInfo(
+                playListsInteractor.getPlayList(playListId)
+            ))
+        }
+    }
+
+    fun requestPlayListTracks(playListId: Int) {
+        viewModelScope.launch {
+            renderState(PlayListState.PlayListTracks(
                 playListsInteractor.getPlayListTracks(playListId)
             ))
         }
@@ -47,7 +55,7 @@ class PlayListViewModel(
 
             playListsInteractor.deleteTrackFromPlaylist(trackId, playListId)
 
-            renderState(PlayListState.PlayList(
+            renderState(PlayListState.PlayListTracks(
                 playListsInteractor.getPlayListTracks(playListId)
             ))
         }

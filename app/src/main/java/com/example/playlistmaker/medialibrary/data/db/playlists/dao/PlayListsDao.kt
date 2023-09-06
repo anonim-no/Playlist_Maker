@@ -30,6 +30,9 @@ interface PlayListsDao {
         addTrackPlayList(trackPlayListEntity)
     }
 
+    @Query("SELECT playListId, name, description, image, (SELECT COUNT(id) FROM play_lists_track_table WHERE play_lists_track_table.playListId=play_lists_table.playListId) as tracksCount FROM play_lists_table WHERE playListId = :playListId")
+    suspend fun getPlayList(playListId: Int): PlayListWithCountTracks
+
     // получает список плейлистов с колв-ом треков
     @Query("SELECT playListId, name, description, image, (SELECT COUNT(id) FROM play_lists_track_table WHERE play_lists_track_table.playListId=play_lists_table.playListId) as tracksCount FROM play_lists_table ORDER BY playListId DESC")
     suspend fun getPlayLists(): List<PlayListWithCountTracks>

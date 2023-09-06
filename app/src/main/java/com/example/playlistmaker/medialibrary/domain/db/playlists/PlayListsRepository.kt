@@ -9,6 +9,8 @@ interface PlayListsRepository {
 
     suspend fun addTrackToPlayList(track: Track, playListId: Int)
 
+    suspend fun getPlayList(playListId: Int): PlayList
+
     suspend fun getPlayLists(): List<PlayList>
 
     suspend fun getPlayListTracks(playListId: Int): List<Track>

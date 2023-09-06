@@ -46,6 +46,10 @@ class PlayListsRepositoryImpl(
             playListsTrackEntity = playListsTrackDbConvertor.map(track),
             trackPlayListEntity = TrackPlayListEntity(null, playListId, track.trackId)
         )
+    override suspend fun getPlayList(playListId: Int): PlayList =
+        playListsTrackDbConvertor.map(
+            appDatabase.playListsTrackDao().getPlayList(playListId)
+        )
 
     override suspend fun getPlayLists(): List<PlayList> =
         convertPlayListWithCountTracksToPlayList(
