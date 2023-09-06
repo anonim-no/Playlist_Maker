@@ -67,15 +67,19 @@ class PlayListsRepositoryImpl(
 
     override suspend fun deletePlaylist(playList: PlayList) {
         playList.image?.let {
-            val filePath = File(
-                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                PLAY_LISTS_IMAGES_DIRECTORY
-            )
-            if (File(filePath, it).exists()) {
-                File(filePath, it).delete()
-            }
+            deleteAlbumImage(it)
         }
         appDatabase.playListsTrackDao().deletePlayList(playList.playListId)
+    }
+
+    private fun deleteAlbumImage(imageFileName: String) {
+        val filePath = File(
+            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            PLAY_LISTS_IMAGES_DIRECTORY
+        )
+        if (File(filePath, imageFileName).exists()) {
+            File(filePath, imageFileName).delete()
+        }
     }
 
     private fun saveAlbumImage(uri: Uri): String {
