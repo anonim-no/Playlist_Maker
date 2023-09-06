@@ -38,6 +38,10 @@ class PlayListsRepositoryImpl(
     override suspend fun isTrackInPlayList(trackId: Int, playListId: Int): Boolean =
         appDatabase.playListsTrackDao().isTrackInPlayList(trackId, playListId)
 
+    override suspend fun deleteTrackFromPlaylist(trackId: Int, playListId: Int) {
+        appDatabase.playListsTrackDao().deleteTrackFromPlayList(trackId, playListId)
+    }
+
 
     private fun convertPlayListsTrackEntityToTrack(tracks: List<PlayListsTrackEntity>): List<Track> =
         tracks.map {

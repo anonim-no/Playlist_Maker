@@ -84,9 +84,7 @@
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/playListDescription"
             app:layout_constraintStart_toStartOf="@id/leftBorder"
-            app:layout_constraintEnd_toEndOf="@id/rightBorder"
-            android:visibility="gone"
-            >
+            app:layout_constraintEnd_toEndOf="@id/rightBorder">
 
             <TextView
                 android:id="@+id/playListInfoDuration"
@@ -95,7 +93,6 @@
 
             <ImageView
                 android:id="@+id/dot"
-                style="@style/PlayListDot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/middleDot"
@@ -139,9 +136,10 @@
             />
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="240dp"
-            android:layout_marginTop="16dp"
+            android:id="@+id/bottomBlankView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="24dp"
             app:layout_constraintTop_toBottomOf="@id/iconShare"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -150,12 +148,12 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-        android:id="@+id/tracks"
+        android:id="@+id/tracksBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/rounded_bottom_sheet_background"
         android:orientation="vertical"
-        app:behavior_peekHeight="240dp"
+        app:behavior_peekHeight="100dp"
         app:behavior_hideable="false"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 

@@ -15,4 +15,6 @@ interface PlayListsInteractor {
 
     suspend fun isTrackInPlayList(trackId: Int, playListId: Int): Boolean
 
+    suspend fun deleteTrackFromPlaylist(trackId: Int, playListId: Int)
+
 }

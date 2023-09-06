@@ -15,7 +15,10 @@ import com.example.playlistmaker.common.utils.DiffCallback
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TracksAdapter(private val clickListener: TrackClickListener) :
+class TracksAdapter(
+    private val clickListener: TrackClickListener,
+    private val longClickListener: LongTrackClickListener? = null
+) :
     RecyclerView.Adapter<TracksViewHolder>() {
 
     var tracks = listOf<Track>()
@@ -44,10 +47,21 @@ class TracksAdapter(private val clickListener: TrackClickListener) :
         holder.itemView.setOnClickListener {
             clickListener.onTrackClick(tracks[holder.adapterPosition])
         }
+        longClickListener?.let { listener ->
+            holder.itemView.setOnLongClickListener {
+                listener.onTrackLongClick(tracks[holder.adapterPosition])
+                return@setOnLongClickListener true
+            }
+        }
+
     }
 
     fun interface TrackClickListener {
         fun onTrackClick(track: Track)
+    }
+
+    fun interface LongTrackClickListener {
+        fun onTrackLongClick(track: Track)
     }
 }
 

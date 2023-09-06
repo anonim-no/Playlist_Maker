@@ -29,13 +29,9 @@ class SearchFragment : Fragment() {
 
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
-    private val searchAdapter = TracksAdapter {
-        clickOnTrack(it)
-    }
+    private val searchAdapter = TracksAdapter({clickOnTrack(it)})
 
-    private val historyAdapter = TracksAdapter {
-        clickOnTrack(it)
-    }
+    private val historyAdapter = TracksAdapter({clickOnTrack(it)})
 
     enum class Content {
         SEARCH_RESULT, NOT_FOUND, ERROR, TRACKS_HISTORY, LOADING

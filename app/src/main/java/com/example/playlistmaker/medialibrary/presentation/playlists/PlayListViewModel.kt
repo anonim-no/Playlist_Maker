@@ -24,8 +24,9 @@ class PlayListViewModel(
 
     fun requestTracks(playListId: Int) {
         viewModelScope.launch {
-            val tracks = playListsInteractor.getPlayListTracks(playListId)
-            renderState(PlayListState.PlayList(tracks))
+            renderState(PlayListState.PlayList(
+                playListsInteractor.getPlayListTracks(playListId)
+            ))
         }
     }
 
@@ -39,6 +40,17 @@ class PlayListViewModel(
             }
         }
         return current
+    }
+
+    fun deleteTrackFromPlaylist(trackId: Int, playListId: Int) {
+        viewModelScope.launch {
+
+            playListsInteractor.deleteTrackFromPlaylist(trackId, playListId)
+
+            renderState(PlayListState.PlayList(
+                playListsInteractor.getPlayListTracks(playListId)
+            ))
+        }
     }
 
     companion object {

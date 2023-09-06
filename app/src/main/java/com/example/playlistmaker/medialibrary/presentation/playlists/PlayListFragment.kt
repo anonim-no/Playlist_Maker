@@ -18,6 +18,7 @@ import com.example.playlistmaker.common.models.Track
 import com.example.playlistmaker.common.presentation.TracksAdapter
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.example.playlistmaker.medialibrary.presentation.models.PlayListState
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -30,9 +31,16 @@ class PlayListFragment : Fragment() {
 
     private lateinit var playList: PlayList
 
-    private val playListTracksAdapter = TracksAdapter {
-        clickOnTrack(it)
-    }
+    private lateinit var confirmDialog: MaterialAlertDialogBuilder
+
+    private val playListTracksAdapter = TracksAdapter(
+        {
+            clickOnTrack(it)
+        },
+        {
+            longClickOnTrack(it)
+        }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,18 +56,18 @@ class PlayListFragment : Fragment() {
 
         binding.tracksRV.adapter = playListTracksAdapter
 
+        showPlayList()
+
+        //TODO("Размер")
+
         playListViewModel.observeState().observe(viewLifecycleOwner) {
             when (it) {
-                is PlayListState.PlayList -> {
-                    playListTracksAdapter.tracks = it.tracks
-                    showPlayList()
-                }
+                is PlayListState.PlayList -> showTracks(it.tracks)
             }
         }
 
         initOnClickListeners()
 
-        playListViewModel.requestTracks(playList.playListId)
 
     }
 
@@ -100,27 +108,27 @@ class PlayListFragment : Fragment() {
                 playListDescription.visibility = View.VISIBLE
             }
 
-            if (playListTracksAdapter.tracks.isNotEmpty()) {
-                var durationSum = 0L
-                playListTracksAdapter.tracks.forEach { track ->
-                    durationSum += track.trackTimeMillis ?: 0
-                }
-                durationSum = TimeUnit.MILLISECONDS.toMinutes(durationSum)
-                playListInfoDuration.text = playListInfoDuration.resources.getQuantityString(
-                    R.plurals.plural_minutes,
-                    durationSum.toInt(),
-                    durationSum
-                )
-
-                playListInfoCountTracks.text = playListInfoCountTracks.resources.getQuantityString(
-                    R.plurals.plural_count_tracks,
-                    playListTracksAdapter.tracks.size,
-                    playListTracksAdapter.tracks.size
-                )
-
-                playListInfo.visibility = View.VISIBLE
-            }
         }
+    }
+
+    private fun showTracks(tracks: List<Track>) {
+        playListTracksAdapter.tracks = tracks
+        var durationSum = 0L
+        playListTracksAdapter.tracks.forEach { track ->
+            durationSum += track.trackTimeMillis ?: 0
+        }
+        durationSum = TimeUnit.MILLISECONDS.toMinutes(durationSum)
+        binding.playListInfoDuration.text = binding.playListInfoDuration.resources.getQuantityString(
+            R.plurals.plural_minutes,
+            durationSum.toInt(),
+            durationSum
+        )
+
+        binding.playListInfoCountTracks.text = binding.playListInfoCountTracks.resources.getQuantityString(
+            R.plurals.plural_count_tracks,
+            playListTracksAdapter.tracks.size,
+            playListTracksAdapter.tracks.size
+        )
     }
 
     private fun clickOnTrack(track: Track) {
@@ -132,6 +140,17 @@ class PlayListFragment : Fragment() {
                 }
             )
         }
+    }
+    private fun longClickOnTrack(track: Track) {
+        confirmDialog = MaterialAlertDialogBuilder(requireContext()).apply {
+            setTitle(resources.getText(R.string.delete_track))
+            setNegativeButton(resources.getText(R.string.cancel)) { dialog, which ->
+            }
+            setPositiveButton(resources.getText(R.string.delete)) { dialog, which ->
+                playListViewModel.deleteTrackFromPlaylist(track.trackId, playList.playListId)
+            }
+        }
+        confirmDialog.show()
     }
 
     companion object {

@@ -67,8 +67,6 @@ class PlayListsFragment : Fragment() {
                 }
             }
         }
-
-        playListsViewModel.requestPlayLists()
     }
 
     override fun onResume() {

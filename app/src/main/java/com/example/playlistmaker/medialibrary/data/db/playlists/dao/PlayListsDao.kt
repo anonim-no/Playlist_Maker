@@ -42,5 +42,17 @@ interface PlayListsDao {
     @Query("SELECT EXISTS (SELECT 1 FROM play_lists_track_table  WHERE trackId = :trackId AND playListId = :playListId)")
     suspend fun isTrackInPlayList(trackId: Int, playListId: Int): Boolean
 
+    @Query("DELETE FROM play_lists_track_table WHERE playListId = :playListId AND trackId = :trackId")
+    suspend fun deleteTrackFromTrackPlayList(playListId: Int, trackId: Int)
+    @Query("DELETE FROM track_play_lists_table WHERE trackId NOT IN (SELECT DISTINCT(:trackId) FROM play_lists_track_table)")
+    suspend fun deleteTrack(trackId: Int)
+    @Transaction
+    suspend fun deleteTrackFromPlayList(
+        trackId: Int,
+        playListId: Int
+    ) {
+        deleteTrackFromTrackPlayList(playListId, trackId)
+        deleteTrack(trackId)
+    }
 
 }

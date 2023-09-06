@@ -175,8 +175,4 @@
         <item name="android:textSize">18sp</item>
         <item name="layout_constraintHorizontal_bias">0</item>
     </style>
-    <style name="PlayListDot">
-        <item name="iconTint">@color/black</item>
-
-    </style>
 </resources>
