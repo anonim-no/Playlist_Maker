@@ -27,6 +27,7 @@ const val TRACK = "track"
 const val PLAY_LIST = "play_list"
 const val APPLE_MUSIC_API_BASE_URL = "http://itunes.apple.com"
 const val PLAY_LISTS_IMAGES_DIRECTORY = "play_list_images"
+const val PLAY_LISTS_IMAGES_QUALITY = 80
 
 
 class App : Application() {

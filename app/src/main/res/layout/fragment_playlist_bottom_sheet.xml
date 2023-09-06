@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/player_bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_bottom_sheet_background"
+    android:orientation="vertical"
+    tools:context=".player.presentation.PlayerBottomSheetFragment">
+
+    <View
+        android:layout_width="50dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_balloon_background" />
+
+    <include
+        android:id="@+id/item_playlist"
+        layout="@layout/item_playlist"
+        android:layout_marginTop="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/buttonSharing"
+        style="@style/SettingsButtonText"
+        android:text="@string/share"
+         />
+
+    <Button
+        android:id="@+id/buttonEdit"
+        style="@style/SettingsButtonText"
+        android:text="@string/playlist_edit"
+        />
+
+    <Button
+        android:id="@+id/buttonDelete"
+        style="@style/SettingsButtonText"
+        android:text="@string/playlist_delete"
+        />
+
+</LinearLayout>

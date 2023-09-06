@@ -36,7 +36,7 @@
     <Button
         android:id="@+id/buttonSharing"
         style="@style/SettingsButtonText"
-        android:text="@string/share"
+        android:text="@string/share_app"
         app:icon="@drawable/ic_share" />
 
     <Button

@@ -1,10 +1,11 @@
 package com.example.playlistmaker.medialibrary.domain.db.playlists
 
+import android.net.Uri
 import com.example.playlistmaker.common.models.Track
 import com.example.playlistmaker.common.models.PlayList
 
 interface PlayListsRepository {
-    suspend fun addPlayList(playList: PlayList)
+    suspend fun addPlayList(playListName: String, playListDescription: String, pickImageUri: Uri?)
 
     suspend fun addTrackToPlayList(track: Track, playListId: Int)
 
@@ -15,4 +16,6 @@ interface PlayListsRepository {
     suspend fun isTrackInPlayList(trackId: Int, playListId: Int): Boolean
 
     suspend fun deleteTrackFromPlaylist(trackId: Int, playListId: Int)
+
+    suspend fun deletePlaylist(playList: PlayList)
 }

@@ -5,7 +5,8 @@
     <string name="settings">Настройки</string>
     <string name="dark_theme">Темная тема</string>
     <string name="back">Назад</string>
-    <string name="share">Поделиться приложением</string>
+    <string name="share_app">Поделиться приложением</string>
+    <string name="share">Поделиться</string>
     <string name="support">Обратиться в техподдержку</string>
     <string name="terms">Пользовательское соглашение</string>
 
@@ -53,6 +54,8 @@
     <string name="playlist_name">Название *</string>
     <string name="playlist_description">Описание</string>
     <string name="playlist_create">Создать</string>
+    <string name="playlist_edit">Редактировать информацию</string>
+    <string name="playlist_delete">Удалить плейлист</string>
     <string name="add_image">Добавить картинку</string>
     <string name="finish_creating_playlist">Завершить создание плейлиста?</string>
     <string name="all_unsaved_data_will_be_lost">Все несохраненные данные будут потеряны</string>
@@ -65,6 +68,9 @@
 
     <string name="delete_track">Удалить трек</string>
     <string name="delete">Удалить</string>
+
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 
     <plurals name="plural_count_tracks">
         <item quantity="zero">%1$d треков</item>

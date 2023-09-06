@@ -1,14 +1,11 @@
 package com.example.playlistmaker.medialibrary.presentation.playlists
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -19,6 +16,7 @@ import com.example.playlistmaker.common.TRACK
 import com.example.playlistmaker.common.models.PlayList
 import com.example.playlistmaker.common.models.Track
 import com.example.playlistmaker.common.presentation.TracksAdapter
+import com.example.playlistmaker.common.utils.shareText
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.example.playlistmaker.medialibrary.presentation.models.PlayListState
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -67,7 +65,9 @@ class PlayListFragment : Fragment() {
 
         playListViewModel.observeState().observe(viewLifecycleOwner) {
             when (it) {
-                is PlayListState.PlayList -> showTracks(it.tracks)
+                is PlayListState.PlayList -> {
+                    showTracks(it.tracks)
+                }
             }
         }
 
@@ -93,32 +93,28 @@ class PlayListFragment : Fragment() {
         }
 
         binding.iconShare.setOnClickListener {
-            sharePlayList()
+            shareText(buildShareText(), requireContext())
+        }
+
+        binding.iconMore.setOnClickListener {
+            PlayListBottomSheetFragment.newInstance(playList, buildShareText()).show(childFragmentManager, PlayListBottomSheetFragment.TAG)
         }
     }
 
-    private fun sharePlayList() {
-        var shareText = "${playList.name}\n${playList.description}\n" + binding.playListInfoCountTracks.resources.getQuantityString(
-            R.plurals.plural_count_tracks,
-            playListTracksAdapter.tracks.size,
-            playListTracksAdapter.tracks.size
-        ) + "\n"
+    private fun buildShareText(): String {
+        var shareText =
+            "${playList.name}\n${playList.description}\n" + binding.playListInfoCountTracks.resources.getQuantityString(
+                R.plurals.plural_count_tracks,
+                playListTracksAdapter.tracks.size,
+                playListTracksAdapter.tracks.size
+            ) + "\n"
         playListTracksAdapter.tracks.forEachIndexed { index, track ->
-            shareText += "\n ${index+1}. ${track.artistName} - ${track.trackName} (" + SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis) + ")"
+            shareText += "\n ${index + 1}. ${track.artistName} - ${track.trackName} (" + SimpleDateFormat(
+                "mm:ss",
+                Locale.getDefault()
+            ).format(track.trackTimeMillis) + ")"
         }
-
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.putExtra(Intent.EXTRA_TEXT, shareText)
-        intent.type = "text/plain"
-        try {
-            startActivity(intent)
-        } catch (ex: ActivityNotFoundException) {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.settings_not_found_app),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        return shareText
     }
 
     private fun showPlayList() {
@@ -174,6 +170,7 @@ class PlayListFragment : Fragment() {
             )
         }
     }
+
     private fun longClickOnTrack(track: Track) {
         confirmDialog = MaterialAlertDialogBuilder(requireContext()).apply {
             setTitle(resources.getText(R.string.delete_track))
