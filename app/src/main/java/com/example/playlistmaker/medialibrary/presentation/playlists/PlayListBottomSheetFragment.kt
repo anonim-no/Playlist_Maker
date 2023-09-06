@@ -5,6 +5,7 @@ import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
@@ -65,11 +66,18 @@ class PlayListBottomSheetFragment(private val playList: PlayList, private val sh
         binding.buttonDelete.setOnClickListener {
             confirmDialog = MaterialAlertDialogBuilder(requireContext()).apply {
                 setTitle(resources.getText(R.string.playlist_delete))
+                setMessage(resources.getText(R.string.playlist_delete_q))
                 setNegativeButton(resources.getText(R.string.no)) { _, _ ->
                 }
                 setPositiveButton(resources.getText(R.string.yes)) { _, _ ->
 
                     viewModelPlayListBottomSheet.deletePlaylist(playList)
+
+                    Toast.makeText(
+                        requireContext(),
+                        resources.getText(R.string.playlist_deleted),
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                     findNavController().popBackStack()
 

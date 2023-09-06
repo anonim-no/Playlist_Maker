@@ -56,6 +56,8 @@
     <string name="playlist_create">Создать</string>
     <string name="playlist_edit">Редактировать информацию</string>
     <string name="playlist_delete">Удалить плейлист</string>
+    <string name="playlist_delete_q">Хотите удалить плейлист?</string>
+    <string name="playlist_deleted">Плейлист удален</string>
     <string name="add_image">Добавить картинку</string>
     <string name="finish_creating_playlist">Завершить создание плейлиста?</string>
     <string name="all_unsaved_data_will_be_lost">Все несохраненные данные будут потеряны</string>

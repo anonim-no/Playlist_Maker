@@ -36,8 +36,7 @@ class PlayListsRepositoryImpl(
                 null,
                 playListName,
                 playListDescription,
-                playListImage,
-                0
+                playListImage
             )
         )
     }

@@ -9,8 +9,7 @@ data class PlayListEntity(
     val playListId: Int?,
     val name: String,
     val description: String,
-    val image: String?,
-    val createdAt: Long
+    val image: String?
 )
 
 data class PlayListWithCountTracks(
