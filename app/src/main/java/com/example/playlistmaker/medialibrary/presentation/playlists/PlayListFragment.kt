@@ -1,11 +1,14 @@
 package com.example.playlistmaker.medialibrary.presentation.playlists
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -21,6 +24,8 @@ import com.example.playlistmaker.medialibrary.presentation.models.PlayListState
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class PlayListFragment : Fragment() {
@@ -85,6 +90,34 @@ class PlayListFragment : Fragment() {
     private fun initOnClickListeners() {
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.iconShare.setOnClickListener {
+            sharePlayList()
+        }
+    }
+
+    private fun sharePlayList() {
+        var shareText = "${playList.name}\n${playList.description}\n" + binding.playListInfoCountTracks.resources.getQuantityString(
+            R.plurals.plural_count_tracks,
+            playListTracksAdapter.tracks.size,
+            playListTracksAdapter.tracks.size
+        ) + "\n"
+        playListTracksAdapter.tracks.forEachIndexed { index, track ->
+            shareText += "\n ${index+1}. ${track.artistName} - ${track.trackName} (" + SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis) + ")"
+        }
+
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.putExtra(Intent.EXTRA_TEXT, shareText)
+        intent.type = "text/plain"
+        try {
+            startActivity(intent)
+        } catch (ex: ActivityNotFoundException) {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.settings_not_found_app),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -152,9 +185,4 @@ class PlayListFragment : Fragment() {
         }
         confirmDialog.show()
     }
-
-    companion object {
-        fun newInstance() = PlayListFragment()
-    }
-
 }
