@@ -23,6 +23,8 @@ abstract class PlayListsAdapter(private val clickListener: PlayListClickListener
                 object : DiffCallback<PlayList>(field, newList) {
                     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                         return field[oldItemPosition].playListId == newList[newItemPosition].playListId
+                                && field[oldItemPosition].image == newList[newItemPosition].image
+                                && field[oldItemPosition].name == newList[newItemPosition].name
                                 && field[oldItemPosition].tracksCount == newList[newItemPosition].tracksCount
                     }
                 }
