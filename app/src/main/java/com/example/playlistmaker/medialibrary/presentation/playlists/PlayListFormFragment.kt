@@ -3,6 +3,7 @@ package com.example.playlistmaker.medialibrary.presentation.playlists
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,19 +11,26 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.FragmentAddplaylistBinding
+import com.example.playlistmaker.common.PLAY_LIST
+import com.example.playlistmaker.common.PLAY_LISTS_IMAGES_DIRECTORY
+import com.example.playlistmaker.common.models.PlayList
+import com.example.playlistmaker.databinding.FragmentFormPlaylistBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
 
-class AddPlayListFragment : Fragment() {
+class PlayListFormFragment : Fragment() {
 
-    private lateinit var binding: FragmentAddplaylistBinding
+    private lateinit var binding: FragmentFormPlaylistBinding
 
-    private val addPlayListViewModel by viewModel<AddPlayListViewModel>()
+    private val playListFormViewModel by viewModel<PlayListFormViewModel>()
+
+    private var playList: PlayList? = null
 
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
@@ -32,12 +40,29 @@ class AddPlayListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAddplaylistBinding.inflate(inflater, container, false)
+        binding = FragmentFormPlaylistBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        playList?.let {
+            binding.toolbar.title = "Редактировать"
+            binding.playListCreateButton.text = "Сохранить"
+            binding.playListNameEditText.setText(it.name)
+            binding.playListDescriptionEditText.setText(it.description)
+            it.image?.let { imageName ->
+                val filePath = File(
+                    requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                    PLAY_LISTS_IMAGES_DIRECTORY
+                )
+                val file = File(filePath, imageName)
+                binding.addImage.setImageURI(file.toUri())
+                pickImageUri = file.toUri()
+            }
+            binding.playListCreateButton.isEnabled = true
+        }
 
         confirmDialog = MaterialAlertDialogBuilder(requireContext()).apply {
             setTitle(getString(R.string.finish_creating_playlist))
@@ -76,17 +101,30 @@ class AddPlayListFragment : Fragment() {
             val name = binding.playListNameEditText.text.toString()
             val description = binding.playListDescriptionEditText.text.toString()
             if (name.isNotEmpty()) {
-                addPlayListViewModel.createPlayList(
-                    name = name,
-                    description = description,
-                    pickImageUri = pickImageUri
-                )
-                Toast.makeText(
-                    requireContext(),
-                    String.format(resources.getText(R.string.playlist_created).toString(), name),
-                    Toast.LENGTH_SHORT
-                ).show()
-                findNavController().popBackStack()
+                if (playList != null) {
+                    playListFormViewModel.editPlayList(
+                        playList!!.playListId,
+                        name = name,
+                        description = description,
+                        pickImageUri = pickImageUri
+                    ) {
+                        findNavController().popBackStack()
+                    }
+                } else {
+                    playListFormViewModel.createPlayList(
+                        name = name,
+                        description = description,
+                        pickImageUri = pickImageUri
+                    ) {
+                        Toast.makeText(
+                            requireContext(),
+                            String.format(resources.getText(R.string.playlist_created).toString(), name),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        findNavController().popBackStack()
+                    }
+
+                }
             }
         }
 
@@ -94,6 +132,8 @@ class AddPlayListFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
+        playList = arguments?.getSerializable(PLAY_LIST) as PlayList?
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -110,9 +150,9 @@ class AddPlayListFragment : Fragment() {
     private fun checkUnsavedData(): Boolean {
         return (
                 pickImageUri != null
-                || binding.playListNameEditText.text.toString().isNotEmpty()
-                || binding.playListDescriptionEditText.text.toString().isNotEmpty()
-        )
+                        || binding.playListNameEditText.text.toString().isNotEmpty()
+                        || binding.playListDescriptionEditText.text.toString().isNotEmpty()
+                )
     }
 
 }

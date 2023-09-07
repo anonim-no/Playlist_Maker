@@ -10,6 +10,10 @@ class PlayListsInteractorImpl(private val playListsRepository: PlayListsReposito
     override suspend fun addPlayList(playListName: String, playListDescription: String, pickImageUri: Uri?) =
         playListsRepository.addPlayList(playListName, playListDescription, pickImageUri)
 
+    override suspend fun editPlayList(playListId: Int, playListName: String, playListDescription: String, pickImageUri: Uri?) {
+        playListsRepository.editPlayList(playListId, playListName, playListDescription, pickImageUri)
+    }
+
     override suspend fun addTrackToPlayList(track: Track, playListId: Int) =
         playListsRepository.addTrackToPlayList(track, playListId)
 

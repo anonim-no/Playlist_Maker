@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
+import com.example.playlistmaker.common.PLAY_LIST
 import com.example.playlistmaker.common.PLAY_LISTS_IMAGES_DIRECTORY
 import com.example.playlistmaker.common.models.PlayList
 import com.example.playlistmaker.common.utils.shareText
@@ -60,7 +61,13 @@ class PlayListBottomSheetFragment(private val playList: PlayList, private val sh
         }
 
         binding.buttonEdit.setOnClickListener {
-
+            dismiss()
+            findNavController().navigate(
+                R.id.action_to_addPlayListFragment,
+                Bundle().apply {
+                    putSerializable(PLAY_LIST, playList)
+                }
+            )
         }
 
         binding.buttonDelete.setOnClickListener {

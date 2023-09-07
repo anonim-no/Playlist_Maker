@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListEntity
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListWithCountTracks
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListsTrackEntity
@@ -16,6 +17,9 @@ interface PlayListsDao {
     // добавляет плейлист
     @Insert(entity = PlayListEntity::class)
     suspend fun addPlayList(playList: PlayListEntity)
+
+    @Update
+    suspend fun editPlayList(playList: PlayListEntity)
 
     @Insert(entity = PlayListsTrackEntity::class, onConflict = OnConflictStrategy.IGNORE) // добавляет трек
     suspend fun addPlayListsTrack(playListsTrackEntity: PlayListsTrackEntity)

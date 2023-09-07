@@ -1,7 +1,7 @@
 package com.example.playlistmaker.medialibrary.di
 
 import com.example.playlistmaker.medialibrary.presentation.favorites.FavoritesTracksViewModel
-import com.example.playlistmaker.medialibrary.presentation.playlists.AddPlayListViewModel
+import com.example.playlistmaker.medialibrary.presentation.playlists.PlayListFormViewModel
 import com.example.playlistmaker.medialibrary.presentation.playlists.PlayListBottomSheetViewModel
 import com.example.playlistmaker.medialibrary.presentation.playlists.PlayListViewModel
 import com.example.playlistmaker.medialibrary.presentation.playlists.PlayListsViewModel
@@ -19,7 +19,7 @@ val mediaLibraryViewModelsModule = module {
         PlayListViewModel(playListsInteractor = get())
     }
     viewModel {
-        AddPlayListViewModel(playListsInteractor = get())
+        PlayListFormViewModel(playListsInteractor = get())
     }
     viewModel {
         PlayListBottomSheetViewModel(

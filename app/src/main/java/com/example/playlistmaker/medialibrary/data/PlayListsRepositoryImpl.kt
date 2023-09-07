@@ -27,16 +27,32 @@ class PlayListsRepositoryImpl(
 ) : PlayListsRepository {
 
     override suspend fun addPlayList(playListName: String, playListDescription: String, pickImageUri: Uri?) {
-        var playListImage: String? = null
-        pickImageUri?.let {
-            playListImage = saveAlbumImage(pickImageUri)
-        }
         appDatabase.playListsTrackDao().addPlayList(
             PlayListEntity(
                 null,
                 playListName,
                 playListDescription,
-                playListImage
+                saveAlbumImage(pickImageUri)
+            )
+        )
+    }
+
+    override suspend fun editPlayList(
+        playListId: Int,
+        playListName: String,
+        playListDescription: String,
+        pickImageUri: Uri?
+    ) {
+        val playList = appDatabase.playListsTrackDao().getPlayList(playListId)
+        playList.image?.let {
+            deleteAlbumImage(it)
+        }
+        appDatabase.playListsTrackDao().editPlayList(
+            PlayListEntity(
+                playListId,
+                playListName,
+                playListDescription,
+                saveAlbumImage(pickImageUri)
             )
         )
     }
@@ -46,6 +62,7 @@ class PlayListsRepositoryImpl(
             playListsTrackEntity = playListsTrackDbConvertor.map(track),
             trackPlayListEntity = TrackPlayListEntity(null, playListId, track.trackId)
         )
+
     override suspend fun getPlayList(playListId: Int): PlayList =
         playListsTrackDbConvertor.map(
             appDatabase.playListsTrackDao().getPlayList(playListId)
@@ -85,23 +102,25 @@ class PlayListsRepositoryImpl(
         }
     }
 
-    private fun saveAlbumImage(uri: Uri): String {
-        val imageFileName = Calendar.getInstance().timeInMillis.toString() + ".jpg"
-        val filePath =
-            File(
-                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                PLAY_LISTS_IMAGES_DIRECTORY
-            )
-        if (!filePath.exists()) {
-            filePath.mkdirs()
+    private fun saveAlbumImage(uri: Uri?): String? {
+        var imageFileName: String? = null
+        uri?.let {
+            val filePath =
+                File(
+                    context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                    PLAY_LISTS_IMAGES_DIRECTORY
+                )
+            if (!filePath.exists()) {
+                filePath.mkdirs()
+            }
+            imageFileName = Calendar.getInstance().timeInMillis.toString() + ".jpg"
+            val file = imageFileName?.let { it1 -> File(filePath, it1) }
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val outputStream = FileOutputStream(file)
+            BitmapFactory
+                .decodeStream(inputStream)
+                .compress(Bitmap.CompressFormat.JPEG, PLAY_LISTS_IMAGES_QUALITY, outputStream)
         }
-
-        val file = File(filePath, imageFileName)
-        val inputStream = context.contentResolver.openInputStream(uri)
-        val outputStream = FileOutputStream(file)
-        BitmapFactory
-            .decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, PLAY_LISTS_IMAGES_QUALITY, outputStream)
         return imageFileName
     }
 
