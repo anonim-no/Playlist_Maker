@@ -27,11 +27,6 @@ class PlayListViewModel(
             renderState(PlayListState.PlayListInfo(
                 playListsInteractor.getPlayList(playListId)
             ))
-        }
-    }
-
-    fun requestPlayListTracks(playListId: Int) {
-        viewModelScope.launch {
             renderState(PlayListState.PlayListTracks(
                 playListsInteractor.getPlayListTracks(playListId)
             ))

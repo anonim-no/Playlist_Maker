@@ -59,10 +59,6 @@ class PlayListFragment : Fragment() {
 
         binding.tracksRV.adapter = playListTracksAdapter
 
-        showPlayList()
-
-        //TODO("Размер")
-
         playListViewModel.observeState().observe(viewLifecycleOwner) {
             when (it) {
                 is PlayListState.PlayListTracks -> {
@@ -76,14 +72,12 @@ class PlayListFragment : Fragment() {
         }
 
         initOnClickListeners()
-
-
     }
 
     override fun onResume() {
         super.onResume()
         playListViewModel.requestPlayListInfo(playList.playListId)
-        playListViewModel.requestPlayListTracks(playList.playListId)
+
     }
 
     override fun onAttach(context: Context) {
@@ -135,14 +129,17 @@ class PlayListFragment : Fragment() {
                 .into(playListImage)
 
             playListName.text = playList.name
+            playListName.isSelected = true
 
             if (playList.description.isNotEmpty()) {
                 playListDescription.text = playList.description
+                playListDescription.isSelected = true
                 playListDescription.visibility = View.VISIBLE
             } else {
-                playListDescription.text = ""
                 playListDescription.visibility = View.GONE
             }
+
+            //TODO("Размер")
 
         }
     }
