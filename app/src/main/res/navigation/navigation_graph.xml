@@ -32,7 +32,7 @@
         android:id="@+id/addPlayListFragment"
         android:name="com.example.playlistmaker.medialibrary.presentation.playlists.PlayListFormFragment"
         android:label="fragment_addplaylist"
-        tools:layout="@layout/fragment_form_playlist" />
+        tools:layout="@layout/fragment_playlist_form" />
         <action
             android:id="@+id/action_to_addPlayListFragment"
             app:destination="@id/addPlayListFragment" />

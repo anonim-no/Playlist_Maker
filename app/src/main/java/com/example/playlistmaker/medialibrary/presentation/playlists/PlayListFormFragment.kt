@@ -19,14 +19,14 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.common.PLAY_LIST
 import com.example.playlistmaker.common.PLAY_LISTS_IMAGES_DIRECTORY
 import com.example.playlistmaker.common.models.PlayList
-import com.example.playlistmaker.databinding.FragmentFormPlaylistBinding
+import com.example.playlistmaker.databinding.FragmentPlaylistFormBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 
 class PlayListFormFragment : Fragment() {
 
-    private lateinit var binding: FragmentFormPlaylistBinding
+    private lateinit var binding: FragmentPlaylistFormBinding
 
     private val playListFormViewModel by viewModel<PlayListFormViewModel>()
 
@@ -40,7 +40,7 @@ class PlayListFormFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentFormPlaylistBinding.inflate(inflater, container, false)
+        binding = FragmentPlaylistFormBinding.inflate(inflater, container, false)
         return binding.root
     }
 
