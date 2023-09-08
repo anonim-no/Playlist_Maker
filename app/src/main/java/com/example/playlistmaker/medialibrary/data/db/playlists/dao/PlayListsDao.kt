@@ -18,7 +18,7 @@ interface PlayListsDao {
     @Insert(entity = PlayListEntity::class)
     suspend fun addPlayList(playList: PlayListEntity)
 
-    @Update
+    @Update(entity = PlayListEntity::class)
     suspend fun editPlayList(playList: PlayListEntity)
 
     @Insert(entity = PlayListsTrackEntity::class, onConflict = OnConflictStrategy.IGNORE) // добавляет трек

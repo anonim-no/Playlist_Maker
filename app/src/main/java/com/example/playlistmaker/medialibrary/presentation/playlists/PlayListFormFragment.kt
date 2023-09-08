@@ -153,8 +153,8 @@ class PlayListFormFragment : Fragment() {
         }
         return (
                 pickImageUri != null
-                        || binding.playListNameEditText.text.toString().isNotEmpty()
-                        || binding.playListDescriptionEditText.text.toString().isNotEmpty()
+                || binding.playListNameEditText.text.toString().isNotEmpty()
+                || binding.playListDescriptionEditText.text.toString().isNotEmpty()
                 )
     }
 

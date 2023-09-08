@@ -114,6 +114,7 @@ class PlayListsRepositoryImpl(
                 filePath.mkdirs()
             }
             imageFileName = Calendar.getInstance().timeInMillis.toString() + ".jpg"
+            //TODO("расширение файла")
             val file = imageFileName?.let { it1 -> File(filePath, it1) }
             val inputStream = context.contentResolver.openInputStream(uri)
             val outputStream = FileOutputStream(file)
