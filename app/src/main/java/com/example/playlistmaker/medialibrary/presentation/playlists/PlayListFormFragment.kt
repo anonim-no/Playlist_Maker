@@ -148,6 +148,9 @@ class PlayListFormFragment : Fragment() {
     }
 
     private fun checkUnsavedData(): Boolean {
+        playList?.let {
+            return false
+        }
         return (
                 pickImageUri != null
                         || binding.playListNameEditText.text.toString().isNotEmpty()

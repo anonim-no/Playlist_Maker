@@ -64,6 +64,7 @@ class PlayListsFragment : Fragment() {
                     playListsAdapter.playLists = it.playLists
                     binding.placeholderNotFound.visibility = View.GONE
                     binding.playListsRV.visibility = View.VISIBLE
+                    //TODO("Скролл")
                 }
             }
         }
