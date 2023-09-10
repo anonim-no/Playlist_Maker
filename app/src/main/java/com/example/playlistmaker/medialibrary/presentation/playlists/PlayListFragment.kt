@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -160,6 +161,9 @@ class PlayListFragment : Fragment() {
     }
 
     private fun showTracks(tracks: List<Track>) {
+        if (tracks.isEmpty()) {
+            Toast.makeText(requireContext(), getString(R.string.playlist_is_empty), Toast.LENGTH_SHORT).show()
+        }
         playListTracksAdapter.tracks = tracks
         var durationSum = 0L
         playListTracksAdapter.tracks.forEach { track ->
@@ -171,7 +175,6 @@ class PlayListFragment : Fragment() {
             durationSum.toInt(),
             durationSum
         )
-
         binding.playListInfoCountTracks.text = binding.playListInfoCountTracks.resources.getQuantityString(
             R.plurals.plural_count_tracks,
             playListTracksAdapter.tracks.size,

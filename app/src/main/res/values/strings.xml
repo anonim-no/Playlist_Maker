@@ -75,6 +75,7 @@
     <string name="no">Нет</string>
     <string name="edit">Редактировать</string>
     <string name="save">Сохранить</string>
+    <string name="playlist_is_empty">В этом плейлисте нет треков</string>
 
     <plurals name="plural_count_tracks">
         <item quantity="zero">%1$d треков</item>
