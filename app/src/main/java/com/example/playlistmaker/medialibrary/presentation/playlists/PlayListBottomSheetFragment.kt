@@ -57,47 +57,48 @@ class PlayListBottomSheetFragment(private val playList: PlayList, private val sh
             )
 
         binding.buttonSharing.setOnClickListener {
-            shareText(shareText, requireContext())
+            if (viewModelPlayListBottomSheet.clickDebounce()) {
+                shareText(shareText, requireContext())
+            }
         }
 
         binding.buttonEdit.setOnClickListener {
-            dismiss()
-            findNavController().navigate(
-                R.id.action_to_addPlayListFragment,
-                Bundle().apply {
-                    putSerializable(PLAY_LIST, playList)
-                }
-            )
+            if (viewModelPlayListBottomSheet.clickDebounce()) {
+                dismiss()
+                findNavController().navigate(
+                    R.id.action_to_addPlayListFragment,
+                    Bundle().apply {
+                        putSerializable(PLAY_LIST, playList)
+                    }
+                )
+            }
         }
 
         binding.buttonDelete.setOnClickListener {
-            confirmDialog = MaterialAlertDialogBuilder(requireContext()).apply {
-                setTitle(resources.getText(R.string.playlist_delete))
-                setMessage(resources.getText(R.string.playlist_delete_q))
-                setNegativeButton(resources.getText(R.string.no)) { _, _ ->
-                }
-                setPositiveButton(resources.getText(R.string.yes)) { _, _ ->
+            if (viewModelPlayListBottomSheet.clickDebounce()) {
+                confirmDialog = MaterialAlertDialogBuilder(requireContext()).apply {
+                    setTitle(resources.getText(R.string.playlist_delete))
+                    setMessage(resources.getText(R.string.playlist_delete_q))
+                    setNegativeButton(resources.getText(R.string.no)) { _, _ ->
+                    }
+                    setPositiveButton(resources.getText(R.string.yes)) { _, _ ->
 
-                    viewModelPlayListBottomSheet.deletePlaylist(playList
-                    ) {
-                        Toast.makeText(
-                            requireContext(),
-                            resources.getText(R.string.playlist_deleted),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        viewModelPlayListBottomSheet.deletePlaylist(
+                            playList
+                        ) {
+                            Toast.makeText(
+                                requireContext(),
+                                resources.getText(R.string.playlist_deleted),
+                                Toast.LENGTH_SHORT
+                            ).show()
 
-                        findNavController().popBackStack()
+                            findNavController().popBackStack()
+                        }
                     }
                 }
+                confirmDialog.show()
             }
-            confirmDialog.show()
         }
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-
     }
 
     companion object {

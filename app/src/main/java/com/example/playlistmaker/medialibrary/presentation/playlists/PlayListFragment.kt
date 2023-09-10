@@ -93,11 +93,16 @@ class PlayListFragment : Fragment() {
         }
 
         binding.iconShare.setOnClickListener {
-            shareText(buildShareText(), requireContext())
+            if (playListViewModel.clickDebounce()) {
+                shareText(buildShareText(), requireContext())
+            }
         }
 
         binding.iconMore.setOnClickListener {
-            PlayListBottomSheetFragment.newInstance(playList, buildShareText()).show(childFragmentManager, PlayListBottomSheetFragment.TAG)
+            if (playListViewModel.clickDebounce()) {
+                PlayListBottomSheetFragment.newInstance(playList, buildShareText())
+                    .show(childFragmentManager, PlayListBottomSheetFragment.TAG)
+            }
         }
     }
 
