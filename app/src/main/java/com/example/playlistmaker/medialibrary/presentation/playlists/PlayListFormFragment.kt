@@ -48,17 +48,19 @@ class PlayListFormFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         playList?.let {
-            binding.toolbar.title = "Редактировать"
-            binding.playListCreateButton.text = "Сохранить"
+            binding.toolbar.title = getString(R.string.edit)
+            binding.playListCreateButton.text = getString(R.string.save)
             binding.playListNameEditText.setText(it.name)
             binding.playListDescriptionEditText.setText(it.description)
             it.image?.let { imageName ->
-                val filePath = File(
-                    requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                    PLAY_LISTS_IMAGES_DIRECTORY
+                binding.addImage.setImageURI(
+                    File(
+                        File(
+                            requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                            PLAY_LISTS_IMAGES_DIRECTORY
+                        ), imageName
+                    ).toUri()
                 )
-                val file = File(filePath, imageName)
-                binding.addImage.setImageURI(file.toUri())
             }
             binding.playListCreateButton.isEnabled = true
         }
@@ -154,7 +156,7 @@ class PlayListFormFragment : Fragment() {
                 pickImageUri != null
                 || binding.playListNameEditText.text.toString().isNotEmpty()
                 || binding.playListDescriptionEditText.text.toString().isNotEmpty()
-                )
+        )
     }
 
 }

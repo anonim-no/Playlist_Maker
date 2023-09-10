@@ -78,16 +78,16 @@ class PlayListBottomSheetFragment(private val playList: PlayList, private val sh
                 }
                 setPositiveButton(resources.getText(R.string.yes)) { _, _ ->
 
-                    viewModelPlayListBottomSheet.deletePlaylist(playList)
+                    viewModelPlayListBottomSheet.deletePlaylist(playList
+                    ) {
+                        Toast.makeText(
+                            requireContext(),
+                            resources.getText(R.string.playlist_deleted),
+                            Toast.LENGTH_SHORT
+                        ).show()
 
-                    Toast.makeText(
-                        requireContext(),
-                        resources.getText(R.string.playlist_deleted),
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                    findNavController().popBackStack()
-
+                        findNavController().popBackStack()
+                    }
                 }
             }
             confirmDialog.show()

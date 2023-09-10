@@ -73,6 +73,8 @@
 
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="edit">Редактировать</string>
+    <string name="save">Сохранить</string>
 
     <plurals name="plural_count_tracks">
         <item quantity="zero">%1$d треков</item>
