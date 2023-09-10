@@ -31,7 +31,11 @@ class PlayListsRepositoryImpl(
         PLAY_LISTS_IMAGES_DIRECTORY
     )
 
-    override suspend fun addPlayList(playListName: String, playListDescription: String, pickImageUri: Uri?) {
+    override suspend fun addPlayList(
+        playListName: String,
+        playListDescription: String,
+        pickImageUri: Uri?
+    ) {
         var imageFileName: String? = null
         if (pickImageUri != null) {
             imageFileName = saveAlbumImage(pickImageUri)
@@ -118,12 +122,17 @@ class PlayListsRepositoryImpl(
         if (!albumImagesFilePath.exists()) {
             albumImagesFilePath.mkdirs()
         }
-        val file = File(albumImagesFilePath, imageFileName)
-        val inputStream = context.contentResolver.openInputStream(uri)
-        val outputStream = FileOutputStream(file)
         BitmapFactory
-            .decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, PLAY_LISTS_IMAGES_QUALITY, outputStream)
+            .decodeStream(
+                context.contentResolver.openInputStream(uri)
+            )
+            .compress(
+                Bitmap.CompressFormat.JPEG,
+                PLAY_LISTS_IMAGES_QUALITY,
+                FileOutputStream(
+                    File(albumImagesFilePath, imageFileName)
+                )
+            )
         return imageFileName
     }
 

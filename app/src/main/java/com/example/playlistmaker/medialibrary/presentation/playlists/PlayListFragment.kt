@@ -6,6 +6,7 @@ import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -19,6 +20,7 @@ import com.example.playlistmaker.common.presentation.TracksAdapter
 import com.example.playlistmaker.common.utils.shareText
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.example.playlistmaker.medialibrary.presentation.models.PlayListState
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -139,7 +141,15 @@ class PlayListFragment : Fragment() {
                 playListDescription.visibility = View.GONE
             }
 
-            //TODO("Размер")
+            val bottomSheetBehavior = BottomSheetBehavior.from(binding.tracksBottomSheet)
+            binding.bottomBlankView.viewTreeObserver.addOnGlobalLayoutListener(
+                object : ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        bottomSheetBehavior.peekHeight = binding.bottomBlankView.height
+                        binding.bottomBlankView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                }
+            )
 
         }
     }
