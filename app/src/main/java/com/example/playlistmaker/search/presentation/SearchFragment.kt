@@ -94,7 +94,7 @@ class SearchFragment : Fragment() {
 
         // нажатие кнопки Обновить на экране с ошибкой повторяет поиск
         binding.errorButton.setOnClickListener {
-            searchViewModel.search(binding.inputSearchForm.text.toString(), repeatSearch = true)
+            searchViewModel.search(binding.inputSearchForm.text.toString())
         }
 
         // по клику на кнопке очистки истории поиска - очищаем историю поиска

@@ -42,12 +42,12 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
         }
     }
 
-    fun search(searchText: String, repeatSearch: Boolean = false) {
+    fun search(searchText: String) {
         debounceJob?.cancel()
 
         if (searchText.isNotEmpty()) {
 
-            if (lastSearchQuery != searchText || repeatSearch) {
+            if (lastSearchQuery != searchText) {
 
                 lastSearchQuery = searchText
 
@@ -72,6 +72,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
 
         when {
             errorCode != null -> {
+                lastSearchQuery = ""
                 renderState(SearchState.Error(errorCode = errorCode))
             }
 
@@ -86,6 +87,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     }
 
     fun clearSearch() {
+        lastSearchQuery = ""
         val historyTracks = getTracksHistory()
         if (historyTracks.isNotEmpty()) {
             renderState(SearchState.History(historyTracks))
