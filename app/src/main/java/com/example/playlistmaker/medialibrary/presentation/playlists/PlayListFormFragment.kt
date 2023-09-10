@@ -59,7 +59,6 @@ class PlayListFormFragment : Fragment() {
                 )
                 val file = File(filePath, imageName)
                 binding.addImage.setImageURI(file.toUri())
-                pickImageUri = file.toUri()
             }
             binding.playListCreateButton.isEnabled = true
         }
