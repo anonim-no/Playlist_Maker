@@ -58,7 +58,12 @@ class PlayListBottomSheetFragment(private val playList: PlayList, private val sh
 
         binding.buttonSharing.setOnClickListener {
             if (viewModelPlayListBottomSheet.clickDebounce()) {
-                shareText(shareText, requireContext())
+                if (playList.tracksCount>0) {
+                    shareText(shareText, requireContext())
+                } else {
+                    dismiss()
+                    Toast.makeText(requireContext(), getString(R.string.playlist_is_empty_for_share), Toast.LENGTH_SHORT).show()
+                }
             }
         }
 

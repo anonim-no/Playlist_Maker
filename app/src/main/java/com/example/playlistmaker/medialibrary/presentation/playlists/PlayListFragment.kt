@@ -95,7 +95,11 @@ class PlayListFragment : Fragment() {
 
         binding.iconShare.setOnClickListener {
             if (playListViewModel.clickDebounce()) {
-                shareText(buildShareText(), requireContext())
+                if (playListTracksAdapter.tracks.isNotEmpty()) {
+                    shareText(buildShareText(), requireContext())
+                } else {
+                    Toast.makeText(requireContext(), getString(R.string.playlist_is_empty_for_share), Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
