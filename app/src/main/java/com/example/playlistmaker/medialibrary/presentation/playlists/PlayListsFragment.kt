@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
+import com.example.playlistmaker.common.PLAY_LIST
 import com.example.playlistmaker.common.models.PlayList
 import com.example.playlistmaker.common.presentation.PlayListViewHolder
 import com.example.playlistmaker.common.presentation.PlayListsAdapter
@@ -63,6 +64,7 @@ class PlayListsFragment : Fragment() {
                     playListsAdapter.playLists = it.playLists
                     binding.placeholderNotFound.visibility = View.GONE
                     binding.playListsRV.visibility = View.VISIBLE
+                    binding.playListsRV.smoothScrollToPosition(0)
                 }
             }
         }
@@ -74,7 +76,12 @@ class PlayListsFragment : Fragment() {
     }
 
     private fun clickOnPlayList(playList: PlayList) {
-
+        findNavController().navigate(
+            R.id.action_to_PlayListFragment,
+            Bundle().apply {
+                putSerializable(PLAY_LIST, playList)
+            }
+        )
     }
 
     companion object {

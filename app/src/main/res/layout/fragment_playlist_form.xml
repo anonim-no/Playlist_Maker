@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".medialibrary.presentation.playlists.AddPlayListFragment">
+    android:background="@color/screen_background"
+    tools:context=".medialibrary.presentation.playlists.PlayListFormFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -30,20 +31,35 @@
         android:orientation="vertical"
         app:layout_constraintGuide_end="16dp" />
 
-    <ImageView
-        android:id="@+id/addImage"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/addImageCardView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:scaleType="centerCrop"
-        android:layout_marginHorizontal="24dp"
         android:layout_marginTop="82dp"
-        android:src="@drawable/add_image_button"
+        android:layout_marginHorizontal="24dp"
+        app:cardCornerRadius="8dp"
+        android:elevation="10dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/screen_background"
         app:layout_constraintDimensionRatio="h,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/playListNameTextInputLayout"
-        android:contentDescription="@string/add_image"/>
+        app:layout_constraintBottom_toTopOf="@+id/playListNameTextInputLayout">
+
+        <ImageView
+            android:id="@+id/addImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/add_image_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/playListNameTextInputLayout"
+            android:contentDescription="@string/add_image"/>
+
+    </androidx.cardview.widget.CardView>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/playListNameTextInputLayout"
@@ -52,7 +68,7 @@
         android:layout_marginTop="32dp"
         app:layout_constraintEnd_toStartOf="@+id/rightBorder"
         app:layout_constraintStart_toStartOf="@+id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@+id/addImage">
+        app:layout_constraintTop_toBottomOf="@+id/addImageCardView">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/playListNameEditText"

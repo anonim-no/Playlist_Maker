@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
+import com.example.playlistmaker.common.utils.shareText
 import com.example.playlistmaker.databinding.FragmentSettingsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -40,18 +41,7 @@ class SettingsFragment : Fragment() {
             }
 
         binding.buttonSharing.setOnClickListener {
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.support_share_link))
-            intent.type = "text/plain"
-            try {
-                startActivity(intent)
-            } catch (ex: ActivityNotFoundException) {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.settings_not_found_app),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            shareText(getString(R.string.support_share_link), requireContext())
         }
 
         binding.buttonSupport.setOnClickListener {

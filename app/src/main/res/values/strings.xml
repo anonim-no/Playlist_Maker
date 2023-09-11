@@ -5,7 +5,8 @@
     <string name="settings">Настройки</string>
     <string name="dark_theme">Темная тема</string>
     <string name="back">Назад</string>
-    <string name="share">Поделиться приложением</string>
+    <string name="share_app">Поделиться приложением</string>
+    <string name="share">Поделиться</string>
     <string name="support">Обратиться в техподдержку</string>
     <string name="terms">Пользовательское соглашение</string>
 
@@ -53,6 +54,10 @@
     <string name="playlist_name">Название *</string>
     <string name="playlist_description">Описание</string>
     <string name="playlist_create">Создать</string>
+    <string name="playlist_edit">Редактировать информацию</string>
+    <string name="playlist_delete">Удалить плейлист</string>
+    <string name="playlist_delete_q">Хотите удалить плейлист?</string>
+    <string name="playlist_deleted">Плейлист удален</string>
     <string name="add_image">Добавить картинку</string>
     <string name="finish_creating_playlist">Завершить создание плейлиста?</string>
     <string name="all_unsaved_data_will_be_lost">Все несохраненные данные будут потеряны</string>
@@ -63,6 +68,16 @@
     <string name="added_to_playlist">Добавлено в плейлист %1$s</string>
     <string name="already_added_to_playlist">Трек уже добавлен в плейлист %1$s</string>
 
+    <string name="delete_track">Удалить трек</string>
+    <string name="delete">Удалить</string>
+
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="edit">Редактировать</string>
+    <string name="save">Сохранить</string>
+    <string name="playlist_is_empty">В этом плейлисте нет треков</string>
+    <string name="playlist_is_empty_for_share">В данном плейлисте нет списка треков, которым можно поделиться</string>
+
     <plurals name="plural_count_tracks">
         <item quantity="zero">%1$d треков</item>
         <item quantity="one">%1$d трек</item>
@@ -70,5 +85,14 @@
         <item quantity="few">%1$d трека</item>
         <item quantity="many">%1$d треков</item>
         <item quantity="other">%1$d треков</item>
+    </plurals>
+
+    <plurals name="plural_minutes">
+        <item quantity="zero">%1$d минут</item>
+        <item quantity="one">%1$d минута</item>
+        <item quantity="two">%1$d минуты</item>
+        <item quantity="few">%1$d минуты</item>
+        <item quantity="many">%1$d минут</item>
+        <item quantity="other">%1$d минут</item>
     </plurals>
 </resources>

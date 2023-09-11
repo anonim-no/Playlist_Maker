@@ -15,7 +15,10 @@ import com.example.playlistmaker.common.utils.DiffCallback
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TracksAdapter(private val clickListener: TrackClickListener) :
+class TracksAdapter(
+    private val clickListener: TrackClickListener,
+    private val longClickListener: LongTrackClickListener? = null
+) :
     RecyclerView.Adapter<TracksViewHolder>() {
 
     var tracks = listOf<Track>()
@@ -44,10 +47,21 @@ class TracksAdapter(private val clickListener: TrackClickListener) :
         holder.itemView.setOnClickListener {
             clickListener.onTrackClick(tracks[holder.adapterPosition])
         }
+        longClickListener?.let { listener ->
+            holder.itemView.setOnLongClickListener {
+                listener.onTrackLongClick(tracks[holder.adapterPosition])
+                return@setOnLongClickListener true
+            }
+        }
+
     }
 
     fun interface TrackClickListener {
         fun onTrackClick(track: Track)
+    }
+
+    fun interface LongTrackClickListener {
+        fun onTrackLongClick(track: Track)
     }
 }
 
@@ -56,7 +70,7 @@ class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val trackName: TextView = itemView.findViewById(R.id.tvTrackName)
     private val artistName: TextView = itemView.findViewById(R.id.tvArtistName)
     private val trackTime: TextView = itemView.findViewById(R.id.tvTrackTime)
-    private val artworkUrl100: ImageView = itemView.findViewById(R.id.ivTrackArt)
+    private val ivTrackArt: ImageView = itemView.findViewById(R.id.ivTrackArt)
 
     fun bind(track: Track) {
         trackName.text = track.trackName
@@ -70,7 +84,7 @@ class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             trackTime.setText(R.string._00_00)
         }
 
-        track.artworkUrl100?.let {
+        track.artworkUrl60?.let {
             Glide
                 .with(itemView)
                 .load(it)
@@ -83,7 +97,7 @@ class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                         )
                     )
                 )
-                .into(artworkUrl100)
+                .into(ivTrackArt)
         }
     }
 }

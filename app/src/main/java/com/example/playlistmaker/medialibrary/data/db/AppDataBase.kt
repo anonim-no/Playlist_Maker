@@ -10,7 +10,7 @@ import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayLists
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.TrackPlayListEntity
 
 @Database(
-    version = 1,
+    version = 3,
     entities = [FavoritesTrackEntity::class, PlayListsTrackEntity::class, PlayListEntity::class, TrackPlayListEntity::class]
 )
 abstract class AppDatabase : RoomDatabase() {

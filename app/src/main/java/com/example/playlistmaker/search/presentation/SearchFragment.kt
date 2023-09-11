@@ -29,13 +29,9 @@ class SearchFragment : Fragment() {
 
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
-    private val searchAdapter = TracksAdapter {
-        clickOnTrack(it)
-    }
+    private val searchAdapter = TracksAdapter({clickOnTrack(it)})
 
-    private val historyAdapter = TracksAdapter {
-        clickOnTrack(it)
-    }
+    private val historyAdapter = TracksAdapter({clickOnTrack(it)})
 
     enum class Content {
         SEARCH_RESULT, NOT_FOUND, ERROR, TRACKS_HISTORY, LOADING
@@ -98,7 +94,7 @@ class SearchFragment : Fragment() {
 
         // нажатие кнопки Обновить на экране с ошибкой повторяет поиск
         binding.errorButton.setOnClickListener {
-            searchViewModel.search(binding.inputSearchForm.text.toString(), repeatSearch = true)
+            searchViewModel.search(binding.inputSearchForm.text.toString())
         }
 
         // по клику на кнопке очистки истории поиска - очищаем историю поиска

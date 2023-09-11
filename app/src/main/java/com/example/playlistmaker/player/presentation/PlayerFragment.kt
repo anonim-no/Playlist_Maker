@@ -138,7 +138,7 @@ class PlayerFragment : Fragment() {
             trackName.text = track.trackName
             trackName.isSelected = true
 
-            track.artworkUrl100?.let {
+            track.artworkUrl60?.let {
                 Glide
                     .with(albumArt)
                     .load(it.replaceAfterLast('/', "512x512bb.jpg"))

@@ -40,4 +40,6 @@
 
     <color name="bottom_sheet_balloon_color">#E6E8EB</color>
 
+    <color name="play_list_background_color">#E6E8EB</color>
+
 </resources>

@@ -8,17 +8,17 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.models.Track
-import com.example.playlistmaker.databinding.FragmentBottomSheetBinding
 import com.example.playlistmaker.common.models.PlayList
 import com.example.playlistmaker.common.presentation.PlayListViewHolder
 import com.example.playlistmaker.common.presentation.PlayListsAdapter
+import com.example.playlistmaker.databinding.FragmentPlayerBottomSheetBinding
 import com.example.playlistmaker.player.presentation.models.PlayListsState
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerBottomSheetFragment(val track: Track) : BottomSheetDialogFragment() {
 
-    private lateinit var binding: FragmentBottomSheetBinding
+    private lateinit var binding: FragmentPlayerBottomSheetBinding
 
     private val viewModelPlayerBottomSheet by viewModel<PlayerBottomSheetViewModel>()
 
@@ -39,7 +39,7 @@ class PlayerBottomSheetFragment(val track: Track) : BottomSheetDialogFragment() 
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentBottomSheetBinding.inflate(inflater, container, false)
+        binding = FragmentPlayerBottomSheetBinding.inflate(inflater, container, false)
         return binding.root
     }
 

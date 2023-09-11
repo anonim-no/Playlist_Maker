@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListEntity
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListWithCountTracks
 import com.example.playlistmaker.medialibrary.data.db.playlists.entity.PlayListsTrackEntity
@@ -16,6 +17,9 @@ interface PlayListsDao {
     // добавляет плейлист
     @Insert(entity = PlayListEntity::class)
     suspend fun addPlayList(playList: PlayListEntity)
+
+    @Update(entity = PlayListEntity::class)
+    suspend fun editPlayList(playList: PlayListEntity)
 
     @Insert(entity = PlayListsTrackEntity::class, onConflict = OnConflictStrategy.IGNORE) // добавляет трек
     suspend fun addPlayListsTrack(playListsTrackEntity: PlayListsTrackEntity)
@@ -30,6 +34,9 @@ interface PlayListsDao {
         addTrackPlayList(trackPlayListEntity)
     }
 
+    @Query("SELECT playListId, name, description, image, (SELECT COUNT(id) FROM play_lists_track_table WHERE play_lists_track_table.playListId=play_lists_table.playListId) as tracksCount FROM play_lists_table WHERE playListId = :playListId")
+    suspend fun getPlayList(playListId: Int): PlayListWithCountTracks
+
     // получает список плейлистов с колв-ом треков
     @Query("SELECT playListId, name, description, image, (SELECT COUNT(id) FROM play_lists_track_table WHERE play_lists_track_table.playListId=play_lists_table.playListId) as tracksCount FROM play_lists_table ORDER BY playListId DESC")
     suspend fun getPlayLists(): List<PlayListWithCountTracks>
@@ -42,5 +49,29 @@ interface PlayListsDao {
     @Query("SELECT EXISTS (SELECT 1 FROM play_lists_track_table  WHERE trackId = :trackId AND playListId = :playListId)")
     suspend fun isTrackInPlayList(trackId: Int, playListId: Int): Boolean
 
+    @Query("DELETE FROM track_play_lists_table WHERE trackId NOT IN (SELECT DISTINCT(trackId) FROM play_lists_track_table)")
+    suspend fun clearTracks()
+
+    @Query("DELETE FROM play_lists_track_table WHERE playListId = :playListId AND trackId = :trackId")
+    suspend fun deleteTrackFromTrackPlayList(playListId: Int, trackId: Int)
+    @Transaction
+    suspend fun deleteTrackFromPlayList(
+        trackId: Int,
+        playListId: Int
+    ) {
+        deleteTrackFromTrackPlayList(playListId, trackId)
+        clearTracks()
+    }
+
+    @Query("DELETE FROM play_lists_table WHERE playListId = :playListId")
+    suspend fun deletePlayListFromPlayList(playListId: Int)
+    @Query("DELETE FROM play_lists_track_table WHERE playListId = :playListId")
+    suspend fun deletePlayListFromTrackPlayList(playListId: Int)
+    @Transaction
+    suspend fun deletePlayList(playListId: Int) {
+        deletePlayListFromPlayList(playListId)
+        deletePlayListFromTrackPlayList(playListId)
+        clearTracks()
+    }
 
 }

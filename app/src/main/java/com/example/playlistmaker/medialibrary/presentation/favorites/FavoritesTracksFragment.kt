@@ -20,9 +20,7 @@ class FavoritesTracksFragment : Fragment() {
 
     private val favoritesTracksViewModel: FavoritesTracksViewModel by viewModel()
 
-    private val favoritesTracksAdapter = TracksAdapter {
-        clickOnTrack(it)
-    }
+    private val favoritesTracksAdapter = TracksAdapter({clickOnTrack(it)})
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +44,7 @@ class FavoritesTracksFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        favoritesTracksViewModel.getFavoritesTracks()
+        favoritesTracksViewModel.requestFavoritesTracks()
     }
 
     private fun render(state: FavoritesTracksState) {
