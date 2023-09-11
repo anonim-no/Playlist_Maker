@@ -1,2 +1,5 @@
 /build
 /schemas
+/release/
+/sampledata/
+google-services.json

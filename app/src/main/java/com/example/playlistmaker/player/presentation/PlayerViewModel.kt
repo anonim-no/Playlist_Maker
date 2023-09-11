@@ -8,6 +8,8 @@ import com.example.playlistmaker.medialibrary.domain.db.favorites.FavoritesInter
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.presentation.models.PlayerState
 import com.example.playlistmaker.common.models.Track
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -16,7 +18,8 @@ import java.util.Locale
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
-    private val favoritesInteractor: FavoritesInteractor
+    private val favoritesInteractor: FavoritesInteractor,
+    private val analytics: FirebaseAnalytics
 ) : ViewModel() {
 
     private val playerStateLiveData = MutableLiveData<PlayerState>()
@@ -139,6 +142,11 @@ class PlayerViewModel(
                 )
                 false
             } else {
+
+                analytics.logEvent("Add_track_to_favorites") {
+                    track.artistName?.let { param("Artist_name", it) }
+                    param("Track_name", track.trackName)
+                }
                 favoritesInteractor.addToFavorites(track)
                 trackFavoriteStateLiveData.postValue(
                     PlayerState.StateFavorite(true)

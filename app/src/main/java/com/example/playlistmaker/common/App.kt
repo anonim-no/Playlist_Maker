@@ -5,6 +5,7 @@ import com.example.playlistmaker.medialibrary.di.mediaLibraryDataModule
 import com.example.playlistmaker.medialibrary.di.mediaLibraryInteractorModule
 import com.example.playlistmaker.medialibrary.di.mediaLibraryRepositoryModule
 import com.example.playlistmaker.medialibrary.di.mediaLibraryViewModelsModule
+import com.example.playlistmaker.common.di.analyticsModule
 import com.example.playlistmaker.player.di.playerDataModule
 import com.example.playlistmaker.player.di.playerInteractorModule
 import com.example.playlistmaker.player.di.playerRepositoryModule
@@ -18,9 +19,12 @@ import com.example.playlistmaker.settings.di.settingsInteractorModule
 import com.example.playlistmaker.settings.di.settingsRepositoryModule
 import com.example.playlistmaker.settings.di.settingsViewModelModule
 import com.example.playlistmaker.settings.domain.api.ThemeSwitchInteractor
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import java.time.ZonedDateTime
 
 const val PLAYLIST_MAKER_PREFERENCE = "playlist_maker_preference"
 const val TRACK = "track"
@@ -28,7 +32,6 @@ const val PLAY_LIST = "play_list"
 const val APPLE_MUSIC_API_BASE_URL = "http://itunes.apple.com"
 const val PLAY_LISTS_IMAGES_DIRECTORY = "play_list_images"
 const val PLAY_LISTS_IMAGES_QUALITY = 80
-
 
 class App : Application() {
 
@@ -40,6 +43,7 @@ class App : Application() {
             androidContext(this@App)
 
             modules(
+                analyticsModule,
                 playerDataModule,
                 playerRepositoryModule,
                 playerInteractorModule,
@@ -62,6 +66,12 @@ class App : Application() {
 
         val themeSwitcherInteractor: ThemeSwitchInteractor by inject()
         themeSwitcherInteractor.applyCurrentTheme()
+
+        val analytics: FirebaseAnalytics by inject()
+
+        analytics.logEvent(FirebaseAnalytics.Event.APP_OPEN) {
+            param(FirebaseAnalytics.Param.START_DATE, ZonedDateTime.now().toString())
+        }
     }
 
 }
