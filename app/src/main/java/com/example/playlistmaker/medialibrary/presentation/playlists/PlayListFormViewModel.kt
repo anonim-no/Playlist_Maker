@@ -4,9 +4,12 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.medialibrary.domain.db.playlists.PlayListsInteractor
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlayListFormViewModel(private val playListsInteractor: PlayListsInteractor) : ViewModel() {
+
+    private var isClickAllowed = true
 
     fun createPlayList(
         name: String,
@@ -32,6 +35,24 @@ class PlayListFormViewModel(private val playListsInteractor: PlayListsInteractor
             onResultListener()
         }
     }
+
+    fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewModelScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
+
+
 
 
 }

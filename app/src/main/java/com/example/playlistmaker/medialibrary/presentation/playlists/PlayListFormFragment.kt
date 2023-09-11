@@ -99,32 +99,34 @@ class PlayListFormFragment : Fragment() {
         }
 
         binding.playListCreateButton.setOnClickListener {
-            val name = binding.playListNameEditText.text.toString()
-            val description = binding.playListDescriptionEditText.text.toString()
-            if (name.isNotEmpty()) {
-                if (playList != null) {
-                    playListFormViewModel.editPlayList(
-                        playList!!.playListId,
-                        name = name,
-                        description = description,
-                        pickImageUri = pickImageUri
-                    ) {
-                        findNavController().popBackStack()
-                    }
-                } else {
-                    playListFormViewModel.createPlayList(
-                        name = name,
-                        description = description,
-                        pickImageUri = pickImageUri
-                    ) {
-                        Toast.makeText(
-                            requireContext(),
-                            String.format(resources.getText(R.string.playlist_created).toString(), name),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        findNavController().popBackStack()
-                    }
+            if (playListFormViewModel.clickDebounce()) {
+                val name = binding.playListNameEditText.text.toString()
+                val description = binding.playListDescriptionEditText.text.toString()
+                if (name.isNotEmpty()) {
+                    if (playList != null) {
+                        playListFormViewModel.editPlayList(
+                            playList!!.playListId,
+                            name = name,
+                            description = description,
+                            pickImageUri = pickImageUri
+                        ) {
+                            findNavController().popBackStack()
+                        }
+                    } else {
+                        playListFormViewModel.createPlayList(
+                            name = name,
+                            description = description,
+                            pickImageUri = pickImageUri
+                        ) {
+                            Toast.makeText(
+                                requireContext(),
+                                String.format(resources.getText(R.string.playlist_created).toString(), name),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            findNavController().popBackStack()
+                        }
 
+                    }
                 }
             }
         }
