@@ -28,14 +28,8 @@ class PlayListViewModel(
                 playListsInteractor.getPlayList(playListId)
             ))
 
-            val tracks = playListsInteractor.getPlayListTracks(playListId).toMutableList()
-            tracks.forEach {
-                tracks[tracks.indexOf(it)] = it.copy(
-                    artworkUrl100 = it.artworkUrl100?.replaceAfterLast('/', "60x60bb.jpg")
-                )
-            }
             renderState(PlayListState.PlayListTracks(
-                tracks
+                playListsInteractor.getPlayListTracks(playListId).toMutableList()
             ))
         }
     }

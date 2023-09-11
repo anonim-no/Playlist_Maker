@@ -70,7 +70,7 @@ class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val trackName: TextView = itemView.findViewById(R.id.tvTrackName)
     private val artistName: TextView = itemView.findViewById(R.id.tvArtistName)
     private val trackTime: TextView = itemView.findViewById(R.id.tvTrackTime)
-    private val artworkUrl100: ImageView = itemView.findViewById(R.id.ivTrackArt)
+    private val ivTrackArt: ImageView = itemView.findViewById(R.id.ivTrackArt)
 
     fun bind(track: Track) {
         trackName.text = track.trackName
@@ -84,7 +84,7 @@ class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             trackTime.setText(R.string._00_00)
         }
 
-        track.artworkUrl100?.let {
+        track.artworkUrl60?.let {
             Glide
                 .with(itemView)
                 .load(it)
@@ -97,7 +97,7 @@ class TracksViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                         )
                     )
                 )
-                .into(artworkUrl100)
+                .into(ivTrackArt)
         }
     }
 }
